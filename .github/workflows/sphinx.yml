@@ -1,0 +1,34 @@
+name: "Sphinx: Render docs"
+
+on: push
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+    - uses: actions/checkout@v4
+    - name: Build HTML
+      uses: ammaraskar/sphinx-action@7.0.0
+      with:
+        docs-folder: docs/
+        pre-build-command: >
+          apt-get update -y;
+          apt-get install -y wget unzip;
+          wget -nc https://github.com/ipython/xkcd-font/blob/master/xkcd-script/font/xkcd-script.ttf?raw=true -O /usr/local/share/fonts/xkcd-Script.ttf;
+          wget -nc https://github.com/ipython/xkcd-font/blob/master/xkcd/build/xkcd.otf?raw=true -O /usr/local/share/fonts/xkcd.otf;
+          wget -nc https://github.com/antimatter15/doge/blob/master/Comic%20Sans%20MS.ttf?raw=true -O /usr/local/share/fonts/comic-sans.otf;
+          fc-cache -f -v;
+        build-command: "sphinx-build -b dirhtml source build"
+    - name: Upload artifacts
+      uses: actions/upload-artifact@v4
+      with:
+        name: html-docs
+        path: docs/build/
+    - name: Deploy
+      uses: peaceiris/actions-gh-pages@v3
+      if: github.ref == 'refs/heads/main'
+      with:
+        github_token: ${{ secrets.GITHUB_TOKEN }}
+        publish_dir: docs/build
