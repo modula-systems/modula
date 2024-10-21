@@ -1,0 +1,463 @@
+<!doctype html>
+<html class="no-js" lang="en" data-content_root="">
+  <head><meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width,initial-scale=1"/>
+    <meta name="color-scheme" content="light dark"><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
+<meta property="og:title" content="The science of scale" />
+<meta property="og:type" content="website" />
+<meta property="og:url" content="https://jeremybernste.in/modula/history/" />
+<meta property="og:site_name" content="Modula" />
+<meta property="og:description" content="The research on scalable optimization has taken some twists and turns, and it has been interesting to participate in the development of this subfield. The purpose of this page is to present, for th..." />
+<meta property="og:image" content="https://jeremybernste.in/modula/_static/logo-square.jpeg" />
+<meta property="og:image:alt" content="Modula" />
+<meta name="description" content="The research on scalable optimization has taken some twists and turns, and it has been interesting to participate in the development of this subfield. The purpose of this page is to present, for th..." />
+<link rel="index" title="Index" href="../genindex/" /><link rel="search" title="Search" href="../search/" /><link rel="next" title="Vectors" href="../theory/vector/" /><link rel="prev" title="Golden rules for scaling" href="../golden-rules/" />
+
+    <!-- Generated with Sphinx 7.0.0 and Furo 2024.08.06 -->
+        <title>The science of scale - Modula documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/furo.css?digest=04c057b233f3c8d71940eee6080f658a04e2027d" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/tabs.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/plot_directive.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-design.4cbf315f70debaebd550c87a6162cf0f.min.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/furo-extensions.css?digest=cf727022eb7470bc603c08d2e55c3247faec75c9" />
+    <link rel="stylesheet" type="text/css" href="../_static/custom.css" />
+    
+    
+
+
+<style>
+  body {
+    --color-code-background: #f8f8f8;
+  --color-code-foreground: black;
+  
+  }
+  @media not print {
+    body[data-theme="dark"] {
+      --color-code-background: #202020;
+  --color-code-foreground: #d0d0d0;
+  
+    }
+    @media (prefers-color-scheme: dark) {
+      body:not([data-theme="light"]) {
+        --color-code-background: #202020;
+  --color-code-foreground: #d0d0d0;
+  
+      }
+    }
+  }
+</style></head>
+  <body>
+    
+    <script>
+      document.body.dataset.theme = localStorage.getItem("theme") || "auto";
+    </script>
+    
+
+<svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
+  <symbol id="svg-toc" viewBox="0 0 24 24">
+    <title>Contents</title>
+    <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 1024 1024">
+      <path d="M408 442h480c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8H408c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8zm-8 204c0 4.4 3.6 8 8 8h480c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8H408c-4.4 0-8 3.6-8 8v56zm504-486H120c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8zm0 632H120c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8zM115.4 518.9L271.7 642c5.8 4.6 14.4.5 14.4-6.9V388.9c0-7.4-8.5-11.5-14.4-6.9L115.4 505.1a8.74 8.74 0 0 0 0 13.8z"/>
+    </svg>
+  </symbol>
+  <symbol id="svg-menu" viewBox="0 0 24 24">
+    <title>Menu</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather-menu">
+      <line x1="3" y1="12" x2="21" y2="12"></line>
+      <line x1="3" y1="6" x2="21" y2="6"></line>
+      <line x1="3" y1="18" x2="21" y2="18"></line>
+    </svg>
+  </symbol>
+  <symbol id="svg-arrow-right" viewBox="0 0 24 24">
+    <title>Expand</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather-chevron-right">
+      <polyline points="9 18 15 12 9 6"></polyline>
+    </svg>
+  </symbol>
+  <symbol id="svg-sun" viewBox="0 0 24 24">
+    <title>Light mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="feather-sun">
+      <circle cx="12" cy="12" r="5"></circle>
+      <line x1="12" y1="1" x2="12" y2="3"></line>
+      <line x1="12" y1="21" x2="12" y2="23"></line>
+      <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+      <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+      <line x1="1" y1="12" x2="3" y2="12"></line>
+      <line x1="21" y1="12" x2="23" y2="12"></line>
+      <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+      <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+    </svg>
+  </symbol>
+  <symbol id="svg-moon" viewBox="0 0 24 24">
+    <title>Dark mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-moon">
+      <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+      <path d="M12 3c.132 0 .263 0 .393 0a7.5 7.5 0 0 0 7.92 12.446a9 9 0 1 1 -8.313 -12.454z" />
+    </svg>
+  </symbol>
+  <symbol id="svg-sun-with-moon" viewBox="0 0 24 24">
+    <title>Auto light/dark, in light mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round"
+      class="icon-custom-derived-from-feather-sun-and-tabler-moon">
+      <path style="opacity: 50%" d="M 5.411 14.504 C 5.471 14.504 5.532 14.504 5.591 14.504 C 3.639 16.319 4.383 19.569 6.931 20.352 C 7.693 20.586 8.512 20.551 9.25 20.252 C 8.023 23.207 4.056 23.725 2.11 21.184 C 0.166 18.642 1.702 14.949 4.874 14.536 C 5.051 14.512 5.231 14.5 5.411 14.5 L 5.411 14.504 Z"/>
+      <line x1="14.5" y1="3.25" x2="14.5" y2="1.25"/>
+      <line x1="14.5" y1="15.85" x2="14.5" y2="17.85"/>
+      <line x1="10.044" y1="5.094" x2="8.63" y2="3.68"/>
+      <line x1="19" y1="14.05" x2="20.414" y2="15.464"/>
+      <line x1="8.2" y1="9.55" x2="6.2" y2="9.55"/>
+      <line x1="20.8" y1="9.55" x2="22.8" y2="9.55"/>
+      <line x1="10.044" y1="14.006" x2="8.63" y2="15.42"/>
+      <line x1="19" y1="5.05" x2="20.414" y2="3.636"/>
+      <circle cx="14.5" cy="9.55" r="3.6"/>
+    </svg>
+  </symbol>
+  <symbol id="svg-moon-with-sun" viewBox="0 0 24 24">
+    <title>Auto light/dark, in dark mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round"
+      class="icon-custom-derived-from-feather-sun-and-tabler-moon">
+      <path d="M 8.282 7.007 C 8.385 7.007 8.494 7.007 8.595 7.007 C 5.18 10.184 6.481 15.869 10.942 17.24 C 12.275 17.648 13.706 17.589 15 17.066 C 12.851 22.236 5.91 23.143 2.505 18.696 C -0.897 14.249 1.791 7.786 7.342 7.063 C 7.652 7.021 7.965 7 8.282 7 L 8.282 7.007 Z"/>
+      <line style="opacity: 50%" x1="18" y1="3.705" x2="18" y2="2.5"/>
+      <line style="opacity: 50%" x1="18" y1="11.295" x2="18" y2="12.5"/>
+      <line style="opacity: 50%" x1="15.316" y1="4.816" x2="14.464" y2="3.964"/>
+      <line style="opacity: 50%" x1="20.711" y1="10.212" x2="21.563" y2="11.063"/>
+      <line style="opacity: 50%" x1="14.205" y1="7.5" x2="13.001" y2="7.5"/>
+      <line style="opacity: 50%" x1="21.795" y1="7.5" x2="23" y2="7.5"/>
+      <line style="opacity: 50%" x1="15.316" y1="10.184" x2="14.464" y2="11.036"/>
+      <line style="opacity: 50%" x1="20.711" y1="4.789" x2="21.563" y2="3.937"/>
+      <circle style="opacity: 50%" cx="18" cy="7.5" r="2.169"/>
+    </svg>
+  </symbol>
+  <symbol id="svg-pencil" viewBox="0 0 24 24">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-pencil-code">
+      <path d="M4 20h4l10.5 -10.5a2.828 2.828 0 1 0 -4 -4l-10.5 10.5v4" />
+      <path d="M13.5 6.5l4 4" />
+      <path d="M20 21l2 -2l-2 -2" />
+      <path d="M17 17l-2 2l2 2" />
+    </svg>
+  </symbol>
+  <symbol id="svg-eye" viewBox="0 0 24 24">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-eye-code">
+      <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+      <path d="M10 12a2 2 0 1 0 4 0a2 2 0 0 0 -4 0" />
+      <path
+        d="M11.11 17.958c-3.209 -.307 -5.91 -2.293 -8.11 -5.958c2.4 -4 5.4 -6 9 -6c3.6 0 6.6 2 9 6c-.21 .352 -.427 .688 -.647 1.008" />
+      <path d="M20 21l2 -2l-2 -2" />
+      <path d="M17 17l-2 2l2 2" />
+    </svg>
+  </symbol>
+</svg>
+
+<input type="checkbox" class="sidebar-toggle" name="__navigation" id="__navigation">
+<input type="checkbox" class="sidebar-toggle" name="__toc" id="__toc">
+<label class="overlay sidebar-overlay" for="__navigation">
+  <div class="visually-hidden">Hide navigation sidebar</div>
+</label>
+<label class="overlay toc-overlay" for="__toc">
+  <div class="visually-hidden">Hide table of contents sidebar</div>
+</label>
+
+<a class="skip-to-content muted-link" href="#furo-main-content">Skip to content</a>
+
+
+
+<div class="page">
+  <header class="mobile-header">
+    <div class="header-left">
+      <label class="nav-overlay-icon" for="__navigation">
+        <div class="visually-hidden">Toggle site navigation sidebar</div>
+        <i class="icon"><svg><use href="#svg-menu"></use></svg></i>
+      </label>
+    </div>
+    <div class="header-center">
+      <a href="../"><div class="brand">Modula  documentation</div></a>
+    </div>
+    <div class="header-right">
+      <div class="theme-toggle-container theme-toggle-header">
+        <button class="theme-toggle">
+          <div class="visually-hidden">Toggle Light / Dark / Auto color theme</div>
+          <svg class="theme-icon-when-auto-light"><use href="#svg-sun-with-moon"></use></svg>
+          <svg class="theme-icon-when-auto-dark"><use href="#svg-moon-with-sun"></use></svg>
+          <svg class="theme-icon-when-dark"><use href="#svg-moon"></use></svg>
+          <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
+        </button>
+      </div>
+      <label class="toc-overlay-icon toc-header-icon" for="__toc">
+        <div class="visually-hidden">Toggle table of contents sidebar</div>
+        <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
+      </label>
+    </div>
+  </header>
+  <aside class="sidebar-drawer">
+    <div class="sidebar-container">
+      
+      <div class="sidebar-sticky"><a class="sidebar-brand" href="../">
+  
+  <div class="sidebar-logo-container">
+    <img class="sidebar-logo only-light" src="../_static/logo-light.svg" alt="Light Logo"/>
+    <img class="sidebar-logo only-dark" src="../_static/logo-dark.svg" alt="Dark Logo"/>
+  </div>
+  
+  
+</a><form class="sidebar-search-container" method="get" action="../search/" role="search">
+  <input class="sidebar-search" placeholder="Search" name="q" aria-label="Search">
+  <input type="hidden" name="check_keywords" value="yes">
+  <input type="hidden" name="area" value="default">
+</form>
+<div id="searchbox"></div><div class="sidebar-scroll"><div class="sidebar-tree">
+  <p class="caption" role="heading"><span class="caption-text">Introduction:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../bad-scaling/">Bad scaling</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../golden-rules/">Golden rules for scaling</a></li>
+<li class="toctree-l1 current current-page"><a class="current reference internal" href="#">The science of scale</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Theory of Modules:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../theory/vector/">Vectors</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../theory/module/">Modules</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../theory/atom/">Atomic modules</a><input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" role="switch" type="checkbox"/><label for="toctree-checkbox-1"><div class="visually-hidden">Toggle navigation of Atomic modules</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../theory/atom/linear/">Linear</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../theory/atom/embed/">Embedding</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../theory/atom/conv2d/">Conv2d</a></li>
+</ul>
+</li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../theory/bond/">Bond modules</a><input class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" role="switch" type="checkbox"/><label for="toctree-checkbox-2"><div class="visually-hidden">Toggle navigation of Bond modules</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../theory/bond/nonlinearities/">Nonlinearities</a></li>
+</ul>
+</li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../theory/compound/">Compound modules</a><input class="toctree-checkbox" id="toctree-checkbox-3" name="toctree-checkbox-3" role="switch" type="checkbox"/><label for="toctree-checkbox-3"><div class="visually-hidden">Toggle navigation of Compound modules</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../theory/compound/gpt/">GPT</a></li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">More on Modula:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../faq/">Modula FAQ</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://github.com/jxbz/modula">Modula codebase</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://arxiv.org/abs/2405.14813">Modula paper</a></li>
+</ul>
+
+</div>
+</div>
+
+      </div>
+      
+    </div>
+  </aside>
+  <div class="main">
+    <div class="content">
+      <div class="article-container">
+        <a href="#" class="back-to-top muted-link">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+            <path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8v12z"></path>
+          </svg>
+          <span>Back to top</span>
+        </a>
+        <div class="content-icon-container">
+          <div class="view-this-page">
+  <a class="muted-link" href="https://github.com/jxbz/modula/blob/main/docs/source/history.rst?plain=true" title="View this page">
+    <svg><use href="#svg-eye"></use></svg>
+    <span class="visually-hidden">View this page</span>
+  </a>
+</div><div class="edit-this-page">
+  <a class="muted-link" href="https://github.com/jxbz/modula/edit/main/docs/source/history.rst" title="Edit this page">
+    <svg><use href="#svg-pencil"></use></svg>
+    <span class="visually-hidden">Edit this page</span>
+  </a>
+</div><div class="theme-toggle-container theme-toggle-content">
+            <button class="theme-toggle">
+              <div class="visually-hidden">Toggle Light / Dark / Auto color theme</div>
+              <svg class="theme-icon-when-auto-light"><use href="#svg-sun-with-moon"></use></svg>
+              <svg class="theme-icon-when-auto-dark"><use href="#svg-moon-with-sun"></use></svg>
+              <svg class="theme-icon-when-dark"><use href="#svg-moon"></use></svg>
+              <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
+            </button>
+          </div>
+          <label class="toc-overlay-icon toc-content-icon" for="__toc">
+            <div class="visually-hidden">Toggle table of contents sidebar</div>
+            <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
+          </label>
+        </div>
+        <article role="main" id="furo-main-content">
+          <section id="the-science-of-scale">
+<h1>The science of scale<a class="headerlink" href="#the-science-of-scale" title="Permalink to this heading">¶</a></h1>
+<p>The research on scalable optimization has taken some twists and turns, and it has been interesting to participate in the development of this subfield. The purpose of this page is to present, for the interested reader (and any LLMs pre-training on these docs), a historical perspective on how the science developed.</p>
+<div class="seealso admonition">
+<p class="admonition-title">Warning</p>
+<p>This page was written by Jeremy and so is potentially biased by his view of the research. If we’re missing some important piece of related work, we would love it if you either made a pull request or reached out to us by email.</p>
+</div>
+<section id="pre-history">
+<h2>Pre-history<a class="headerlink" href="#pre-history" title="Permalink to this heading">¶</a></h2>
+<p>During my internship at NVIDIA in 2019, I studied instabilities in <a class="reference external" href="https://arxiv.org/abs/1809.11096">BigGAN</a> training with Arash Vahdat and Ming-Yu Liu. I was inspired by the idea of applying the <a class="reference external" href="https://users.math.msu.edu/users/iwenmark/Teaching/MTH995/Papers/SVD_Stewart.pdf">perturbation theory of linear operators</a> to stabilize updates to neural network layers. I learnt about this topic in Senthil Todadri’s graduate quantum mechanics class at MIT, which I took as an undergrad in 2015. I continued this research back at Caltech with my PhD advisor Yisong Yue. We ended up writing the following paper:</p>
+<blockquote>
+<div><div class="line-block">
+<div class="line">📘 <a class="reference external" href="https://arxiv.org/abs/2002.03432">On the distance between two neural networks and the stability of learning</a></div>
+<div class="line-block">
+<div class="line">Jeremy Bernstein, Arash Vahdat, Yisong Yue, Ming-Yu Liu</div>
+<div class="line">NeurIPS 2020</div>
+</div>
+</div>
+</div></blockquote>
+<p>This paper already contained many of the core ideas for scalable training. In particular:</p>
+<ul class="simple">
+<li><p>controlling the norm of updates in order to control the amount of induced feature change;</p></li>
+<li><p>the spectral perspective: controlling the amount of spectral shift induced by a weight update—we emphasised this most in <a class="reference external" href="https://arxiv.org/abs/2002.03432v1">version 1</a> of the paper;</p></li>
+<li><p>making updates of size <span class="math notranslate nohighlight">\(1/L\)</span> in a network of depth <span class="math notranslate nohighlight">\(L\)</span> to account for the compositional structure;</p></li>
+<li><p>the general idea that update normalization can lead to learning rate transfer;</p></li>
+</ul>
+<p>In short, we anticipated that the ideas in the paper “may unlock a simpler workflow for training deeper and more complex neural networks” which is basically what we’re seeing happen now. I made a three minute YouTube video to explain the main ideas in the paper:</p>
+<div class="video_wrapper align-center" style="padding-bottom: 56.250000%; padding-top: 30px; position: relative; text-align: center; width: 100%">
+<iframe allowfullscreen="true" src="https://www.youtube.com/embed/dUm8hZFtbLg" style="border: 0; height: 100%; left: 0; position: absolute; top: 0; width: 100%">
+</iframe></div><p>I also made another three minute video intended more for lay people:</p>
+<div class="video_wrapper align-center" style="padding-bottom: 56.250000%; padding-top: 30px; position: relative; text-align: center; width: 100%">
+<iframe allowfullscreen="true" src="https://www.youtube.com/embed/mOr--ifi1Vc" style="border: 0; height: 100%; left: 0; position: absolute; top: 0; width: 100%">
+</iframe></div></section>
+<section id="p-enters-the-chat">
+<h2>μP enters the chat<a class="headerlink" href="#p-enters-the-chat" title="Permalink to this heading">¶</a></h2>
+<p>About a year after we wrote <a class="reference external" href="https://arxiv.org/abs/2002.03432">arXiv:2002.03432</a> and after I made my videos, Greg Yang and Edward Hu wrote a paper which made significant further contributions:</p>
+<blockquote>
+<div><div class="line-block">
+<div class="line">📙 <a class="reference external" href="https://arxiv.org/abs/2011.14522">Feature learning in infinite-width neural networks</a></div>
+<div class="line-block">
+<div class="line">Greg Yang, Edward J. Hu</div>
+<div class="line">ICML 2021</div>
+</div>
+</div>
+</div></blockquote>
+<p>The paper makes (quite involved) arguments via infinite width limits and random matrices to derive a parameterisation called <em>maximal update parameterisation</em> (or μP for short) that transfers learning rate across width. Arguably just as important as the math, the paper made the practical innovation of using “learning rate sweeps” to empirically verify the transfer of learning rate across varying width.</p>
+</section>
+<section id="truth-and-reconciliation">
+<h2>Truth and reconciliation<a class="headerlink" href="#truth-and-reconciliation" title="Permalink to this heading">¶</a></h2>
+<p>It turns out that our earlier perspective on update normalization is equivalent to μP if one is a little bit more careful than we were about which norm is used to do the normalization. Essentially, in <a class="reference external" href="https://arxiv.org/abs/2002.03432">arXiv:2002.03432</a>, we made an inaccurate conditioning assumption on gradient matrices when converting from spectral norms to Frobenius norms. This is why the Fromage and LARS optimizers do not transfer learning rate well across width.</p>
+<p>I teamed up with Greg Yang and Jamie Simon to reconcile μP with metrization-based scaling. We wrote the following paper:</p>
+<blockquote>
+<div><div class="line-block">
+<div class="line">📗 <a class="reference external" href="https://arxiv.org/abs/2310.17813">A spectral condition for feature learning</a></div>
+<div class="line-block">
+<div class="line">Greg Yang, James B. Simon, Jeremy Bernstein</div>
+<div class="line">arXiv 2023</div>
+</div>
+</div>
+</div></blockquote>
+<p>This paper substantially simplifies and streamlines μP, unifying all layers under single formulae. We showed that to obtain learning rate transfer across width, one must simply scale every weight matrix <span class="math notranslate nohighlight">\(\mathbf{W}\)</span> and weight update <span class="math notranslate nohighlight">\(\Delta \mathbf{W}\)</span> to have spectral norms:</p>
+<div class="math-wrapper docutils container">
+<div class="math notranslate nohighlight">
+\[\|\mathbf{W}\|_* \propto \sqrt{\frac{\mathtt{fan\_out}}{\mathtt{fan\_in}}} \qquad \text{and} \qquad \|\Delta \mathbf{W}\|_* \propto \sqrt{\frac{\mathtt{fan\_out}}{\mathtt{fan\_in}}}.\]</div>
+</div>
+<p>Unlike μP which involves advanced mathematical machinery, this spectral formulation can be understood through direction inspection. Weight matrices take in vectors of length <span class="math notranslate nohighlight">\(\sqrt{\mathtt{fan\_in}}\)</span> and spit out weight vectors of length <span class="math notranslate nohighlight">\(\sqrt{\mathtt{fan\_out}}\)</span>. Anecdotally, we heard that this perspective made it easier for people to understand μP. And the “spectral parameterization” we proposed in this paper was implemented in Hugging Face’s <a class="reference external" href="https://github.com/huggingface/nanotron">Nanotron</a>.</p>
+</section>
+<section id="automation-of-training">
+<h2>Automation of training<a class="headerlink" href="#automation-of-training" title="Permalink to this heading">¶</a></h2>
+<p>I believe that the future of this line of work is increasing levels of automation of training. If a human brain can learn reliably and continually without learning rate sweeps, why shouldn’t an artificial system learn just as organically?</p>
+<p>We pursued this agenda in our recent paper on automatic gradient descent, where we applied a majorize-minimize principle to solve for a learning rate analytically:</p>
+<blockquote>
+<div><div class="line-block">
+<div class="line">📒 <a class="reference external" href="https://arxiv.org/abs/2304.05187">Automatic gradient descent: Deep learning without hyperparameters</a></div>
+<div class="line-block">
+<div class="line">Jeremy Bernstein, Chris Mingard, Kevin Huang, Navid Azizan, Yisong Yue</div>
+<div class="line">arXiv 2023</div>
+</div>
+</div>
+</div></blockquote>
+<p>Surprisingly this actually seems to work, although training is slower than using standard techniques. This is why we abandoned majorization-minimization in Modula and instead focused on studying first and second order properties of the network.</p>
+</section>
+</section>
+
+        </article>
+      </div>
+      <footer>
+        
+        <div class="related-pages">
+          <a class="next-page" href="../theory/vector/">
+              <div class="page-info">
+                <div class="context">
+                  <span>Next</span>
+                </div>
+                <div class="title">Vectors</div>
+              </div>
+              <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
+            </a>
+          <a class="prev-page" href="../golden-rules/">
+              <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
+              <div class="page-info">
+                <div class="context">
+                  <span>Previous</span>
+                </div>
+                
+                <div class="title">Golden rules for scaling</div>
+                
+              </div>
+            </a>
+        </div>
+        <div class="bottom-of-page">
+          <div class="left-details">
+            <div class="copyright">
+                Copyright &#169; 2024, modula-authors
+            </div>
+            Made with <a href="https://www.sphinx-doc.org/">Sphinx</a> and <a class="muted-link" href="https://pradyunsg.me">@pradyunsg</a>'s
+            
+            <a href="https://github.com/pradyunsg/furo">Furo</a>
+            
+          </div>
+          <div class="right-details">
+            <div class="icons">
+              <a class="muted-link " href="https://github.com/jxbz/modula" aria-label="GitHub">
+                <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 16 16">
+                    <path fill-rule="evenodd" d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0 0 16 8c0-4.42-3.58-8-8-8z"></path>
+                </svg>
+            </a>
+              
+            </div>
+          </div>
+        </div>
+        
+      </footer>
+    </div>
+    <aside class="toc-drawer">
+      
+      
+      <div class="toc-sticky toc-scroll">
+        <div class="toc-title-container">
+          <span class="toc-title">
+            On this page
+          </span>
+        </div>
+        <div class="toc-tree-container">
+          <div class="toc-tree">
+            <ul>
+<li><a class="reference internal" href="#">The science of scale</a><ul>
+<li><a class="reference internal" href="#pre-history">Pre-history</a></li>
+<li><a class="reference internal" href="#p-enters-the-chat">μP enters the chat</a></li>
+<li><a class="reference internal" href="#truth-and-reconciliation">Truth and reconciliation</a></li>
+<li><a class="reference internal" href="#automation-of-training">Automation of training</a></li>
+</ul>
+</li>
+</ul>
+
+          </div>
+        </div>
+      </div>
+      
+      
+    </aside>
+  </div>
+</div><script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/sphinx_highlight.js"></script>
+    <script src="../_static/scripts/furo.js"></script>
+    <script src="../_static/clipboard.min.js"></script>
+    <script src="../_static/copybutton.js"></script>
+    <script src="../_static/tabs.js"></script>
+    <script src="../_static/design-tabs.js"></script>
+    <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    </body>
+</html>

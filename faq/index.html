@@ -1,0 +1,558 @@
+<!doctype html>
+<html class="no-js" lang="en" data-content_root="">
+  <head><meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width,initial-scale=1"/>
+    <meta name="color-scheme" content="light dark"><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
+<meta property="og:title" content="Frequently asked questions" />
+<meta property="og:type" content="website" />
+<meta property="og:url" content="https://jeremybernste.in/modula/faq/" />
+<meta property="og:site_name" content="Modula" />
+<meta property="og:description" content="Feel free to reach out or start a GitHub issue if you have any questions about Modula. We’ll post answers to any useful or common questions on this page. Conceptual questions: The gradient is a vec..." />
+<meta property="og:image" content="https://jeremybernste.in/modula/_static/logo-square.jpeg" />
+<meta property="og:image:alt" content="Modula" />
+<meta name="description" content="Feel free to reach out or start a GitHub issue if you have any questions about Modula. We’ll post answers to any useful or common questions on this page. Conceptual questions: The gradient is a vec..." />
+<link rel="index" title="Index" href="../genindex/" /><link rel="search" title="Search" href="../search/" /><link rel="prev" title="GPT" href="../theory/compound/gpt/" />
+
+    <!-- Generated with Sphinx 7.0.0 and Furo 2024.08.06 -->
+        <title>Frequently asked questions - Modula documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/furo.css?digest=04c057b233f3c8d71940eee6080f658a04e2027d" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/tabs.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/plot_directive.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-design.4cbf315f70debaebd550c87a6162cf0f.min.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/furo-extensions.css?digest=cf727022eb7470bc603c08d2e55c3247faec75c9" />
+    <link rel="stylesheet" type="text/css" href="../_static/custom.css" />
+    
+    
+
+
+<style>
+  body {
+    --color-code-background: #f8f8f8;
+  --color-code-foreground: black;
+  
+  }
+  @media not print {
+    body[data-theme="dark"] {
+      --color-code-background: #202020;
+  --color-code-foreground: #d0d0d0;
+  
+    }
+    @media (prefers-color-scheme: dark) {
+      body:not([data-theme="light"]) {
+        --color-code-background: #202020;
+  --color-code-foreground: #d0d0d0;
+  
+      }
+    }
+  }
+</style></head>
+  <body>
+    
+    <script>
+      document.body.dataset.theme = localStorage.getItem("theme") || "auto";
+    </script>
+    
+
+<svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
+  <symbol id="svg-toc" viewBox="0 0 24 24">
+    <title>Contents</title>
+    <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 1024 1024">
+      <path d="M408 442h480c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8H408c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8zm-8 204c0 4.4 3.6 8 8 8h480c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8H408c-4.4 0-8 3.6-8 8v56zm504-486H120c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8zm0 632H120c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8zM115.4 518.9L271.7 642c5.8 4.6 14.4.5 14.4-6.9V388.9c0-7.4-8.5-11.5-14.4-6.9L115.4 505.1a8.74 8.74 0 0 0 0 13.8z"/>
+    </svg>
+  </symbol>
+  <symbol id="svg-menu" viewBox="0 0 24 24">
+    <title>Menu</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather-menu">
+      <line x1="3" y1="12" x2="21" y2="12"></line>
+      <line x1="3" y1="6" x2="21" y2="6"></line>
+      <line x1="3" y1="18" x2="21" y2="18"></line>
+    </svg>
+  </symbol>
+  <symbol id="svg-arrow-right" viewBox="0 0 24 24">
+    <title>Expand</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather-chevron-right">
+      <polyline points="9 18 15 12 9 6"></polyline>
+    </svg>
+  </symbol>
+  <symbol id="svg-sun" viewBox="0 0 24 24">
+    <title>Light mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="feather-sun">
+      <circle cx="12" cy="12" r="5"></circle>
+      <line x1="12" y1="1" x2="12" y2="3"></line>
+      <line x1="12" y1="21" x2="12" y2="23"></line>
+      <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+      <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+      <line x1="1" y1="12" x2="3" y2="12"></line>
+      <line x1="21" y1="12" x2="23" y2="12"></line>
+      <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+      <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+    </svg>
+  </symbol>
+  <symbol id="svg-moon" viewBox="0 0 24 24">
+    <title>Dark mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-moon">
+      <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+      <path d="M12 3c.132 0 .263 0 .393 0a7.5 7.5 0 0 0 7.92 12.446a9 9 0 1 1 -8.313 -12.454z" />
+    </svg>
+  </symbol>
+  <symbol id="svg-sun-with-moon" viewBox="0 0 24 24">
+    <title>Auto light/dark, in light mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round"
+      class="icon-custom-derived-from-feather-sun-and-tabler-moon">
+      <path style="opacity: 50%" d="M 5.411 14.504 C 5.471 14.504 5.532 14.504 5.591 14.504 C 3.639 16.319 4.383 19.569 6.931 20.352 C 7.693 20.586 8.512 20.551 9.25 20.252 C 8.023 23.207 4.056 23.725 2.11 21.184 C 0.166 18.642 1.702 14.949 4.874 14.536 C 5.051 14.512 5.231 14.5 5.411 14.5 L 5.411 14.504 Z"/>
+      <line x1="14.5" y1="3.25" x2="14.5" y2="1.25"/>
+      <line x1="14.5" y1="15.85" x2="14.5" y2="17.85"/>
+      <line x1="10.044" y1="5.094" x2="8.63" y2="3.68"/>
+      <line x1="19" y1="14.05" x2="20.414" y2="15.464"/>
+      <line x1="8.2" y1="9.55" x2="6.2" y2="9.55"/>
+      <line x1="20.8" y1="9.55" x2="22.8" y2="9.55"/>
+      <line x1="10.044" y1="14.006" x2="8.63" y2="15.42"/>
+      <line x1="19" y1="5.05" x2="20.414" y2="3.636"/>
+      <circle cx="14.5" cy="9.55" r="3.6"/>
+    </svg>
+  </symbol>
+  <symbol id="svg-moon-with-sun" viewBox="0 0 24 24">
+    <title>Auto light/dark, in dark mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round"
+      class="icon-custom-derived-from-feather-sun-and-tabler-moon">
+      <path d="M 8.282 7.007 C 8.385 7.007 8.494 7.007 8.595 7.007 C 5.18 10.184 6.481 15.869 10.942 17.24 C 12.275 17.648 13.706 17.589 15 17.066 C 12.851 22.236 5.91 23.143 2.505 18.696 C -0.897 14.249 1.791 7.786 7.342 7.063 C 7.652 7.021 7.965 7 8.282 7 L 8.282 7.007 Z"/>
+      <line style="opacity: 50%" x1="18" y1="3.705" x2="18" y2="2.5"/>
+      <line style="opacity: 50%" x1="18" y1="11.295" x2="18" y2="12.5"/>
+      <line style="opacity: 50%" x1="15.316" y1="4.816" x2="14.464" y2="3.964"/>
+      <line style="opacity: 50%" x1="20.711" y1="10.212" x2="21.563" y2="11.063"/>
+      <line style="opacity: 50%" x1="14.205" y1="7.5" x2="13.001" y2="7.5"/>
+      <line style="opacity: 50%" x1="21.795" y1="7.5" x2="23" y2="7.5"/>
+      <line style="opacity: 50%" x1="15.316" y1="10.184" x2="14.464" y2="11.036"/>
+      <line style="opacity: 50%" x1="20.711" y1="4.789" x2="21.563" y2="3.937"/>
+      <circle style="opacity: 50%" cx="18" cy="7.5" r="2.169"/>
+    </svg>
+  </symbol>
+  <symbol id="svg-pencil" viewBox="0 0 24 24">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-pencil-code">
+      <path d="M4 20h4l10.5 -10.5a2.828 2.828 0 1 0 -4 -4l-10.5 10.5v4" />
+      <path d="M13.5 6.5l4 4" />
+      <path d="M20 21l2 -2l-2 -2" />
+      <path d="M17 17l-2 2l2 2" />
+    </svg>
+  </symbol>
+  <symbol id="svg-eye" viewBox="0 0 24 24">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-eye-code">
+      <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+      <path d="M10 12a2 2 0 1 0 4 0a2 2 0 0 0 -4 0" />
+      <path
+        d="M11.11 17.958c-3.209 -.307 -5.91 -2.293 -8.11 -5.958c2.4 -4 5.4 -6 9 -6c3.6 0 6.6 2 9 6c-.21 .352 -.427 .688 -.647 1.008" />
+      <path d="M20 21l2 -2l-2 -2" />
+      <path d="M17 17l-2 2l2 2" />
+    </svg>
+  </symbol>
+</svg>
+
+<input type="checkbox" class="sidebar-toggle" name="__navigation" id="__navigation">
+<input type="checkbox" class="sidebar-toggle" name="__toc" id="__toc">
+<label class="overlay sidebar-overlay" for="__navigation">
+  <div class="visually-hidden">Hide navigation sidebar</div>
+</label>
+<label class="overlay toc-overlay" for="__toc">
+  <div class="visually-hidden">Hide table of contents sidebar</div>
+</label>
+
+<a class="skip-to-content muted-link" href="#furo-main-content">Skip to content</a>
+
+
+
+<div class="page">
+  <header class="mobile-header">
+    <div class="header-left">
+      <label class="nav-overlay-icon" for="__navigation">
+        <div class="visually-hidden">Toggle site navigation sidebar</div>
+        <i class="icon"><svg><use href="#svg-menu"></use></svg></i>
+      </label>
+    </div>
+    <div class="header-center">
+      <a href="../"><div class="brand">Modula  documentation</div></a>
+    </div>
+    <div class="header-right">
+      <div class="theme-toggle-container theme-toggle-header">
+        <button class="theme-toggle">
+          <div class="visually-hidden">Toggle Light / Dark / Auto color theme</div>
+          <svg class="theme-icon-when-auto-light"><use href="#svg-sun-with-moon"></use></svg>
+          <svg class="theme-icon-when-auto-dark"><use href="#svg-moon-with-sun"></use></svg>
+          <svg class="theme-icon-when-dark"><use href="#svg-moon"></use></svg>
+          <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
+        </button>
+      </div>
+      <label class="toc-overlay-icon toc-header-icon" for="__toc">
+        <div class="visually-hidden">Toggle table of contents sidebar</div>
+        <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
+      </label>
+    </div>
+  </header>
+  <aside class="sidebar-drawer">
+    <div class="sidebar-container">
+      
+      <div class="sidebar-sticky"><a class="sidebar-brand" href="../">
+  
+  <div class="sidebar-logo-container">
+    <img class="sidebar-logo only-light" src="../_static/logo-light.svg" alt="Light Logo"/>
+    <img class="sidebar-logo only-dark" src="../_static/logo-dark.svg" alt="Dark Logo"/>
+  </div>
+  
+  
+</a><form class="sidebar-search-container" method="get" action="../search/" role="search">
+  <input class="sidebar-search" placeholder="Search" name="q" aria-label="Search">
+  <input type="hidden" name="check_keywords" value="yes">
+  <input type="hidden" name="area" value="default">
+</form>
+<div id="searchbox"></div><div class="sidebar-scroll"><div class="sidebar-tree">
+  <p class="caption" role="heading"><span class="caption-text">Introduction:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../bad-scaling/">Bad scaling</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../golden-rules/">Golden rules for scaling</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../history/">The science of scale</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Theory of Modules:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../theory/vector/">Vectors</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../theory/module/">Modules</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../theory/atom/">Atomic modules</a><input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" role="switch" type="checkbox"/><label for="toctree-checkbox-1"><div class="visually-hidden">Toggle navigation of Atomic modules</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../theory/atom/linear/">Linear</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../theory/atom/embed/">Embedding</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../theory/atom/conv2d/">Conv2d</a></li>
+</ul>
+</li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../theory/bond/">Bond modules</a><input class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" role="switch" type="checkbox"/><label for="toctree-checkbox-2"><div class="visually-hidden">Toggle navigation of Bond modules</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../theory/bond/nonlinearities/">Nonlinearities</a></li>
+</ul>
+</li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../theory/compound/">Compound modules</a><input class="toctree-checkbox" id="toctree-checkbox-3" name="toctree-checkbox-3" role="switch" type="checkbox"/><label for="toctree-checkbox-3"><div class="visually-hidden">Toggle navigation of Compound modules</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../theory/compound/gpt/">GPT</a></li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">More on Modula:</span></p>
+<ul class="current">
+<li class="toctree-l1 current current-page"><a class="current reference internal" href="#">Modula FAQ</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://github.com/jxbz/modula">Modula codebase</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://arxiv.org/abs/2405.14813">Modula paper</a></li>
+</ul>
+
+</div>
+</div>
+
+      </div>
+      
+    </div>
+  </aside>
+  <div class="main">
+    <div class="content">
+      <div class="article-container">
+        <a href="#" class="back-to-top muted-link">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+            <path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8v12z"></path>
+          </svg>
+          <span>Back to top</span>
+        </a>
+        <div class="content-icon-container">
+          <div class="view-this-page">
+  <a class="muted-link" href="https://github.com/jxbz/modula/blob/main/docs/source/faq.rst?plain=true" title="View this page">
+    <svg><use href="#svg-eye"></use></svg>
+    <span class="visually-hidden">View this page</span>
+  </a>
+</div><div class="edit-this-page">
+  <a class="muted-link" href="https://github.com/jxbz/modula/edit/main/docs/source/faq.rst" title="Edit this page">
+    <svg><use href="#svg-pencil"></use></svg>
+    <span class="visually-hidden">Edit this page</span>
+  </a>
+</div><div class="theme-toggle-container theme-toggle-content">
+            <button class="theme-toggle">
+              <div class="visually-hidden">Toggle Light / Dark / Auto color theme</div>
+              <svg class="theme-icon-when-auto-light"><use href="#svg-sun-with-moon"></use></svg>
+              <svg class="theme-icon-when-auto-dark"><use href="#svg-moon-with-sun"></use></svg>
+              <svg class="theme-icon-when-dark"><use href="#svg-moon"></use></svg>
+              <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
+            </button>
+          </div>
+          <label class="toc-overlay-icon toc-content-icon" for="__toc">
+            <div class="visually-hidden">Toggle table of contents sidebar</div>
+            <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
+          </label>
+        </div>
+        <article role="main" id="furo-main-content">
+          <section id="frequently-asked-questions">
+<h1>Frequently asked questions<a class="headerlink" href="#frequently-asked-questions" title="Permalink to this heading">¶</a></h1>
+<p>Feel free to reach out or start a <a class="reference external" href="https://github.com/jxbz/modula/issues">GitHub issue</a> if you have any questions about Modula. We’ll post answers to any useful or common questions on this page.</p>
+<section id="conceptual-questions">
+<h2>Conceptual questions<a class="headerlink" href="#conceptual-questions" title="Permalink to this heading">¶</a></h2>
+<details class="sd-sphinx-override sd-dropdown sd-card sd-mb-3">
+<summary class="sd-summary-title sd-card-header">
+<span class="sd-summary-icon"><svg version="1.1" width="1.0em" height="1.0em" class="sd-octicon sd-octicon-question" viewBox="0 0 16 16" aria-hidden="true"><path d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8Zm8-6.5a6.5 6.5 0 1 0 0 13 6.5 6.5 0 0 0 0-13ZM6.92 6.085h.001a.749.749 0 1 1-1.342-.67c.169-.339.436-.701.849-.977C6.845 4.16 7.369 4 8 4a2.756 2.756 0 0 1 1.637.525c.503.377.863.965.863 1.725 0 .448-.115.83-.329 1.15-.205.307-.47.513-.692.662-.109.072-.22.138-.313.195l-.006.004a6.24 6.24 0 0 0-.26.16.952.952 0 0 0-.276.245.75.75 0 0 1-1.248-.832c.184-.264.42-.489.692-.661.103-.067.207-.132.313-.195l.007-.004c.1-.061.182-.11.258-.161a.969.969 0 0 0 .277-.245C8.96 6.514 9 6.427 9 6.25a.612.612 0 0 0-.262-.525A1.27 1.27 0 0 0 8 5.5c-.369 0-.595.09-.74.187a1.01 1.01 0 0 0-.34.398ZM9 11a1 1 0 1 1-2 0 1 1 0 0 1 2 0Z"></path></svg></span><span class="sd-summary-text">The gradient is a vector: how can a vector have a spectral norm?</span><span class="sd-summary-state-marker sd-summary-chevron-right"><svg version="1.1" width="1.5em" height="1.5em" class="sd-octicon sd-octicon-chevron-right" viewBox="0 0 24 24" aria-hidden="true"><path d="M8.72 18.78a.75.75 0 0 1 0-1.06L14.44 12 8.72 6.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018l6.25 6.25a.75.75 0 0 1 0 1.06l-6.25 6.25a.75.75 0 0 1-1.06 0Z"></path></svg></span></summary><div class="sd-summary-content sd-card-body docutils">
+<p class="sd-card-text">An important mental jump in Modula is to think of the weights of our neural network as a list of tensors <span class="math notranslate nohighlight">\((\mathbf{W}_1, \dots \mathbf{W}_L)\)</span> where <span class="math notranslate nohighlight">\(\mathbf{W}_k\)</span> is the weight tensor of layer <span class="math notranslate nohighlight">\(k\)</span>. It then makes sense to think of the gradient of the loss <span class="math notranslate nohighlight">\(\mathcal{L}\)</span> with respect to the <span class="math notranslate nohighlight">\(k\text{th}\)</span> weight tensor <span class="math notranslate nohighlight">\(\mathbf{W}_k\)</span> as itself being a tensor <span class="math notranslate nohighlight">\(\nabla_{\mathbf{W_k}}\mathcal{L}\)</span> with the same shape as <span class="math notranslate nohighlight">\(\mathbf{W}_k\)</span>. We can then meaningfully ask what is the operator norm of this gradient tensor.</p>
+<p class="sd-card-text">This contrasts with a common approach to optimization theory where the whole weight space is “flattened” into one big weight vector <span class="math notranslate nohighlight">\(\mathbf{w}\)</span> with a corresponding gradient vector <span class="math notranslate nohighlight">\(\nabla_\mathbf{w} \mathcal{L}\)</span>, thus “losing” the operator structure.</p>
+</div>
+</details><details class="sd-sphinx-override sd-dropdown sd-card sd-mb-3">
+<summary class="sd-summary-title sd-card-header">
+<span class="sd-summary-icon"><svg version="1.1" width="1.0em" height="1.0em" class="sd-octicon sd-octicon-question" viewBox="0 0 16 16" aria-hidden="true"><path d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8Zm8-6.5a6.5 6.5 0 1 0 0 13 6.5 6.5 0 0 0 0-13ZM6.92 6.085h.001a.749.749 0 1 1-1.342-.67c.169-.339.436-.701.849-.977C6.845 4.16 7.369 4 8 4a2.756 2.756 0 0 1 1.637.525c.503.377.863.965.863 1.725 0 .448-.115.83-.329 1.15-.205.307-.47.513-.692.662-.109.072-.22.138-.313.195l-.006.004a6.24 6.24 0 0 0-.26.16.952.952 0 0 0-.276.245.75.75 0 0 1-1.248-.832c.184-.264.42-.489.692-.661.103-.067.207-.132.313-.195l.007-.004c.1-.061.182-.11.258-.161a.969.969 0 0 0 .277-.245C8.96 6.514 9 6.427 9 6.25a.612.612 0 0 0-.262-.525A1.27 1.27 0 0 0 8 5.5c-.369 0-.595.09-.74.187a1.01 1.01 0 0 0-.34.398ZM9 11a1 1 0 1 1-2 0 1 1 0 0 1 2 0Z"></path></svg></span><span class="sd-summary-text">Why does Adam beat SGD on transformer, and how does normalization fix SGD?</span><span class="sd-summary-state-marker sd-summary-chevron-right"><svg version="1.1" width="1.5em" height="1.5em" class="sd-octicon sd-octicon-chevron-right" viewBox="0 0 24 24" aria-hidden="true"><path d="M8.72 18.78a.75.75 0 0 1 0-1.06L14.44 12 8.72 6.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018l6.25 6.25a.75.75 0 0 1 0 1.06l-6.25 6.25a.75.75 0 0 1-1.06 0Z"></path></svg></span></summary><div class="sd-summary-content sd-card-body docutils">
+<p class="sd-card-text">While some researchers <a class="reference external" href="https://arxiv.org/abs/1705.08292">have challenged</a> the use of Adam in deep learning, Adam is certainly the optimizer of choice for training large language models, <a class="reference external" href="https://arxiv.org/abs/2407.07972">performing much better</a> than SGD in practice. Still, it is not widely known <em>why</em> Adam is better than SGD. Here we aim to provide a mechanistic explanation of one of the main reasons. The basic idea is that there is no reason the raw gradients should have good relative sizes across layers. And a major thing that Adam does is to “rebalance” the update sizes across layers.</p>
+<p class="sd-card-text">Let’s give a concrete example to see what we mean. Consider a machine learning model with a list of weight tensors <span class="math notranslate nohighlight">\(\mathbf{w} = (\mathbf{W}_1, \dots \mathbf{W}_L)\)</span> and a loss function <span class="math notranslate nohighlight">\(\mathcal{L}\)</span>. Then a vanilla gradient update is given by <span class="math notranslate nohighlight">\((\mathbf{W}_1, \dots \mathbf{W}_L) - \eta \times (\nabla_{\mathbf{W}_1}\mathcal{L}, \dots \nabla_{\mathbf{W}_L}\mathcal{L})\)</span> where <span class="math notranslate nohighlight">\(\eta\)</span> is the global learning rate. Now, suppose that our neural network is a toy residual network with <span class="math notranslate nohighlight">\(L\)</span> layers:</p>
+<div class="math-wrapper docutils container">
+<div class="math notranslate nohighlight">
+\[f(\mathbf{w} ;\mathbf{x}) := \mathbf{W}_L \left(1 + \frac{1}{L} \mathbf{W_{L-1}}\right) \dots \left(1 + \frac{1}{L} \mathbf{W_{2}}\right) \mathbf{W_1} \mathbf{x}.\]</div>
+</div>
+<p class="sd-card-text">This toy network consists of “read-in” and “read-out” matrices <span class="math notranslate nohighlight">\(\mathbf{W}_0\)</span> and <span class="math notranslate nohighlight">\(\mathbf{W}_L\)</span> along with <span class="math notranslate nohighlight">\(L-2\)</span> “residual” matrices each depressed by a factor of <span class="math notranslate nohighlight">\(1/L\)</span>. These depression factors are included to give the model a better large depth limit—in Modula we advocate for <span class="math notranslate nohighlight">\(1/L\)</span> depression factors, while the the inclusion of <span class="math notranslate nohighlight">\(1/\sqrt{L}\)</span> depression factors is <a class="reference external" href="https://proceedings.mlr.press/v119/huang20f.html">standard in large language models</a>. We do not include a nonlinearity in this toy model for simplicity.</p>
+<p class="sd-card-text">The point is that the depression factors—be they <span class="math notranslate nohighlight">\(1/L\)</span> or <span class="math notranslate nohighlight">\(1/\sqrt{L}\)</span>—also depress the gradients to the residual blocks by the same factor. So if one takes the depth <span class="math notranslate nohighlight">\(L\)</span> large and uses vanilla gradient descent or SGD to train a transformer, one is essentially applying the update:</p>
+<div class="math-wrapper docutils container">
+<div class="math notranslate nohighlight">
+\[(\mathbf{W}_1, \mathbf{W}_2, \mathbf{W}_3, \dots \mathbf{W}_{L-2}, \mathbf{W}_{L-1}, \mathbf{W}_L) - \eta \times (\nabla_{\mathbf{W}_1}\mathcal{L}, 0, 0, \dots, 0, 0,  \nabla_{\mathbf{W}_L}\mathcal{L}).\]</div>
+</div>
+<p class="sd-card-text">In words: the inclusion of the depression factors kills the size of the updates to the residual blocks in comparison to the read-in and read-out layers in deep networks. If you use SGD to train such a model, depending on how you set the learning rate <span class="math notranslate nohighlight">\(\eta\)</span>, you are stuck between severely under-training the middle layers or severely over-training the input and output layers. Adam largely fixes this issue by normalizing each update tensor individually and thus removing the effect of the depression factors. So, Adam is a form of gradient normalization! Modular normalization also automatically fixes this issue by rebalancing the size of the updates for any base optimizer.</p>
+</div>
+</details><details class="sd-sphinx-override sd-dropdown sd-card sd-mb-3">
+<summary class="sd-summary-title sd-card-header">
+<span class="sd-summary-icon"><svg version="1.1" width="1.0em" height="1.0em" class="sd-octicon sd-octicon-question" viewBox="0 0 16 16" aria-hidden="true"><path d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8Zm8-6.5a6.5 6.5 0 1 0 0 13 6.5 6.5 0 0 0 0-13ZM6.92 6.085h.001a.749.749 0 1 1-1.342-.67c.169-.339.436-.701.849-.977C6.845 4.16 7.369 4 8 4a2.756 2.756 0 0 1 1.637.525c.503.377.863.965.863 1.725 0 .448-.115.83-.329 1.15-.205.307-.47.513-.692.662-.109.072-.22.138-.313.195l-.006.004a6.24 6.24 0 0 0-.26.16.952.952 0 0 0-.276.245.75.75 0 0 1-1.248-.832c.184-.264.42-.489.692-.661.103-.067.207-.132.313-.195l.007-.004c.1-.061.182-.11.258-.161a.969.969 0 0 0 .277-.245C8.96 6.514 9 6.427 9 6.25a.612.612 0 0 0-.262-.525A1.27 1.27 0 0 0 8 5.5c-.369 0-.595.09-.74.187a1.01 1.01 0 0 0-.34.398ZM9 11a1 1 0 1 1-2 0 1 1 0 0 1 2 0Z"></path></svg></span><span class="sd-summary-text">Why does modular normalization lead to learning rate transfer across scale?</span><span class="sd-summary-state-marker sd-summary-chevron-right"><svg version="1.1" width="1.5em" height="1.5em" class="sd-octicon sd-octicon-chevron-right" viewBox="0 0 24 24" aria-hidden="true"><path d="M8.72 18.78a.75.75 0 0 1 0-1.06L14.44 12 8.72 6.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018l6.25 6.25a.75.75 0 0 1 0 1.06l-6.25 6.25a.75.75 0 0 1-1.06 0Z"></path></svg></span></summary><div class="sd-summary-content sd-card-body docutils">
+<p class="sd-card-text">By the definition of a “well-normed module” <span class="math notranslate nohighlight">\(\mathsf{M}\)</span>, when weight updates <span class="math notranslate nohighlight">\(\Delta \mathbf{w}\)</span> are normalized in the modular norm <span class="math notranslate nohighlight">\(\|\cdot\|_\mathsf{M}\)</span> then updates <span class="math notranslate nohighlight">\(\Delta \mathbf{y}\)</span> to the module output are well-behaved in the output norm <span class="math notranslate nohighlight">\(\|\cdot\|_\mathcal{Y}\)</span>. We set up our actual architectures, including complicated models like GPT, to actually be well-normed independent of the scale of the architecture. A little bit more formally:</p>
+<ol class="arabic simple">
+<li><p class="sd-card-text">well-normed modules are one-Lipschitz in the modular norm, meaning <span class="math notranslate nohighlight">\(\|\Delta \mathbf{y}\|_\mathcal{Y} \leq \|\Delta \mathbf{w}\|_\mathsf{M}\)</span>;</p></li>
+<li><p class="sd-card-text">this inequality holds tightly when tensors in the network “align” during training, meaning that we may approximate <span class="math notranslate nohighlight">\(\|\Delta \mathbf{y}\|_\mathcal{y} \approx \|\Delta \mathbf{w}\|_\mathsf{M}\)</span> in a fully aligned network;</p></li>
+<li><p class="sd-card-text">therefore normalizing updates in the modular norm provides control on the change in outputs;</p></li>
+<li><p class="sd-card-text">these statements are all independent of the size of the architecture.</p></li>
+</ol>
+<p class="sd-card-text">Since modular normalization works by recursively normalizing the weight updates to each submodule, these desirable properties extend to all submodules as well as the overall compound.</p>
+</div>
+</details><details class="sd-sphinx-override sd-dropdown sd-card sd-mb-3">
+<summary class="sd-summary-title sd-card-header">
+<span class="sd-summary-icon"><svg version="1.1" width="1.0em" height="1.0em" class="sd-octicon sd-octicon-question" viewBox="0 0 16 16" aria-hidden="true"><path d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8Zm8-6.5a6.5 6.5 0 1 0 0 13 6.5 6.5 0 0 0 0-13ZM6.92 6.085h.001a.749.749 0 1 1-1.342-.67c.169-.339.436-.701.849-.977C6.845 4.16 7.369 4 8 4a2.756 2.756 0 0 1 1.637.525c.503.377.863.965.863 1.725 0 .448-.115.83-.329 1.15-.205.307-.47.513-.692.662-.109.072-.22.138-.313.195l-.006.004a6.24 6.24 0 0 0-.26.16.952.952 0 0 0-.276.245.75.75 0 0 1-1.248-.832c.184-.264.42-.489.692-.661.103-.067.207-.132.313-.195l.007-.004c.1-.061.182-.11.258-.161a.969.969 0 0 0 .277-.245C8.96 6.514 9 6.427 9 6.25a.612.612 0 0 0-.262-.525A1.27 1.27 0 0 0 8 5.5c-.369 0-.595.09-.74.187a1.01 1.01 0 0 0-.34.398ZM9 11a1 1 0 1 1-2 0 1 1 0 0 1 2 0Z"></path></svg></span><span class="sd-summary-text">What do we mean by “tensor alignment” in Modula?</span><span class="sd-summary-state-marker sd-summary-chevron-right"><svg version="1.1" width="1.5em" height="1.5em" class="sd-octicon sd-octicon-chevron-right" viewBox="0 0 24 24" aria-hidden="true"><path d="M8.72 18.78a.75.75 0 0 1 0-1.06L14.44 12 8.72 6.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018l6.25 6.25a.75.75 0 0 1 0 1.06l-6.25 6.25a.75.75 0 0 1-1.06 0Z"></path></svg></span></summary><div class="sd-summary-content sd-card-body docutils">
+<p class="sd-card-text">In the guts of a neural network there can be found lots and lots of tensors. And sometimes these tensors like to multiply each other. For example, there are:</p>
+<ul class="simple">
+<li><p class="sd-card-text">vector-vector products <span class="math notranslate nohighlight">\(\mathbf{u}^\top\mathbf{v}\)</span></p></li>
+<li><p class="sd-card-text">matrix-vector products <span class="math notranslate nohighlight">\(\mathbf{A}\mathbf{v}\)</span></p></li>
+<li><p class="sd-card-text">matrix-matrix products <span class="math notranslate nohighlight">\(\mathbf{A}\mathbf{B}\)</span></p></li>
+<li><p class="sd-card-text">and so on…</p></li>
+</ul>
+<p class="sd-card-text">An important question is “how big are such tensor products inside a neural network?” In other words, if we know the size of the inputs to the product, can we predict the size of the product itself?</p>
+<p class="sd-card-text">Let’s start with the simplest example of the vector-vector product, otherwise known as a friendly “dot product”. Suppose we have two <span class="math notranslate nohighlight">\(n\)</span> dimensional vectors <span class="math notranslate nohighlight">\(\mathbf{u}\)</span> and <span class="math notranslate nohighlight">\(\mathbf{v}\)</span> of known sizes <span class="math notranslate nohighlight">\(\|\mathbf{u}\|_2\)</span> and <span class="math notranslate nohighlight">\(\|\mathbf{v}\|_2\)</span>. Here the symbol <span class="math notranslate nohighlight">\(\|\mathbf{\cdot}\|_2\)</span> denotes the “Euclidean length” or “<span class="math notranslate nohighlight">\(\ell_2\)</span> norm” of the vectors. How large can the dot product be?
+Well, by the Cauchy-Schwarz inequality, we have that:</p>
+<div class="math-wrapper docutils container">
+<div class="math notranslate nohighlight">
+\[|\mathbf{u}^\top \mathbf{v}| \leq \|\mathbf{u}\|_2 \times \|\mathbf{v}\|_2.\]</div>
+</div>
+<p class="sd-card-text">In words: the size of the dot product is limited by the size of its two inputs. What’s more the Cauchy-Schwarz inequality is “tight”, meaning that <span class="math notranslate nohighlight">\(|\mathbf{u}^\top \mathbf{v}| = \|\mathbf{u}\|_2 \times \|\mathbf{v}\|_2\)</span>, when the two vectors <span class="math notranslate nohighlight">\(\mathbf{u}\)</span> and <span class="math notranslate nohighlight">\(\mathbf{v}\)</span> point in the same (or opposite) directions—when the two vectors “align”.</p>
+<p class="sd-card-text">This idea of having an inequality that limits the size of a tensor product, which is tight under certain configurations of the input tensors, generalizes to higer-order forms of tensor product. For example, for the matrix-vector product <span class="math notranslate nohighlight">\(\mathbf{A}\mathbf{v}\)</span> the relevant inequality is given by:</p>
+<div class="math-wrapper docutils container">
+<div class="math notranslate nohighlight">
+\[\|\mathbf{A} \mathbf{v}\|_2 \leq \|\mathbf{A}\|_* \times \|\mathbf{v}\|_2,\]</div>
+</div>
+<p class="sd-card-text">where <span class="math notranslate nohighlight">\(\|\cdot\|_*\)</span> is the matrix spectral norm. This inequality is tight when the vector <span class="math notranslate nohighlight">\(\mathbf{v}\)</span> lies in the top singular subspace of the matrix <span class="math notranslate nohighlight">\(\mathbf{A}\)</span>—when the matrix and vector “align”.</p>
+<p class="sd-card-text">And for matrix-matrix products, we have the “sub-multiplicativity of the spectral norm”:</p>
+<div class="math-wrapper docutils container">
+<div class="math notranslate nohighlight">
+\[\|\mathbf{A} \mathbf{B}\|_* \leq \|\mathbf{A}\|_* \times \|\mathbf{B}\|_*.\]</div>
+</div>
+<p class="sd-card-text">We will say that this inequality is tight when the two matrices “align”—you get the idea!</p>
+<p class="sd-card-text">Why does any of this matter? Well for a neural network at initialization, some of these inequalities may be quite slack because tensors in the network are randomly oriented with respect to each other. But it is a central tenet of the Modula framework that after training has sufficiently “warmed up”, the network will fall into a fully aligned state where all inequalities of the type mentioned in the section hold reasonably tightly, and may therefore be used to predict the size and scaling of various quantities in the network.</p>
+<div class="seealso admonition">
+<p class="admonition-title">Other notions of alignment</p>
+<p class="sd-card-text">We have outlined a notion of alignment which captures whether or not a certain inequality governing a tensor product is tight. This is different to the notion of alignment measured in <a class="reference external" href="https://arxiv.org/abs/2407.05872">Scaling Exponents Across Parameterizations and Optimizers</a> which <a class="reference external" href="https://x.com/jxbz/status/1814289986885140614">turns out to be coupled to the matrix stable rank</a>. Essentially, the findings on alignment in that paper don’t have an obvious bearing on the notion of alignment used in Modula. Large-scale empirical tests of alignment as we have described it are certainly a valuable direction for future work.</p>
+</div>
+</div>
+</details><details class="sd-sphinx-override sd-dropdown sd-card sd-mb-3">
+<summary class="sd-summary-title sd-card-header">
+<span class="sd-summary-icon"><svg version="1.1" width="1.0em" height="1.0em" class="sd-octicon sd-octicon-question" viewBox="0 0 16 16" aria-hidden="true"><path d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8Zm8-6.5a6.5 6.5 0 1 0 0 13 6.5 6.5 0 0 0 0-13ZM6.92 6.085h.001a.749.749 0 1 1-1.342-.67c.169-.339.436-.701.849-.977C6.845 4.16 7.369 4 8 4a2.756 2.756 0 0 1 1.637.525c.503.377.863.965.863 1.725 0 .448-.115.83-.329 1.15-.205.307-.47.513-.692.662-.109.072-.22.138-.313.195l-.006.004a6.24 6.24 0 0 0-.26.16.952.952 0 0 0-.276.245.75.75 0 0 1-1.248-.832c.184-.264.42-.489.692-.661.103-.067.207-.132.313-.195l.007-.004c.1-.061.182-.11.258-.161a.969.969 0 0 0 .277-.245C8.96 6.514 9 6.427 9 6.25a.612.612 0 0 0-.262-.525A1.27 1.27 0 0 0 8 5.5c-.369 0-.595.09-.74.187a1.01 1.01 0 0 0-.34.398ZM9 11a1 1 0 1 1-2 0 1 1 0 0 1 2 0Z"></path></svg></span><span class="sd-summary-text">Is there a unique and optimal way to parameterize an architecture?</span><span class="sd-summary-state-marker sd-summary-chevron-right"><svg version="1.1" width="1.5em" height="1.5em" class="sd-octicon sd-octicon-chevron-right" viewBox="0 0 24 24" aria-hidden="true"><path d="M8.72 18.78a.75.75 0 0 1 0-1.06L14.44 12 8.72 6.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018l6.25 6.25a.75.75 0 0 1 0 1.06l-6.25 6.25a.75.75 0 0 1-1.06 0Z"></path></svg></span></summary><div class="sd-summary-content sd-card-body docutils">
+<p class="sd-card-text">The short answer is no: if you’re careful, there is some freedom in how you can parameterize your architecture. With that said, there are some constraints that you can’t really avoid if you want things to work well. And there are some “natural choices” which I think we may as well agree on at least to ease communication between researchers.</p>
+<p class="sd-card-text">A <a class="reference external" href="https://arxiv.org/abs/2106.09685">LoRA layer</a> provides a really good setting to think about these points. Given a <span class="math notranslate nohighlight">\(n \times r\)</span> matrix <span class="math notranslate nohighlight">\(B\)</span> and an <span class="math notranslate nohighlight">\(r \times n\)</span> matrix <span class="math notranslate nohighlight">\(A\)</span>, a LoRA layer is just the matrix product <span class="math notranslate nohighlight">\(B A\)</span>. Now if you’re a <a class="reference external" href="https://arxiv.org/abs/2310.17813">spectral-μP</a> afficionado, you’d know that the “right way” to scale these matrices is so that their initialization and updates have spectral norm proportional to <span class="math notranslate nohighlight">\(\sqrt{\text{fan-out/fan-in}}\)</span>. Written out in full:</p>
+<ul class="simple">
+<li><p class="sd-card-text">matrix <span class="math notranslate nohighlight">\(B\)</span> and update <span class="math notranslate nohighlight">\(\Delta B\)</span> have spectral norms <span class="math notranslate nohighlight">\(\|B\|_*\)</span> and <span class="math notranslate nohighlight">\(\|\Delta B\|_* \propto \sqrt{n / r}\)</span>,</p></li>
+<li><p class="sd-card-text">matrix <span class="math notranslate nohighlight">\(A\)</span> and update <span class="math notranslate nohighlight">\(\Delta A\)</span> have spectral norms <span class="math notranslate nohighlight">\(\|A\|_*\)</span> and <span class="math notranslate nohighlight">\(\|\Delta A\|_* \propto \sqrt{r / n}\)</span>.</p></li>
+</ul>
+<p class="sd-card-text">However, these conditions are more restrictive than necessary. Because matrices are homogeneuous linear maps, in the product <span class="math notranslate nohighlight">\(BA\)</span> we are free to scale up the matrix <span class="math notranslate nohighlight">\(B\)</span> by any factor so long as we divide the matrix <span class="math notranslate nohighlight">\(A\)</span> by the same factor. Nothing changes if we do this. In particular, if we scale <span class="math notranslate nohighlight">\(B\)</span> by factor <span class="math notranslate nohighlight">\(\sqrt{r/n}\)</span> and divide <span class="math notranslate nohighlight">\(A\)</span> by this same factor we obtain new conditions:</p>
+<ul class="simple">
+<li><p class="sd-card-text">matrix <span class="math notranslate nohighlight">\(B\)</span> and update <span class="math notranslate nohighlight">\(\Delta B\)</span> have spectral norms <span class="math notranslate nohighlight">\(\|B\|_*\)</span> and <span class="math notranslate nohighlight">\(\|\Delta B\|_* \propto 1\)</span>,</p></li>
+<li><p class="sd-card-text">matrix <span class="math notranslate nohighlight">\(A\)</span> and update <span class="math notranslate nohighlight">\(\Delta A\)</span> have spectral norms <span class="math notranslate nohighlight">\(\|A\|_*\)</span> and <span class="math notranslate nohighlight">\(\|\Delta A\|_* \propto 1\)</span>.</p></li>
+</ul>
+<p class="sd-card-text">Using these new spectral scaling conditions will have exactly the same training dynamics.</p>
+<div class="seealso admonition">
+<p class="admonition-title">Matters of precision</p>
+<p class="sd-card-text">When considering representing the weight entries in floating point, a difference may emerge between these two schemes. In particular, one scheme may lead to weight entries more easily representable in a low-precision floating point number format. Charlie Blake et al. consider exploiting this type of “scale symmetry” in <a class="reference external" href="https://arxiv.org/abs/2407.17465">u-μP: The Unit-Scaled Maximal Update Parametrization</a>.</p>
+</div>
+<p class="sd-card-text">In summary, I hope that this section demonstrates that:</p>
+<ol class="arabic simple">
+<li><p class="sd-card-text">the conditions in the spectral-μP paper provide a sensible default way of scaling matrices which should work well in generic situations;</p></li>
+<li><p class="sd-card-text">however, the conditions are not unique, and in specific cases you can modify the rules—so long as you know what you’re doing;</p></li>
+<li><p class="sd-card-text">you may want to take advantage of scale symmetries if you are interested in designing low-precision training algorithms.</p></li>
+</ol>
+</div>
+</details></section>
+<section id="related-work">
+<h2>Related work<a class="headerlink" href="#related-work" title="Permalink to this heading">¶</a></h2>
+<details class="sd-sphinx-override sd-dropdown sd-card sd-mb-3">
+<summary class="sd-summary-title sd-card-header">
+<span class="sd-summary-icon"><svg version="1.1" width="1.0em" height="1.0em" class="sd-octicon sd-octicon-question" viewBox="0 0 16 16" aria-hidden="true"><path d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8Zm8-6.5a6.5 6.5 0 1 0 0 13 6.5 6.5 0 0 0 0-13ZM6.92 6.085h.001a.749.749 0 1 1-1.342-.67c.169-.339.436-.701.849-.977C6.845 4.16 7.369 4 8 4a2.756 2.756 0 0 1 1.637.525c.503.377.863.965.863 1.725 0 .448-.115.83-.329 1.15-.205.307-.47.513-.692.662-.109.072-.22.138-.313.195l-.006.004a6.24 6.24 0 0 0-.26.16.952.952 0 0 0-.276.245.75.75 0 0 1-1.248-.832c.184-.264.42-.489.692-.661.103-.067.207-.132.313-.195l.007-.004c.1-.061.182-.11.258-.161a.969.969 0 0 0 .277-.245C8.96 6.514 9 6.427 9 6.25a.612.612 0 0 0-.262-.525A1.27 1.27 0 0 0 8 5.5c-.369 0-.595.09-.74.187a1.01 1.01 0 0 0-.34.398ZM9 11a1 1 0 1 1-2 0 1 1 0 0 1 2 0Z"></path></svg></span><span class="sd-summary-text">What is the relationship between Modula and spectral-μP?</span><span class="sd-summary-state-marker sd-summary-chevron-right"><svg version="1.1" width="1.5em" height="1.5em" class="sd-octicon sd-octicon-chevron-right" viewBox="0 0 24 24" aria-hidden="true"><path d="M8.72 18.78a.75.75 0 0 1 0-1.06L14.44 12 8.72 6.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018l6.25 6.25a.75.75 0 0 1 0 1.06l-6.25 6.25a.75.75 0 0 1-1.06 0Z"></path></svg></span></summary><div class="sd-summary-content sd-card-body docutils">
+<p class="sd-card-text">In the <a class="reference external" href="https://arxiv.org/abs/2310.17813">spectral-μP paper</a>, we considered the problem of equipping individual layers—such as linear and embedding layers—with their “natural norm”. Normalizing updates in this “natural norm” leads to learning rate transfer across the dimensions of that layer. You can see Modula as generalizing this approach to arbitrary compositions and concatenations of individual layers—i.e. neural nets.</p>
+</div>
+</details><details class="sd-sphinx-override sd-dropdown sd-card sd-mb-3">
+<summary class="sd-summary-title sd-card-header">
+<span class="sd-summary-icon"><svg version="1.1" width="1.0em" height="1.0em" class="sd-octicon sd-octicon-question" viewBox="0 0 16 16" aria-hidden="true"><path d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8Zm8-6.5a6.5 6.5 0 1 0 0 13 6.5 6.5 0 0 0 0-13ZM6.92 6.085h.001a.749.749 0 1 1-1.342-.67c.169-.339.436-.701.849-.977C6.845 4.16 7.369 4 8 4a2.756 2.756 0 0 1 1.637.525c.503.377.863.965.863 1.725 0 .448-.115.83-.329 1.15-.205.307-.47.513-.692.662-.109.072-.22.138-.313.195l-.006.004a6.24 6.24 0 0 0-.26.16.952.952 0 0 0-.276.245.75.75 0 0 1-1.248-.832c.184-.264.42-.489.692-.661.103-.067.207-.132.313-.195l.007-.004c.1-.061.182-.11.258-.161a.969.969 0 0 0 .277-.245C8.96 6.514 9 6.427 9 6.25a.612.612 0 0 0-.262-.525A1.27 1.27 0 0 0 8 5.5c-.369 0-.595.09-.74.187a1.01 1.01 0 0 0-.34.398ZM9 11a1 1 0 1 1-2 0 1 1 0 0 1 2 0Z"></path></svg></span><span class="sd-summary-text">What is the relationship between Modula and Tensor Programs?</span><span class="sd-summary-state-marker sd-summary-chevron-right"><svg version="1.1" width="1.5em" height="1.5em" class="sd-octicon sd-octicon-chevron-right" viewBox="0 0 24 24" aria-hidden="true"><path d="M8.72 18.78a.75.75 0 0 1 0-1.06L14.44 12 8.72 6.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018l6.25 6.25a.75.75 0 0 1 0 1.06l-6.25 6.25a.75.75 0 0 1-1.06 0Z"></path></svg></span></summary><div class="sd-summary-content sd-card-body docutils">
+<p class="sd-card-text">We pointed out in the section on <a class="reference external" href="../history">the science of scale</a> that Modula builds on an approach to learning rate transfer <a class="reference external" href="https://arxiv.org/abs/2002.03432">that we first released</a> almost a year before <a class="reference external" href="https://arxiv.org/abs/2011.14522">the first incarnation of μP</a>. So I want to focus here on explaining the technical differences between Modula and <a class="reference external" href="https://thegregyang.com">Tensor Programs</a>.</p>
+<p class="sd-card-text">The main advantages of Modula over Tensor Programs are that:</p>
+<ol class="arabic simple">
+<li><p class="sd-card-text"><strong>Modula is grounded in elementary math.</strong> We show that learning rate transfer is essentially just the question of how to build neural nets with tight and non-dimensional Lipschitz estimates. The main ingredient is just bounding derivatives and tracking how derivative bounds behave under composition and concatenation. We do not employ limiting or probabilistic analyses.</p></li>
+<li><p class="sd-card-text"><strong>Modula theory is non-asymptotic.</strong> The unifying thread through the Tensor Programs series of works is the study of neural network computation in limiting cases: infinite width, infinite depth, and so on. This means that the theory is encumbered by significant mathematical overhead, and one is often confronted with thorny technical questions—for example: <a class="reference external" href="https://arxiv.org/abs/2302.00453">do width and depth limits commute?</a> In contrast, Modula is based on a completely non-asymptotic theory. It deals directly with the finite-sized neural networks that we actually use in practice, so you don’t have to worry that certain technical details may be “lost in the limit”. To show that this is not just talk, in our paper we <a class="reference external" href="https://arxiv.org/abs/2405.14813">built a theory of an actual working transformer</a>.</p></li>
+<li><p class="sd-card-text"><strong>Modula is more automatic.</strong> In Modula, we automatically build a norm during construction of the computation graph that can be used to explicitly normalize weight updates taken from any base optimizer. The Tensor Programs approach essentially amounts to manually deriving a priori estimates on the size of this norm, and using these estimates to modify the SGD learning rate per layer. However, working out these prior estimates is quite a hairy procedure which seemingly does not always work, hence why later Tensor Programs papers <a class="reference external" href="https://arxiv.org/abs/2308.01814">shift to modifying Adam updates</a>. Adam updates are easier to deal with since they already impose a form of normalization on the gradients. Furthermore, the Tensor Programs calculations must be done by hand. The result is large tables of scaling rules, with tables of rules for different base optimizers (Adam versus SGD) and even tables for different matrix shapes (square versus wide rectangular versus skinny rectangular).</p></li>
+<li><p class="sd-card-text"><strong>Modula is easier to extend.</strong> Ultimately, we hope that Modula—and more generally the idea of <em>metrized deep learning</em>—will inspire followup work on clean, simple and technically sound approaches to algorithm design in deep learning. We give some directions for future work towards the end of <a class="reference external" href="https://arxiv.org/abs/2405.14813">our paper</a>, and we believe it should be relatively easy to extend our approach to handle new modules types and new norms. To give an example, there is a natural extension of the linear module that equips the input and output spaces with the <span class="math notranslate nohighlight">\(\ell_\infty\)</span> norm instead of the RMS norm, thereby inducing the <span class="math notranslate nohighlight">\(\ell_\infty\)</span>–<span class="math notranslate nohighlight">\(\ell_\infty\)</span> operator norm on the matrix space. While from the point of view of infinite width limits, it may not matter whether you are stabilizing infinity norms or RMS norms, we believe this sort of consideration might be quite interesting in practice.</p></li>
+</ol>
+</div>
+</details><details class="sd-sphinx-override sd-dropdown sd-card sd-mb-3">
+<summary class="sd-summary-title sd-card-header">
+<span class="sd-summary-icon"><svg version="1.1" width="1.0em" height="1.0em" class="sd-octicon sd-octicon-question" viewBox="0 0 16 16" aria-hidden="true"><path d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8Zm8-6.5a6.5 6.5 0 1 0 0 13 6.5 6.5 0 0 0 0-13ZM6.92 6.085h.001a.749.749 0 1 1-1.342-.67c.169-.339.436-.701.849-.977C6.845 4.16 7.369 4 8 4a2.756 2.756 0 0 1 1.637.525c.503.377.863.965.863 1.725 0 .448-.115.83-.329 1.15-.205.307-.47.513-.692.662-.109.072-.22.138-.313.195l-.006.004a6.24 6.24 0 0 0-.26.16.952.952 0 0 0-.276.245.75.75 0 0 1-1.248-.832c.184-.264.42-.489.692-.661.103-.067.207-.132.313-.195l.007-.004c.1-.061.182-.11.258-.161a.969.969 0 0 0 .277-.245C8.96 6.514 9 6.427 9 6.25a.612.612 0 0 0-.262-.525A1.27 1.27 0 0 0 8 5.5c-.369 0-.595.09-.74.187a1.01 1.01 0 0 0-.34.398ZM9 11a1 1 0 1 1-2 0 1 1 0 0 1 2 0Z"></path></svg></span><span class="sd-summary-text">What is the relationship between Modula and AGD?</span><span class="sd-summary-state-marker sd-summary-chevron-right"><svg version="1.1" width="1.5em" height="1.5em" class="sd-octicon sd-octicon-chevron-right" viewBox="0 0 24 24" aria-hidden="true"><path d="M8.72 18.78a.75.75 0 0 1 0-1.06L14.44 12 8.72 6.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018l6.25 6.25a.75.75 0 0 1 0 1.06l-6.25 6.25a.75.75 0 0 1-1.06 0Z"></path></svg></span></summary><div class="sd-summary-content sd-card-body docutils">
+<p class="sd-card-text">In part, Modula builds on the analysis from our previous paper on <a class="reference external" href="https://arxiv.org/abs/2304.05187">automatic gradient descent</a>. The AGD paper focused on building a majorize-minimize-style analysis of deep fully-connected networks. The surprising aspect of the AGD algorithm was that it could train various deep learning problems with no learning rate, weight decay, momentum or schedule hyperparameters. However, the training was slower and sometimes not quite as good as conventional training setups.</p>
+<p class="sd-card-text">The Modula paper, in contrast, shows how to modularize and automate the types of technical calculations done in the AGD paper. In Modula, we conduct these calculations to first and second order, since we came to believe that a full majorization is overly pessimistic, contributing to the slower training of AGD. And ultimately in the Modula experiments, we opted to use a linear decay learning rate schedule for its simplicity and high performance, rather than various automatic learning rate schedules that could be derived from the the Modula theory.</p>
+<p class="sd-card-text">I (Jeremy) still think an analogue of AGD that is also fast and performant might still be possible. It might involve combining Modula with ideas from people like Konstantin Mishchenko and Aaron Defazio such as <a class="reference external" href="https://arxiv.org/abs/2306.06101">Prodigy</a> or <a class="reference external" href="https://arxiv.org/abs/2405.15682">schedule-free optimizer</a>. I think this is a great direction for future work.</p>
+</div>
+</details><details class="sd-sphinx-override sd-dropdown sd-card sd-mb-3">
+<summary class="sd-summary-title sd-card-header">
+<span class="sd-summary-icon"><svg version="1.1" width="1.0em" height="1.0em" class="sd-octicon sd-octicon-question" viewBox="0 0 16 16" aria-hidden="true"><path d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8Zm8-6.5a6.5 6.5 0 1 0 0 13 6.5 6.5 0 0 0 0-13ZM6.92 6.085h.001a.749.749 0 1 1-1.342-.67c.169-.339.436-.701.849-.977C6.845 4.16 7.369 4 8 4a2.756 2.756 0 0 1 1.637.525c.503.377.863.965.863 1.725 0 .448-.115.83-.329 1.15-.205.307-.47.513-.692.662-.109.072-.22.138-.313.195l-.006.004a6.24 6.24 0 0 0-.26.16.952.952 0 0 0-.276.245.75.75 0 0 1-1.248-.832c.184-.264.42-.489.692-.661.103-.067.207-.132.313-.195l.007-.004c.1-.061.182-.11.258-.161a.969.969 0 0 0 .277-.245C8.96 6.514 9 6.427 9 6.25a.612.612 0 0 0-.262-.525A1.27 1.27 0 0 0 8 5.5c-.369 0-.595.09-.74.187a1.01 1.01 0 0 0-.34.398ZM9 11a1 1 0 1 1-2 0 1 1 0 0 1 2 0Z"></path></svg></span><span class="sd-summary-text">What is the relationship between Modula and Shampoo?</span><span class="sd-summary-state-marker sd-summary-chevron-right"><svg version="1.1" width="1.5em" height="1.5em" class="sd-octicon sd-octicon-chevron-right" viewBox="0 0 24 24" aria-hidden="true"><path d="M8.72 18.78a.75.75 0 0 1 0-1.06L14.44 12 8.72 6.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018l6.25 6.25a.75.75 0 0 1 0 1.06l-6.25 6.25a.75.75 0 0 1-1.06 0Z"></path></svg></span></summary><div class="sd-summary-content sd-card-body docutils">
+<p class="sd-card-text">Actually no one asked this one, and I just thought about it for myself. But here goes… Consider a loss function <span class="math notranslate nohighlight">\(\mathcal{L} : \mathbb{R}^{m \times n}\to\mathbb{R}\)</span>. In other words, we have a machine learning model whose weights are given by an <span class="math notranslate nohighlight">\(m \times n\)</span> matrix <span class="math notranslate nohighlight">\(\mathbf{W}\)</span>. Further, suppose that the loss is smooth in the sense that:</p>
+<div class="math-wrapper docutils container">
+<div class="math notranslate nohighlight">
+\[\mathcal{L}(\mathbf{W} + \mathbf{\Delta W}) \leq \mathcal{L}(\mathbf{W}) +\mathrm{trace}(\mathbf{G}^\top \mathbf{\Delta W}) + \frac{1}{2} \|\mathbf{\Delta W}\|_*^2.\]</div>
+</div>
+<p class="sd-card-text">In words: the loss is “smooth in the spectral norm”. This toy problem is interesting for us to think about since the modular norm on linear atomic modules <em>is</em> the spectral norm. The second term on the righthand side is the <a class="reference external" href="https://en.wikipedia.org/wiki/Frobenius_inner_product">Frobenius inner product</a> and <span class="math notranslate nohighlight">\(\|\cdot\|_*\)</span> denotes the <a class="reference external" href="https://mathworld.wolfram.com/SpectralNorm.html">spectral norm</a>. We have adopted the shorthand <span class="math notranslate nohighlight">\(\mathbf{G}\)</span> for the gradient of the loss <span class="math notranslate nohighlight">\(\nabla_\mathbf{W} \mathcal{L}(\mathbf{W})\)</span>, and we suppose that the gradient admits the singular value decomposition <span class="math notranslate nohighlight">\(\mathbf{G} = \mathbf{U}\mathbf{\Sigma}\mathbf{V}^\top\)</span>.</p>
+<p class="sd-card-text">If we minimise the righthand side of this inequality with respect to <span class="math notranslate nohighlight">\(\mathbf{\Delta W}\)</span>, we find that the optimal step direction is given by <span class="math notranslate nohighlight">\(\mathbf{\Delta W} \propto - \mathbf{U}\mathbf{V}^\top\)</span>. That is, we take the negative gradient and set all of its singular values to one. This direction “squeezes the most juice” out of the gradient under a spectral norm geometry. This is a somewhat classical observation. For instance, it appears in a 2015 paper on <a class="reference external" href="https://ieeexplore.ieee.org/document/7347351">stochastic spectral descent</a>. Tim independently pointed this out to me in the course of the Modula project, and so did Laker Newhouse who is a talented undergrad at MIT.</p>
+<p class="sd-card-text">What stopped us experimenting further with this idea is that it’s not obvious how to compute <span class="math notranslate nohighlight">\(\mathbf{\Delta W} \propto - \mathbf{U}\mathbf{V}^\top\)</span> without computing SVDs, and SVDs are kind of expensive in PyTorch. But a cool realization I had recently is that there is another way to compute <span class="math notranslate nohighlight">\(\mathbf{U}\mathbf{V}^\top\)</span>. In fact, it holds that:</p>
+<div class="math-wrapper docutils container">
+<div class="math notranslate nohighlight">
+\[\mathbf{U}\mathbf{V}^\top = (\mathbf{G}\mathbf{G}^\top)^{-\tfrac{1}{4}} \mathbf{G} (\mathbf{G}^\top \mathbf{G})^{-\tfrac{1}{4}}.\]</div>
+</div>
+<p class="sd-card-text">Why is this interesting? Well, for one, that expression on the right-hand side is precisely the <a class="reference external" href="https://arxiv.org/abs/1802.09568">Shampoo</a> preconditioner with the accumulation dropped. It suggests a new perspective on Shampoo as doing “steepest descent under the spectral norm”. This is a squarely “first-order” interpretation, as opposed to the predominant way people seem to think of Shampoo as an “approximate second-order method”.</p>
+<p class="sd-card-text">Another reason this could be interesting is that a lot of efficiencies developed for Shampoo could now be applied to <a class="reference external" href="https://ieeexplore.ieee.org/document/7347351">stochastic spectral descent</a> and in turn Modula linear modules. One of the coolest examples is something I found in <a class="reference external" href="https://rosanneliu.com/dlctfs/dlct_210312.pdf">Rohan Anil’s slides</a> on Shampoo. It’s the idea that you can compute expressions like <span class="math notranslate nohighlight">\((\mathbf{G}\mathbf{G}^\top)^{-1/4}\)</span> using <a class="reference external" href="https://en.wikipedia.org/wiki/Newton%27s_method">Newton-Raphson iterations</a>—a very different approach to taking SVDs. A classic paper on this topic is called <a class="reference external" href="https://onlinelibrary.wiley.com/doi/10.1002/%28SICI%291521-4001%28199803%2978%3A3%3C167%3A%3AAID-ZAMM167%3E3.0.CO%3B2-R">On the Computation of the Matrix k-th Root</a> by Slobodan Lakić. <a class="reference external" href="https://gist.github.com/jxbz/fe235ee1c72b8b41ccd0d02b43378cf2">I implemented Algorithm 1 from that paper as a gist</a>, finding that it often gives significant speedups over the SVD, provided one is willing to tolerate some error.</p>
+<p class="sd-card-text">An extremely natural way to combine this idea with Modula is to write a new “ShampooLinear” atomic module which replaces the normalize function of our Linear atom with a zeroth matrix power. Jack Gallagher has started experimenting with this idea in <a class="reference external" href="https://github.com/GallagherCommaJack/modulax/">Modulax</a>.</p>
+</div>
+</details></section>
+<section id="modula-package">
+<h2>Modula package<a class="headerlink" href="#modula-package" title="Permalink to this heading">¶</a></h2>
+<details class="sd-sphinx-override sd-dropdown sd-card sd-mb-3">
+<summary class="sd-summary-title sd-card-header">
+<span class="sd-summary-icon"><svg version="1.1" width="1.0em" height="1.0em" class="sd-octicon sd-octicon-question" viewBox="0 0 16 16" aria-hidden="true"><path d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8Zm8-6.5a6.5 6.5 0 1 0 0 13 6.5 6.5 0 0 0 0-13ZM6.92 6.085h.001a.749.749 0 1 1-1.342-.67c.169-.339.436-.701.849-.977C6.845 4.16 7.369 4 8 4a2.756 2.756 0 0 1 1.637.525c.503.377.863.965.863 1.725 0 .448-.115.83-.329 1.15-.205.307-.47.513-.692.662-.109.072-.22.138-.313.195l-.006.004a6.24 6.24 0 0 0-.26.16.952.952 0 0 0-.276.245.75.75 0 0 1-1.248-.832c.184-.264.42-.489.692-.661.103-.067.207-.132.313-.195l.007-.004c.1-.061.182-.11.258-.161a.969.969 0 0 0 .277-.245C8.96 6.514 9 6.427 9 6.25a.612.612 0 0 0-.262-.525A1.27 1.27 0 0 0 8 5.5c-.369 0-.595.09-.74.187a1.01 1.01 0 0 0-.34.398ZM9 11a1 1 0 1 1-2 0 1 1 0 0 1 2 0Z"></path></svg></span><span class="sd-summary-text">The modular norm involves a max—why do I not see any maxes in the package?</span><span class="sd-summary-state-marker sd-summary-chevron-right"><svg version="1.1" width="1.5em" height="1.5em" class="sd-octicon sd-octicon-chevron-right" viewBox="0 0 24 24" aria-hidden="true"><path d="M8.72 18.78a.75.75 0 0 1 0-1.06L14.44 12 8.72 6.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018l6.25 6.25a.75.75 0 0 1 0 1.06l-6.25 6.25a.75.75 0 0 1-1.06 0Z"></path></svg></span></summary><div class="sd-summary-content sd-card-body docutils">
+<p class="sd-card-text">Computing the modular norm involves evaluating lots of expressions of the form:</p>
+<div class="math-wrapper docutils container">
+<div class="math notranslate nohighlight">
+\[\| (\mathbf{w}_1, \mathbf{w}_2) \|_{\mathsf{M}} := \max ( p * \|\mathbf{w}_1\|_{\mathsf{M}_1} , q * \|\mathbf{w}_2\|_{\mathsf{M}_2}).\]</div>
+</div>
+<p class="sd-card-text">So you might be surprised not to see lots of maxes in the package. This is because to normalize a vector <span class="math notranslate nohighlight">\((\mathbf{w}_1, \mathbf{w}_2)\)</span> we do not just compute <span class="math notranslate nohighlight">\((\mathbf{w}_1, \mathbf{w}_2) / \|(\mathbf{w}_1, \mathbf{w}_2)\|_\mathsf{M}\)</span>. Instead, we separately normalize both sub-vectors in order to “saturate” the max. That is, we send:</p>
+<div class="math-wrapper docutils container">
+<div class="math notranslate nohighlight">
+\[(\mathbf{w}_1, \mathbf{w}_2) \mapsto \left(\frac{\mathbf{w}_1}{p * \|\mathbf{w}_1\|_{\mathsf{M}_1}}, \frac{\mathbf{w}_2}{q * \|\mathbf{w}_2\|_{\mathsf{M}_2}} \right).\]</div>
+</div>
+<p class="sd-card-text">In other words, we maximize the size of each subvector under the constraint that the full vector has unit modular norm.</p>
+</div>
+</details><details class="sd-sphinx-override sd-dropdown sd-card sd-mb-3">
+<summary class="sd-summary-title sd-card-header">
+<span class="sd-summary-icon"><svg version="1.1" width="1.0em" height="1.0em" class="sd-octicon sd-octicon-question" viewBox="0 0 16 16" aria-hidden="true"><path d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8Zm8-6.5a6.5 6.5 0 1 0 0 13 6.5 6.5 0 0 0 0-13ZM6.92 6.085h.001a.749.749 0 1 1-1.342-.67c.169-.339.436-.701.849-.977C6.845 4.16 7.369 4 8 4a2.756 2.756 0 0 1 1.637.525c.503.377.863.965.863 1.725 0 .448-.115.83-.329 1.15-.205.307-.47.513-.692.662-.109.072-.22.138-.313.195l-.006.004a6.24 6.24 0 0 0-.26.16.952.952 0 0 0-.276.245.75.75 0 0 1-1.248-.832c.184-.264.42-.489.692-.661.103-.067.207-.132.313-.195l.007-.004c.1-.061.182-.11.258-.161a.969.969 0 0 0 .277-.245C8.96 6.514 9 6.427 9 6.25a.612.612 0 0 0-.262-.525A1.27 1.27 0 0 0 8 5.5c-.369 0-.595.09-.74.187a1.01 1.01 0 0 0-.34.398ZM9 11a1 1 0 1 1-2 0 1 1 0 0 1 2 0Z"></path></svg></span><span class="sd-summary-text">Is it necessary to use orthogonal intialization in Modula?</span><span class="sd-summary-state-marker sd-summary-chevron-right"><svg version="1.1" width="1.5em" height="1.5em" class="sd-octicon sd-octicon-chevron-right" viewBox="0 0 24 24" aria-hidden="true"><path d="M8.72 18.78a.75.75 0 0 1 0-1.06L14.44 12 8.72 6.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018l6.25 6.25a.75.75 0 0 1 0 1.06l-6.25 6.25a.75.75 0 0 1-1.06 0Z"></path></svg></span></summary><div class="sd-summary-content sd-card-body docutils">
+<p class="sd-card-text">No. You could re-write the atomic modules to use Gaussian initialization if you wanted. The reason we choose to use orthogonal initialization is that it makes it much easier to get scaling right. This is because the spectral norm of any <span class="math notranslate nohighlight">\(m \times n\)</span> random orthogonal matrix is always one. In contrast, the spectral norm of an <span class="math notranslate nohighlight">\(m \times n\)</span> random Gaussian matrix depends on the dimensions <span class="math notranslate nohighlight">\(m\)</span> and <span class="math notranslate nohighlight">\(n\)</span> and also the entry-wise variance <span class="math notranslate nohighlight">\(\sigma^2\)</span>, making it more difficult to properly set the initialization scale. In addition, orthogonal matrices have the benign property that all singular values are one. In Gaussian matrices, on the other hand, the average singular value and the max singular value are different, meaning that Gaussian matrices have more subtle numerical properties.</p>
+</div>
+</details><details class="sd-sphinx-override sd-dropdown sd-card sd-mb-3">
+<summary class="sd-summary-title sd-card-header">
+<span class="sd-summary-icon"><svg version="1.1" width="1.0em" height="1.0em" class="sd-octicon sd-octicon-question" viewBox="0 0 16 16" aria-hidden="true"><path d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8Zm8-6.5a6.5 6.5 0 1 0 0 13 6.5 6.5 0 0 0 0-13ZM6.92 6.085h.001a.749.749 0 1 1-1.342-.67c.169-.339.436-.701.849-.977C6.845 4.16 7.369 4 8 4a2.756 2.756 0 0 1 1.637.525c.503.377.863.965.863 1.725 0 .448-.115.83-.329 1.15-.205.307-.47.513-.692.662-.109.072-.22.138-.313.195l-.006.004a6.24 6.24 0 0 0-.26.16.952.952 0 0 0-.276.245.75.75 0 0 1-1.248-.832c.184-.264.42-.489.692-.661.103-.067.207-.132.313-.195l.007-.004c.1-.061.182-.11.258-.161a.969.969 0 0 0 .277-.245C8.96 6.514 9 6.427 9 6.25a.612.612 0 0 0-.262-.525A1.27 1.27 0 0 0 8 5.5c-.369 0-.595.09-.74.187a1.01 1.01 0 0 0-.34.398ZM9 11a1 1 0 1 1-2 0 1 1 0 0 1 2 0Z"></path></svg></span><span class="sd-summary-text">Does Modula support weight sharing?</span><span class="sd-summary-state-marker sd-summary-chevron-right"><svg version="1.1" width="1.5em" height="1.5em" class="sd-octicon sd-octicon-chevron-right" viewBox="0 0 24 24" aria-hidden="true"><path d="M8.72 18.78a.75.75 0 0 1 0-1.06L14.44 12 8.72 6.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018l6.25 6.25a.75.75 0 0 1 0 1.06l-6.25 6.25a.75.75 0 0 1-1.06 0Z"></path></svg></span></summary><div class="sd-summary-content sd-card-body docutils">
+<p class="sd-card-text">Not at present, although it would be possible to support this.</p>
+</div>
+</details></section>
+<section id="research-philosophy">
+<h2>Research philosophy<a class="headerlink" href="#research-philosophy" title="Permalink to this heading">¶</a></h2>
+<details class="sd-sphinx-override sd-dropdown sd-card sd-mb-3">
+<summary class="sd-summary-title sd-card-header">
+<span class="sd-summary-icon"><svg version="1.1" width="1.0em" height="1.0em" class="sd-octicon sd-octicon-question" viewBox="0 0 16 16" aria-hidden="true"><path d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8Zm8-6.5a6.5 6.5 0 1 0 0 13 6.5 6.5 0 0 0 0-13ZM6.92 6.085h.001a.749.749 0 1 1-1.342-.67c.169-.339.436-.701.849-.977C6.845 4.16 7.369 4 8 4a2.756 2.756 0 0 1 1.637.525c.503.377.863.965.863 1.725 0 .448-.115.83-.329 1.15-.205.307-.47.513-.692.662-.109.072-.22.138-.313.195l-.006.004a6.24 6.24 0 0 0-.26.16.952.952 0 0 0-.276.245.75.75 0 0 1-1.248-.832c.184-.264.42-.489.692-.661.103-.067.207-.132.313-.195l.007-.004c.1-.061.182-.11.258-.161a.969.969 0 0 0 .277-.245C8.96 6.514 9 6.427 9 6.25a.612.612 0 0 0-.262-.525A1.27 1.27 0 0 0 8 5.5c-.369 0-.595.09-.74.187a1.01 1.01 0 0 0-.34.398ZM9 11a1 1 0 1 1-2 0 1 1 0 0 1 2 0Z"></path></svg></span><span class="sd-summary-text">Do I need to be a mathematical savant to contribute to research of this kind?</span><span class="sd-summary-state-marker sd-summary-chevron-right"><svg version="1.1" width="1.5em" height="1.5em" class="sd-octicon sd-octicon-chevron-right" viewBox="0 0 24 24" aria-hidden="true"><path d="M8.72 18.78a.75.75 0 0 1 0-1.06L14.44 12 8.72 6.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018l6.25 6.25a.75.75 0 0 1 0 1.06l-6.25 6.25a.75.75 0 0 1-1.06 0Z"></path></svg></span></summary><div class="sd-summary-content sd-card-body docutils">
+<p class="sd-card-text">I don’t think so. There are a lot of very technical people working in this field bringing with them some quite advanced tools from math and theoretical physics, and this is great. But in my experience it’s usually the simpler and more elementary ideas that actually work in practice. I strongly believe that deep learning theory is still at the stage of model building. And I resonate with both Rahimi and Recht’s call for <a class="reference external" href="https://archives.argmin.net/2017/12/11/alchemy-addendum/">simple theorems and simple experiments</a> and George Dahl’s call for <a class="reference external" href="https://www.youtube.com/watch?v=huTx3rtv8q8">a healthy dose of skepticism</a> when evaluating claims in the literature.</p>
+</div>
+</details></section>
+</section>
+
+        </article>
+      </div>
+      <footer>
+        
+        <div class="related-pages">
+          
+          <a class="prev-page" href="../theory/compound/gpt/">
+              <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
+              <div class="page-info">
+                <div class="context">
+                  <span>Previous</span>
+                </div>
+                
+                <div class="title">GPT</div>
+                
+              </div>
+            </a>
+        </div>
+        <div class="bottom-of-page">
+          <div class="left-details">
+            <div class="copyright">
+                Copyright &#169; 2024, modula-authors
+            </div>
+            Made with <a href="https://www.sphinx-doc.org/">Sphinx</a> and <a class="muted-link" href="https://pradyunsg.me">@pradyunsg</a>'s
+            
+            <a href="https://github.com/pradyunsg/furo">Furo</a>
+            
+          </div>
+          <div class="right-details">
+            <div class="icons">
+              <a class="muted-link " href="https://github.com/jxbz/modula" aria-label="GitHub">
+                <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 16 16">
+                    <path fill-rule="evenodd" d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0 0 16 8c0-4.42-3.58-8-8-8z"></path>
+                </svg>
+            </a>
+              
+            </div>
+          </div>
+        </div>
+        
+      </footer>
+    </div>
+    <aside class="toc-drawer">
+      
+      
+      <div class="toc-sticky toc-scroll">
+        <div class="toc-title-container">
+          <span class="toc-title">
+            On this page
+          </span>
+        </div>
+        <div class="toc-tree-container">
+          <div class="toc-tree">
+            <ul>
+<li><a class="reference internal" href="#">Frequently asked questions</a><ul>
+<li><a class="reference internal" href="#conceptual-questions">Conceptual questions</a></li>
+<li><a class="reference internal" href="#related-work">Related work</a></li>
+<li><a class="reference internal" href="#modula-package">Modula package</a></li>
+<li><a class="reference internal" href="#research-philosophy">Research philosophy</a></li>
+</ul>
+</li>
+</ul>
+
+          </div>
+        </div>
+      </div>
+      
+      
+    </aside>
+  </div>
+</div><script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/sphinx_highlight.js"></script>
+    <script src="../_static/scripts/furo.js"></script>
+    <script src="../_static/clipboard.min.js"></script>
+    <script src="../_static/copybutton.js"></script>
+    <script src="../_static/tabs.js"></script>
+    <script src="../_static/design-tabs.js"></script>
+    <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    </body>
+</html>
