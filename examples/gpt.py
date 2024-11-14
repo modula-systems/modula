@@ -1,3 +1,5 @@
+import time
+
 import torch
 import numpy as np
 
@@ -114,6 +116,7 @@ if __name__ == "__main__":
 
     # train the model
 
+    start = time.time()
     for step in range(steps):
 
         if step % log_interval == 0:
@@ -160,6 +163,8 @@ if __name__ == "__main__":
             weights.zero_grad()
 
         if step % log_interval == 0:
-            print(    "step:", step,
-                    "\t train loss:", "%.2f" % train_loss.item(), 
-                    "\t test loss:",  "%.2f" % test_loss.item()   )
+            print(     "step:", step,
+                    "\t train loss:", "%.2f" % train_loss.item(),
+                    "\t test loss:",  "%.2f" % test_loss.item()   ,
+                   f"\t took: {time.time() - start:.2f}s")
+            start = time.time()
