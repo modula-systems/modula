@@ -26,10 +26,16 @@ python examples/data/shakespeare.py
 
 And finally, let's train a GPT:
 ```bash
-python examples/train-gpt.py
+python examples/gpt.py train
 ```
 
-This runs on CPU and should get train loss: 1.65 and test loss: 1.80 after 2000 iterations.
+This runs on CPU and should get train loss: 1.65 and test loss: 1.80 after 2000 iterations (took a few minutes).
+
+The trained weights will be saved to `examples/data/shakespeare/weights.pt`. You can now run inference:
+```bash
+python examples/gpt.py inference "ROMEO:"
+```
+
 
 ## Project roadmap
 
@@ -86,7 +92,7 @@ for step in range(steps:=20):
         mlp.normalize(grad := weights.grad())     # normalize the gradient in the modular norm
         weights -= 0.1 * grad
         weights.zero_grad()
-    
+
         mlp.regularize(weights, strength = 0.01)  # regularize the weight vector
 
     print(step, loss.item())

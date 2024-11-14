@@ -22,6 +22,18 @@ steps = 2001
 eval_steps = 100
 log_interval = 200
 
+chars = list("\n !$&',-.3:;?ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz")
+stoi = {ch: i for i, ch in enumerate(chars)}
+itos = {i: ch for i, ch in enumerate(chars)}
+
+def encode(s):
+    global stoi
+    return [stoi[c] for c in s]
+
+def decode(l):
+    global itos
+    return ''.join([itos[i] for i in l])
+
 # let's start by defining our GPT architecture
 # (we could instead just import GPT from modula.compound)
 
@@ -82,8 +94,7 @@ class SimpleLLMDataset(torch.utils.data.Dataset):
 
 # now let's start doing stuff
 
-if __name__ == "__main__":
-
+def train():
     # load the data
 
     trainset = SimpleLLMDataset(np.memmap("examples/data/shakespeare/train.bin", dtype=np.uint16, mode='r'), context)
@@ -168,3 +179,56 @@ if __name__ == "__main__":
                     "\t test loss:",  "%.2f" % test_loss.item()   ,
                    f"\t took: {time.time() - start:.2f}s")
             start = time.time()
+
+    return weights
+
+
+def inference(weights, input_text, chars_to_generate):
+    gpt = GPT(vocab_size, context, num_heads, d_embed, d_query, d_value, num_blocks)
+    print(input_text, end="", flush=True)
+    context_tokens = torch.tensor(encode(input_text)).unsqueeze(0)
+    for _ in range(chars_to_generate):
+        with torch.no_grad():
+            output = gpt.forward(context_tokens, weights)
+        logits = output[0, -1, :]
+        probs = torch.softmax(logits, dim=-1)
+        next_token = torch.multinomial(probs, num_samples=1).item()
+        print(decode([next_token]), end="", flush=True)
+        context_tokens = torch.cat([context_tokens, torch.tensor([[next_token]])], dim=1)
+        if context_tokens.shape[1] > context:
+            context_tokens = context_tokens[:, -context:]
+
+
+if __name__ == "__main__":
+    import argparse
+
+    default_weights_filename = "examples/data/shakespeare/weights.pt"
+    parser = argparse.ArgumentParser()
+    subparsers = parser.add_subparsers(dest="mode")
+
+    parser_train = subparsers.add_parser("train")
+    parser_train.add_argument("--weights", "-w", default=default_weights_filename, help="Weights filename")
+
+    parser_inference = subparsers.add_parser("inference")
+    parser_inference.add_argument("--weights", "-w", default=default_weights_filename, help="Weights filename")
+    parser_inference.add_argument("--chars", "-c", default=1024)
+    parser_inference.add_argument("input", help="Text to be feed into the model")
+
+    args = parser.parse_args()
+
+    if args.mode == "train":
+        weights_filename = args.weights
+
+        weights = train()
+        torch.save(weights, weights_filename)
+        print(f"Weights saved to {weights_filename}")
+
+    elif args.mode == "inference":
+        weights_filename = args.weights
+        input_text = args.input
+        chars_to_generate = args.chars
+
+        print(f"Loading weights from {weights_filename}")
+        weights = torch.load(weights_filename)
+        print()
+        inference(weights, input_text, chars_to_generate)
