@@ -5,6 +5,7 @@ import numpy as np
 
 # Karpathy's smallest GPT config
 
+chars = list("\n !$&',-.3:;?ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz")
 vocab_size = 65
 context = 64
 num_heads = 4
@@ -12,6 +13,8 @@ d_embed = 128
 d_query = 32
 d_value = 32
 num_blocks = 4
+assert len(chars) == vocab_size, "`chars` must be aligned to `vocab_size`"
+
 
 # training hparams
 
@@ -22,7 +25,8 @@ steps = 2001
 eval_steps = 100
 log_interval = 200
 
-chars = list("\n !$&',-.3:;?ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz")
+# encoding/decoding
+
 stoi = {ch: i for i, ch in enumerate(chars)}
 itos = {i: ch for i, ch in enumerate(chars)}
 
@@ -94,22 +98,22 @@ class SimpleLLMDataset(torch.utils.data.Dataset):
 
 # now let's start doing stuff
 
-def train():
+def train(train_filename, validation_filename):
     # load the data
 
-    trainset = SimpleLLMDataset(np.memmap("examples/data/shakespeare/train.bin", dtype=np.uint16, mode='r'), context)
-    testset  = SimpleLLMDataset(np.memmap("examples/data/shakespeare/val.bin",   dtype=np.uint16, mode='r'), context)
+    trainset = SimpleLLMDataset(np.memmap(train_filename, dtype=np.uint16, mode="r"), context)
+    testset  = SimpleLLMDataset(np.memmap(validation_filename, dtype=np.uint16, mode="r"), context)
 
     train_sampler = RandomSampler(trainset, batch_size)
     test_sampler  = RandomSampler(testset,  batch_size)
 
-    train_loader = torch.utils.data.DataLoader( trainset, num_workers=1, pin_memory=True, batch_sampler=train_sampler)
-    test_loader  = torch.utils.data.DataLoader( testset,  num_workers=1, pin_memory=True, batch_sampler=test_sampler)
+    train_loader = torch.utils.data.DataLoader(trainset, num_workers=1, pin_memory=True, batch_sampler=train_sampler)
+    test_loader  = torch.utils.data.DataLoader(testset,  num_workers=1, pin_memory=True, batch_sampler=test_sampler)
 
     train_iterator = iter(train_loader)
     test_iterator  = iter(test_loader)
 
-    getBatch = lambda train: next(train_iterator if train else test_iterator)
+    get_batch = lambda train: next(train_iterator if train else test_iterator)
 
     # load the model
 
@@ -133,7 +137,7 @@ def train():
         if step % log_interval == 0:
             test_loss = test_acc = 0
             for eval_step in range(eval_steps):
-                data, target = getBatch(train = False)
+                data, target = get_batch(train=False)
                 output = gpt.forward(data, weights)
                 output = output.view(-1, output.size(-1))
                 target = target.view(-1)
@@ -145,7 +149,7 @@ def train():
             test_loss /= eval_steps
             test_acc /= eval_steps
 
-        data, target = getBatch(train = True)
+        data, target = get_batch(train=True)
         output = gpt.forward(data, weights)
         output = output.view(-1, output.size(-1))
         target = target.view(-1)
@@ -207,19 +211,23 @@ if __name__ == "__main__":
     subparsers = parser.add_subparsers(dest="mode")
 
     parser_train = subparsers.add_parser("train")
-    parser_train.add_argument("--weights", "-w", default=default_weights_filename, help="Weights filename")
+    parser_train.add_argument("--weights", "-w", default=default_weights_filename, help="Weights filename to save")
+    parser_train.add_argument("--train", "-t", default="examples/data/shakespeare/train.bin", help="Train dataset filename")
+    parser_train.add_argument("--validation", "-v", default="examples/data/shakespeare/val.bin", help="Validation dataset filename")
 
     parser_inference = subparsers.add_parser("inference")
-    parser_inference.add_argument("--weights", "-w", default=default_weights_filename, help="Weights filename")
-    parser_inference.add_argument("--chars", "-c", default=1024)
+    parser_inference.add_argument("--weights", "-w", default=default_weights_filename, help="Weights filename to load")
+    parser_inference.add_argument("--chars", "-c", default=1024, help="Number of chars to generate")
     parser_inference.add_argument("input", help="Text to be feed into the model")
 
     args = parser.parse_args()
 
     if args.mode == "train":
         weights_filename = args.weights
+        train_filename = args.train
+        validation_filename = args.validation
 
-        weights = train()
+        weights = train(train_filename, validation_filename)
         torch.save(weights, weights_filename)
         print(f"Weights saved to {weights_filename}")
 
