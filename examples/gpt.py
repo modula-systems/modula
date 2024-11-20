@@ -205,20 +205,25 @@ def inference(weights, input_text, chars_to_generate):
 
 if __name__ == "__main__":
     import argparse
+    from pathlib import Path
 
-    default_weights_filename = "examples/data/shakespeare/weights.pt"
+
+    data_path = Path(__file__).parent / "data" / "shakespeare"
+    default_weights_filename = data_path / "weights.pt"
+    default_train_filename = data_path / "train.bin"
+    default_validation_filename = data_path / "val.bin"
     parser = argparse.ArgumentParser()
     subparsers = parser.add_subparsers(dest="mode")
 
     parser_train = subparsers.add_parser("train")
-    parser_train.add_argument("--weights", "-w", default=default_weights_filename, help="Weights filename to save")
-    parser_train.add_argument("--train", "-t", default="examples/data/shakespeare/train.bin", help="Train dataset filename")
-    parser_train.add_argument("--validation", "-v", default="examples/data/shakespeare/val.bin", help="Validation dataset filename")
+    parser_train.add_argument("--weights", "-w", type=Path, default=default_weights_filename, help="Weights filename to save")
+    parser_train.add_argument("--train", "-t", type=Path, default=default_train_filename, help="Train dataset filename")
+    parser_train.add_argument("--validation", "-v", type=Path, default=default_validation_filename, help="Validation dataset filename")
 
     parser_inference = subparsers.add_parser("inference")
-    parser_inference.add_argument("--weights", "-w", default=default_weights_filename, help="Weights filename to load")
-    parser_inference.add_argument("--chars", "-c", default=1024, help="Number of chars to generate")
-    parser_inference.add_argument("input", help="Text to be feed into the model")
+    parser_inference.add_argument("--weights", "-w", type=Path, default=default_weights_filename, help="Weights filename to load")
+    parser_inference.add_argument("--chars", "-c", type=int, default=1024, help="Number of chars to generate")
+    parser_inference.add_argument("input", type=str, help="Text to be feed into the model")
 
     args = parser.parse_args()
 
