@@ -213,7 +213,7 @@ if __name__ == "__main__":
     default_train_filename = data_path / "train.bin"
     default_validation_filename = data_path / "val.bin"
     parser = argparse.ArgumentParser()
-    subparsers = parser.add_subparsers(dest="mode")
+    subparsers = parser.add_subparsers(dest="mode", required=True)
 
     parser_train = subparsers.add_parser("train")
     parser_train.add_argument("--weights", "-w", type=Path, default=default_weights_filename, help="Weights filename to save")
