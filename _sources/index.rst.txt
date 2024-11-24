@@ -64,5 +64,5 @@ Thanks to Gavia Gray, Uzay Girit, Jyo Pari and Laurence Aitchison for helpful fe
    :caption: More on Modula:
 
    Modula FAQ <faq>
-   Modula codebase <https://github.com/jxbz/modula>
+   Modula codebase <https://github.com/modula-systems/modula>
    Modula paper <https://arxiv.org/abs/2405.14813>
