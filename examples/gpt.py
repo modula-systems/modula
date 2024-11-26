@@ -1,8 +1,11 @@
+import time
+
 import torch
 import numpy as np
 
 # Karpathy's smallest GPT config
 
+chars = list("\n !$&',-.3:;?ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz")
 vocab_size = 65
 context = 64
 num_heads = 4
@@ -10,6 +13,8 @@ d_embed = 128
 d_query = 32
 d_value = 32
 num_blocks = 4
+assert len(chars) == vocab_size, "`chars` must be aligned to `vocab_size`"
+
 
 # training hparams
 
@@ -19,6 +24,19 @@ batch_size = 12
 steps = 2001
 eval_steps = 100
 log_interval = 200
+
+# encoding/decoding
+
+stoi = {ch: i for i, ch in enumerate(chars)}
+itos = {i: ch for i, ch in enumerate(chars)}
+
+def encode(s):
+    global stoi
+    return [stoi[c] for c in s]
+
+def decode(l):
+    global itos
+    return ''.join([itos[i] for i in l])
 
 # let's start by defining our GPT architecture
 # (we could instead just import GPT from modula.compound)
@@ -80,23 +98,22 @@ class SimpleLLMDataset(torch.utils.data.Dataset):
 
 # now let's start doing stuff
 
-if __name__ == "__main__":
-
+def train(train_filename, validation_filename):
     # load the data
 
-    trainset = SimpleLLMDataset(np.memmap("examples/data/shakespeare/train.bin", dtype=np.uint16, mode='r'), context)
-    testset  = SimpleLLMDataset(np.memmap("examples/data/shakespeare/val.bin",   dtype=np.uint16, mode='r'), context)
+    trainset = SimpleLLMDataset(np.memmap(train_filename, dtype=np.uint16, mode="r"), context)
+    testset  = SimpleLLMDataset(np.memmap(validation_filename, dtype=np.uint16, mode="r"), context)
 
     train_sampler = RandomSampler(trainset, batch_size)
     test_sampler  = RandomSampler(testset,  batch_size)
 
-    train_loader = torch.utils.data.DataLoader( trainset, num_workers=1, pin_memory=True, batch_sampler=train_sampler)
-    test_loader  = torch.utils.data.DataLoader( testset,  num_workers=1, pin_memory=True, batch_sampler=test_sampler)
+    train_loader = torch.utils.data.DataLoader(trainset, num_workers=1, pin_memory=True, batch_sampler=train_sampler)
+    test_loader  = torch.utils.data.DataLoader(testset,  num_workers=1, pin_memory=True, batch_sampler=test_sampler)
 
     train_iterator = iter(train_loader)
     test_iterator  = iter(test_loader)
 
-    getBatch = lambda train: next(train_iterator if train else test_iterator)
+    get_batch = lambda train: next(train_iterator if train else test_iterator)
 
     # load the model
 
@@ -114,12 +131,13 @@ if __name__ == "__main__":
 
     # train the model
 
+    start = time.time()
     for step in range(steps):
 
         if step % log_interval == 0:
             test_loss = test_acc = 0
             for eval_step in range(eval_steps):
-                data, target = getBatch(train = False)
+                data, target = get_batch(train=False)
                 output = gpt.forward(data, weights)
                 output = output.view(-1, output.size(-1))
                 target = target.view(-1)
@@ -131,7 +149,7 @@ if __name__ == "__main__":
             test_loss /= eval_steps
             test_acc /= eval_steps
 
-        data, target = getBatch(train = True)
+        data, target = get_batch(train=True)
         output = gpt.forward(data, weights)
         output = output.view(-1, output.size(-1))
         target = target.view(-1)
@@ -160,6 +178,70 @@ if __name__ == "__main__":
             weights.zero_grad()
 
         if step % log_interval == 0:
-            print(    "step:", step,
-                    "\t train loss:", "%.2f" % train_loss.item(), 
-                    "\t test loss:",  "%.2f" % test_loss.item()   )
+            print(     "step:", step,
+                    "\t train loss:", "%.2f" % train_loss.item(),
+                    "\t test loss:",  "%.2f" % test_loss.item()   ,
+                   f"\t took: {time.time() - start:.2f}s")
+            start = time.time()
+
+    return weights
+
+
+def inference(weights, input_text, chars_to_generate):
+    gpt = GPT(vocab_size, context, num_heads, d_embed, d_query, d_value, num_blocks)
+    print(input_text, end="", flush=True)
+    context_tokens = torch.tensor(encode(input_text)).unsqueeze(0)
+    for _ in range(chars_to_generate):
+        with torch.no_grad():
+            output = gpt.forward(context_tokens, weights)
+        logits = output[0, -1, :]
+        probs = torch.softmax(logits, dim=-1)
+        next_token = torch.multinomial(probs, num_samples=1).item()
+        print(decode([next_token]), end="", flush=True)
+        context_tokens = torch.cat([context_tokens, torch.tensor([[next_token]])], dim=1)
+        if context_tokens.shape[1] > context:
+            context_tokens = context_tokens[:, -context:]
+
+
+if __name__ == "__main__":
+    import argparse
+    from pathlib import Path
+
+
+    data_path = Path(__file__).parent / "data" / "shakespeare"
+    default_weights_filename = data_path / "weights.pt"
+    default_train_filename = data_path / "train.bin"
+    default_validation_filename = data_path / "val.bin"
+    parser = argparse.ArgumentParser()
+    subparsers = parser.add_subparsers(dest="mode", required=True)
+
+    parser_train = subparsers.add_parser("train")
+    parser_train.add_argument("--weights", "-w", type=Path, default=default_weights_filename, help="Weights filename to save")
+    parser_train.add_argument("--train", "-t", type=Path, default=default_train_filename, help="Train dataset filename")
+    parser_train.add_argument("--validation", "-v", type=Path, default=default_validation_filename, help="Validation dataset filename")
+
+    parser_inference = subparsers.add_parser("inference")
+    parser_inference.add_argument("--weights", "-w", type=Path, default=default_weights_filename, help="Weights filename to load")
+    parser_inference.add_argument("--chars", "-c", type=int, default=1024, help="Number of chars to generate")
+    parser_inference.add_argument("input", type=str, help="Text to be feed into the model")
+
+    args = parser.parse_args()
+
+    if args.mode == "train":
+        weights_filename = args.weights
+        train_filename = args.train
+        validation_filename = args.validation
+
+        weights = train(train_filename, validation_filename)
+        torch.save(weights, weights_filename)
+        print(f"Weights saved to {weights_filename}")
+
+    elif args.mode == "inference":
+        weights_filename = args.weights
+        input_text = args.input
+        chars_to_generate = args.chars
+
+        print(f"Loading weights from {weights_filename}")
+        weights = torch.load(weights_filename)
+        print()
+        inference(weights, input_text, chars_to_generate)

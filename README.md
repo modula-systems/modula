@@ -27,10 +27,38 @@ python examples/data/shakespeare.py
 
 And finally, let's train a GPT:
 ```bash
-python examples/train-gpt.py
+python examples/gpt.py train
 ```
 
-This runs on CPU and should get train loss: 1.65 and test loss: 1.80 after 2000 iterations.
+This runs on CPU and should get train loss: 1.65 and test loss: 1.80 after 2000 iterations (took a few minutes).
+
+The trained weights will be saved to `examples/data/shakespeare/weights.pt`. You can now run inference:
+```bash
+python examples/gpt.py inference "ROMEO:"
+```
+
+You could also generate your own dataset and train your own GPT! See `examples/data/shakespeare.py` and change the
+source text files, then train your new model:
+
+```bash
+python examples/gpt.py train \
+  --train=mydataset/train.bin \
+  --validation=mydataset/val.bin \
+  --weights=mydataset/weights.pt
+```
+
+Now you can run inference with our fresh weights:
+
+```bash
+python examples/gpt.py inference \
+  --weights=mydataset/weights.pt \
+  "JULIET:"
+```
+
+> Note: you may need to change the `chars` in `examples/gpt.py` to match the chars of your dataset.
+> If you want a more generic approach, consider using something like:
+> `chars = list(string.ascii_letters + string.digits + string.punctuation + string.whitespace)`
+
 
 ## Project roadmap
 
@@ -87,7 +115,7 @@ for step in range(steps:=20):
         mlp.normalize(grad := weights.grad())     # normalize the gradient in the modular norm
         weights -= 0.1 * grad
         weights.zero_grad()
-    
+
         mlp.regularize(weights, strength = 0.01)  # regularize the weight vector
 
     print(step, loss.item())
