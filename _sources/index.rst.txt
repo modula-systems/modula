@@ -61,6 +61,13 @@ Thanks to Gavia Gray, Uzay Girit, Jyo Pari and Laurence Aitchison for helpful fe
 .. toctree::
    :hidden:
    :maxdepth: 2
+   :caption: Algorithms:
+
+   algorithms/manifold/index
+
+.. toctree::
+   :hidden:
+   :maxdepth: 2
    :caption: More on Modula:
 
    Modula FAQ <faq>
