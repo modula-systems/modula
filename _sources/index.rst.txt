@@ -1,62 +1,54 @@
 Welcome to the Modula docs!
 ============================
 
-Modula is a deep learning framework designed for graceful scaling. Neural networks written in Modula automatically transfer learning rate across scale. Modula can be installed by running: 
-
-.. code-block:: console
-
-   $ pip install modula
+Modula is a deep learning framework and a deep learning theory built hand-in-hand. The central idea of Modula is to metrize the neural architecture and construct the corresponding duality theory. This is leading to training algorithms that are faster and more intrinsically scalable. But I anticipate other benefits too.
 
 Purpose of the docs
 ^^^^^^^^^^^^^^^^^^^^
 
-We wrote these docs with the intention of explaining both scaling theory and the design of Modula in clear and simple terms. We hope that this will help speed up deep learning optimization research.
+I'm currently in the process of overhauling these docs. But the idea is to create a central place to learn about the theory, algorithms and code behind Modula. I hope that this will help inspire further research into metrized deep learning.
 
-If something is unclear, first check `the FAQ <faq>`_, but then consider starting a `GitHub issue <https://github.com/jxbz/modula/issues>`_, making a `pull request <https://github.com/jxbz/modula/pulls>`_ or reaching out to us by email. Then we can improve the docs for everyone.
+If something is unclear, first check `the FAQ <faq>`_, but then consider starting a `GitHub issue <https://github.com/jxbz/modula/issues>`_, making a `pull request <https://github.com/jxbz/modula/pulls>`_ or reaching out by email. Then we can improve the docs for everyone.
 
 Navigating the docs
 ^^^^^^^^^^^^^^^^^^^^
 
 You can use the :kbd:`←` and :kbd:`→` arrow keys to jump around the docs. You can also use the side panel.
 
-Companion paper
+Citing the docs
 ^^^^^^^^^^^^^^^^
 
-If you prefer to read a more academic-style paper, then you can check out `our arXiv paper <https://arxiv.org/abs/2405.14813>`_:
+The docs currently contain some original research contributions not published anywhere else---in particular, the section on manifold duality maps. If you want to cite the docs, here's some BibTeX:
 
 .. code::
     
-    @article{modula,
-      author  = {Tim Large and Yang Liu and Minyoung Huh and Hyojin Bahng and Phillip Isola and Jeremy Bernstein},
-      title   = {Scalable Optimization in the Modular Norm},
-      journal = {arXiv:2405.14813},
-      year    = 2024
+    @misc{modula-docs,
+      author  = {Jeremy Bernstein},
+      title   = {The Modula Docs},
+      url     = {https://docs.modula.systems/},
+      year    = 2025
     }
-
-Acknowledgements
-^^^^^^^^^^^^^^^^^
-
-Thanks to Gavia Gray, Uzay Girit, Jyo Pari and Laurence Aitchison for helpful feedback.
 
 .. toctree::
    :hidden:
    :maxdepth: 2
    :caption: Introduction:
 
-   bad-scaling
-   golden-rules
-   history
+   .. bad-scaling
+   .. golden-rules
+   .. history
+   intro/reading-list
 
-.. toctree::
-   :hidden:
-   :maxdepth: 2
-   :caption: Theory of Modules:
+.. .. toctree::
+..    :hidden:
+..    :maxdepth: 2
+..    :caption: Theory of Modules:
 
-   theory/vector
-   theory/module
-   theory/atom/index
-   theory/bond/index
-   theory/compound/index
+..    theory/vector
+..    theory/module
+..    theory/atom/index
+..    theory/bond/index
+..    theory/compound/index
 
 .. toctree::
    :hidden:
@@ -72,4 +64,4 @@ Thanks to Gavia Gray, Uzay Girit, Jyo Pari and Laurence Aitchison for helpful fe
 
    Modula FAQ <faq>
    Modula codebase <https://github.com/modula-systems/modula>
-   Modula paper <https://arxiv.org/abs/2405.14813>
+   Modula homepage <https://modula.systems/>

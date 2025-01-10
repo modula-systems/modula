@@ -1,11 +1,11 @@
 Orthogonal matrices
 ====================
 
-On this page, we will work out an algorithm for performing gradient descent on the manifold of orthogonal matrices while taking steps that are steepest under the spectral norm. The algorithm will solve for the matrix of unit spectral norm that lies tangent to the manifold and maximizes the linearized improvement in loss. The "retraction map"---which sends the update from the tangent space back to the manifold---can oftentimes be performed by a simple scalar multiplication.
+On this page, we will work out an algorithm for performing gradient descent on the manifold of orthogonal matrices while taking steps that are steepest under the spectral norm. The algorithm will solve for the matrix of unit spectral norm that maximizes the linearized improvement in loss while lying tangent to the manifold. The "retraction map"---which sends the update from the tangent space back to the manifold---can oftentimes be performed by a simple scalar multiplication.
 
 .. plot:: figure/tangent.py
    
-   Orthogonal matrices are a more complicated manifold than the hypersphere. Still, it's helpful to keep in mind the same general picture.
+   While orthogonal matrices are a more complicated manifold than the hypersphere, it's helpful to keep in mind the same general picture of solving for a weight update in the tangent plane to a manifold.
 
 Steepest descent on the orthogonal manifold
 --------------------------------------------

@@ -216,32 +216,11 @@
 <div id="searchbox"></div><div class="sidebar-scroll"><div class="sidebar-tree">
   <p class="caption" role="heading"><span class="caption-text">Introduction:</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="../../../bad-scaling/">Bad scaling</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../golden-rules/">Golden rules for scaling</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../history/">The science of scale</a></li>
-</ul>
-<p class="caption" role="heading"><span class="caption-text">Theory of Modules:</span></p>
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="../../../theory/vector/">Vectors</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../theory/module/">Modules</a></li>
-<li class="toctree-l1 has-children"><a class="reference internal" href="../../../theory/atom/">Atomic modules</a><input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" role="switch" type="checkbox"/><label for="toctree-checkbox-1"><div class="visually-hidden">Toggle navigation of Atomic modules</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
-<li class="toctree-l2"><a class="reference internal" href="../../../theory/atom/linear/">Linear</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../../theory/atom/embed/">Embedding</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../../theory/atom/conv2d/">Conv2d</a></li>
-</ul>
-</li>
-<li class="toctree-l1 has-children"><a class="reference internal" href="../../../theory/bond/">Bond modules</a><input class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" role="switch" type="checkbox"/><label for="toctree-checkbox-2"><div class="visually-hidden">Toggle navigation of Bond modules</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
-<li class="toctree-l2"><a class="reference internal" href="../../../theory/bond/nonlinearities/">Nonlinearities</a></li>
-</ul>
-</li>
-<li class="toctree-l1 has-children"><a class="reference internal" href="../../../theory/compound/">Compound modules</a><input class="toctree-checkbox" id="toctree-checkbox-3" name="toctree-checkbox-3" role="switch" type="checkbox"/><label for="toctree-checkbox-3"><div class="visually-hidden">Toggle navigation of Compound modules</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
-<li class="toctree-l2"><a class="reference internal" href="../../../theory/compound/gpt/">GPT</a></li>
-</ul>
-</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../intro/reading-list/">Reading list</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Algorithms:</span></p>
 <ul class="current">
-<li class="toctree-l1 current has-children"><a class="reference internal" href="../">Manifold duality maps</a><input checked="" class="toctree-checkbox" id="toctree-checkbox-4" name="toctree-checkbox-4" role="switch" type="checkbox"/><label for="toctree-checkbox-4"><div class="visually-hidden">Toggle navigation of Manifold duality maps</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul class="current">
+<li class="toctree-l1 current has-children"><a class="reference internal" href="../">Manifold duality maps</a><input checked="" class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" role="switch" type="checkbox"/><label for="toctree-checkbox-1"><div class="visually-hidden">Toggle navigation of Manifold duality maps</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="../hypersphere/">Hypersphere</a></li>
 <li class="toctree-l2 current current-page"><a class="current reference internal" href="#">Orthogonal matrices</a></li>
 </ul>
@@ -251,7 +230,7 @@
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../../faq/">Modula FAQ</a></li>
 <li class="toctree-l1"><a class="reference external" href="https://github.com/modula-systems/modula">Modula codebase</a></li>
-<li class="toctree-l1"><a class="reference external" href="https://arxiv.org/abs/2405.14813">Modula paper</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://modula.systems/">Modula homepage</a></li>
 </ul>
 
 </div>
@@ -298,10 +277,10 @@
         <article role="main" id="furo-main-content">
           <section id="orthogonal-matrices">
 <h1>Orthogonal matrices<a class="headerlink" href="#orthogonal-matrices" title="Permalink to this heading">¶</a></h1>
-<p>On this page, we will work out an algorithm for performing gradient descent on the manifold of orthogonal matrices while taking steps that are steepest under the spectral norm. The algorithm will solve for the matrix of unit spectral norm that lies tangent to the manifold and maximizes the linearized improvement in loss. The “retraction map”—which sends the update from the tangent space back to the manifold—can oftentimes be performed by a simple scalar multiplication.</p>
+<p>On this page, we will work out an algorithm for performing gradient descent on the manifold of orthogonal matrices while taking steps that are steepest under the spectral norm. The algorithm will solve for the matrix of unit spectral norm that maximizes the linearized improvement in loss while lying tangent to the manifold. The “retraction map”—which sends the update from the tangent space back to the manifold—can oftentimes be performed by a simple scalar multiplication.</p>
 <figure class="align-default" id="id2">
 <img alt="../../../_images/tangent.svg" class="plot-directive" src="../../../_images/tangent.svg" /><figcaption>
-<p><span class="caption-text">Orthogonal matrices are a more complicated manifold than the hypersphere. Still, it’s helpful to keep in mind the same general picture.</span><a class="headerlink" href="#id2" title="Permalink to this image">¶</a></p>
+<p><span class="caption-text">While orthogonal matrices are a more complicated manifold than the hypersphere, it’s helpful to keep in mind the same general picture of solving for a weight update in the tangent plane to a manifold.</span><a class="headerlink" href="#id2" title="Permalink to this image">¶</a></p>
 </figcaption>
 </figure>
 <section id="steepest-descent-on-the-orthogonal-manifold">

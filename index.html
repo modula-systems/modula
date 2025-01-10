@@ -7,11 +7,11 @@
 <meta property="og:type" content="website" />
 <meta property="og:url" content="https://modula.systems" />
 <meta property="og:site_name" content="Modula" />
-<meta property="og:description" content="Modula is a deep learning framework designed for graceful scaling. Neural networks written in Modula automatically transfer learning rate across scale. Modula can be installed by running: Purpose o..." />
+<meta property="og:description" content="Modula is a deep learning framework and a deep learning theory built hand-in-hand. The central idea of Modula is to metrize the neural architecture and construct the corresponding duality theory. T..." />
 <meta property="og:image" content="https://docs.modula.systems/_static/logo-square.jpeg" />
 <meta property="og:image:alt" content="Modula" />
-<meta name="description" content="Modula is a deep learning framework designed for graceful scaling. Neural networks written in Modula automatically transfer learning rate across scale. Modula can be installed by running: Purpose o..." />
-<link rel="index" title="Index" href="genindex/" /><link rel="search" title="Search" href="search/" /><link rel="next" title="Bad scaling" href="bad-scaling/" />
+<meta name="description" content="Modula is a deep learning framework and a deep learning theory built hand-in-hand. The central idea of Modula is to metrize the neural architecture and construct the corresponding duality theory. T..." />
+<link rel="index" title="Index" href="genindex/" /><link rel="search" title="Search" href="search/" /><link rel="next" title="Reading list" href="intro/reading-list/" />
 
     <link rel="shortcut icon" href="_static/favicon.ico"/><!-- Generated with Sphinx 7.0.0 and Furo 2024.08.06 -->
         <title>docs.modula.systems</title>
@@ -216,32 +216,11 @@
 <div id="searchbox"></div><div class="sidebar-scroll"><div class="sidebar-tree">
   <p class="caption" role="heading"><span class="caption-text">Introduction:</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="bad-scaling/">Bad scaling</a></li>
-<li class="toctree-l1"><a class="reference internal" href="golden-rules/">Golden rules for scaling</a></li>
-<li class="toctree-l1"><a class="reference internal" href="history/">The science of scale</a></li>
-</ul>
-<p class="caption" role="heading"><span class="caption-text">Theory of Modules:</span></p>
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="theory/vector/">Vectors</a></li>
-<li class="toctree-l1"><a class="reference internal" href="theory/module/">Modules</a></li>
-<li class="toctree-l1 has-children"><a class="reference internal" href="theory/atom/">Atomic modules</a><input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" role="switch" type="checkbox"/><label for="toctree-checkbox-1"><div class="visually-hidden">Toggle navigation of Atomic modules</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
-<li class="toctree-l2"><a class="reference internal" href="theory/atom/linear/">Linear</a></li>
-<li class="toctree-l2"><a class="reference internal" href="theory/atom/embed/">Embedding</a></li>
-<li class="toctree-l2"><a class="reference internal" href="theory/atom/conv2d/">Conv2d</a></li>
-</ul>
-</li>
-<li class="toctree-l1 has-children"><a class="reference internal" href="theory/bond/">Bond modules</a><input class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" role="switch" type="checkbox"/><label for="toctree-checkbox-2"><div class="visually-hidden">Toggle navigation of Bond modules</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
-<li class="toctree-l2"><a class="reference internal" href="theory/bond/nonlinearities/">Nonlinearities</a></li>
-</ul>
-</li>
-<li class="toctree-l1 has-children"><a class="reference internal" href="theory/compound/">Compound modules</a><input class="toctree-checkbox" id="toctree-checkbox-3" name="toctree-checkbox-3" role="switch" type="checkbox"/><label for="toctree-checkbox-3"><div class="visually-hidden">Toggle navigation of Compound modules</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
-<li class="toctree-l2"><a class="reference internal" href="theory/compound/gpt/">GPT</a></li>
-</ul>
-</li>
+<li class="toctree-l1"><a class="reference internal" href="intro/reading-list/">Reading list</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Algorithms:</span></p>
 <ul>
-<li class="toctree-l1 has-children"><a class="reference internal" href="algorithms/manifold/">Manifold duality maps</a><input class="toctree-checkbox" id="toctree-checkbox-4" name="toctree-checkbox-4" role="switch" type="checkbox"/><label for="toctree-checkbox-4"><div class="visually-hidden">Toggle navigation of Manifold duality maps</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l1 has-children"><a class="reference internal" href="algorithms/manifold/">Manifold duality maps</a><input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" role="switch" type="checkbox"/><label for="toctree-checkbox-1"><div class="visually-hidden">Toggle navigation of Manifold duality maps</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
 <li class="toctree-l2"><a class="reference internal" href="algorithms/manifold/hypersphere/">Hypersphere</a></li>
 <li class="toctree-l2"><a class="reference internal" href="algorithms/manifold/orthogonal/">Orthogonal matrices</a></li>
 </ul>
@@ -251,7 +230,7 @@
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="faq/">Modula FAQ</a></li>
 <li class="toctree-l1"><a class="reference external" href="https://github.com/modula-systems/modula">Modula codebase</a></li>
-<li class="toctree-l1"><a class="reference external" href="https://arxiv.org/abs/2405.14813">Modula paper</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://modula.systems/">Modula homepage</a></li>
 </ul>
 
 </div>
@@ -298,35 +277,26 @@
         <article role="main" id="furo-main-content">
           <section id="welcome-to-the-modula-docs">
 <h1>Welcome to the Modula docs!<a class="headerlink" href="#welcome-to-the-modula-docs" title="Permalink to this heading">¶</a></h1>
-<p>Modula is a deep learning framework designed for graceful scaling. Neural networks written in Modula automatically transfer learning rate across scale. Modula can be installed by running:</p>
-<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">$ </span>pip<span class="w"> </span>install<span class="w"> </span>modula
-</pre></div>
-</div>
+<p>Modula is a deep learning framework and a deep learning theory built hand-in-hand. The central idea of Modula is to metrize the neural architecture and construct the corresponding duality theory. This is leading to training algorithms that are faster and more intrinsically scalable. But I anticipate other benefits too.</p>
 <section id="purpose-of-the-docs">
 <h2>Purpose of the docs<a class="headerlink" href="#purpose-of-the-docs" title="Permalink to this heading">¶</a></h2>
-<p>We wrote these docs with the intention of explaining both scaling theory and the design of Modula in clear and simple terms. We hope that this will help speed up deep learning optimization research.</p>
-<p>If something is unclear, first check <a class="reference external" href="faq">the FAQ</a>, but then consider starting a <a class="reference external" href="https://github.com/jxbz/modula/issues">GitHub issue</a>, making a <a class="reference external" href="https://github.com/jxbz/modula/pulls">pull request</a> or reaching out to us by email. Then we can improve the docs for everyone.</p>
+<p>I’m currently in the process of overhauling these docs. But the idea is to create a central place to learn about the theory, algorithms and code behind Modula. I hope that this will help inspire further research into metrized deep learning.</p>
+<p>If something is unclear, first check <a class="reference external" href="faq">the FAQ</a>, but then consider starting a <a class="reference external" href="https://github.com/jxbz/modula/issues">GitHub issue</a>, making a <a class="reference external" href="https://github.com/jxbz/modula/pulls">pull request</a> or reaching out by email. Then we can improve the docs for everyone.</p>
 </section>
 <section id="navigating-the-docs">
 <h2>Navigating the docs<a class="headerlink" href="#navigating-the-docs" title="Permalink to this heading">¶</a></h2>
 <p>You can use the <kbd class="kbd docutils literal notranslate">←</kbd> and <kbd class="kbd docutils literal notranslate">→</kbd> arrow keys to jump around the docs. You can also use the side panel.</p>
 </section>
-<section id="companion-paper">
-<h2>Companion paper<a class="headerlink" href="#companion-paper" title="Permalink to this heading">¶</a></h2>
-<p>If you prefer to read a more academic-style paper, then you can check out <a class="reference external" href="https://arxiv.org/abs/2405.14813">our arXiv paper</a>:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="nd">@article</span><span class="p">{</span><span class="n">modula</span><span class="p">,</span>
-  <span class="n">author</span>  <span class="o">=</span> <span class="p">{</span><span class="n">Tim</span> <span class="n">Large</span> <span class="ow">and</span> <span class="n">Yang</span> <span class="n">Liu</span> <span class="ow">and</span> <span class="n">Minyoung</span> <span class="n">Huh</span> <span class="ow">and</span> <span class="n">Hyojin</span> <span class="n">Bahng</span> <span class="ow">and</span> <span class="n">Phillip</span> <span class="n">Isola</span> <span class="ow">and</span> <span class="n">Jeremy</span> <span class="n">Bernstein</span><span class="p">},</span>
-  <span class="n">title</span>   <span class="o">=</span> <span class="p">{</span><span class="n">Scalable</span> <span class="n">Optimization</span> <span class="ow">in</span> <span class="n">the</span> <span class="n">Modular</span> <span class="n">Norm</span><span class="p">},</span>
-  <span class="n">journal</span> <span class="o">=</span> <span class="p">{</span><span class="n">arXiv</span><span class="p">:</span><span class="mf">2405.14813</span><span class="p">},</span>
-  <span class="n">year</span>    <span class="o">=</span> <span class="mi">2024</span>
+<section id="citing-the-docs">
+<h2>Citing the docs<a class="headerlink" href="#citing-the-docs" title="Permalink to this heading">¶</a></h2>
+<p>The docs currently contain some original research contributions not published anywhere else—in particular, the section on manifold duality maps. If you want to cite the docs, here’s some BibTeX:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="nd">@misc</span><span class="p">{</span><span class="n">modula</span><span class="o">-</span><span class="n">docs</span><span class="p">,</span>
+  <span class="n">author</span>  <span class="o">=</span> <span class="p">{</span><span class="n">Jeremy</span> <span class="n">Bernstein</span><span class="p">},</span>
+  <span class="n">title</span>   <span class="o">=</span> <span class="p">{</span><span class="n">The</span> <span class="n">Modula</span> <span class="n">Docs</span><span class="p">},</span>
+  <span class="n">url</span>     <span class="o">=</span> <span class="p">{</span><span class="n">https</span><span class="p">:</span><span class="o">//</span><span class="n">docs</span><span class="o">.</span><span class="n">modula</span><span class="o">.</span><span class="n">systems</span><span class="o">/</span><span class="p">},</span>
+  <span class="n">year</span>    <span class="o">=</span> <span class="mi">2025</span>
 <span class="p">}</span>
 </pre></div>
-</div>
-</section>
-<section id="acknowledgements">
-<h2>Acknowledgements<a class="headerlink" href="#acknowledgements" title="Permalink to this heading">¶</a></h2>
-<p>Thanks to Gavia Gray, Uzay Girit, Jyo Pari and Laurence Aitchison for helpful feedback.</p>
-<div class="toctree-wrapper compound">
 </div>
 <div class="toctree-wrapper compound">
 </div>
@@ -342,12 +312,12 @@
       <footer>
         
         <div class="related-pages">
-          <a class="next-page" href="bad-scaling/">
+          <a class="next-page" href="intro/reading-list/">
               <div class="page-info">
                 <div class="context">
                   <span>Next</span>
                 </div>
-                <div class="title">Bad scaling</div>
+                <div class="title">Reading list</div>
               </div>
               <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
             </a>
@@ -392,8 +362,7 @@
 <li><a class="reference internal" href="#">Welcome to the Modula docs!</a><ul>
 <li><a class="reference internal" href="#purpose-of-the-docs">Purpose of the docs</a></li>
 <li><a class="reference internal" href="#navigating-the-docs">Navigating the docs</a></li>
-<li><a class="reference internal" href="#companion-paper">Companion paper</a></li>
-<li><a class="reference internal" href="#acknowledgements">Acknowledgements</a><ul>
+<li><a class="reference internal" href="#citing-the-docs">Citing the docs</a><ul>
 </ul>
 </li>
 </ul>
