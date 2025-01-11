@@ -3,7 +3,7 @@
   <head><meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width,initial-scale=1"/>
     <meta name="color-scheme" content="light dark"><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
-<meta property="og:title" content="Orthogonal matrices" />
+<meta property="og:title" content="Orthogonal manifold" />
 <meta property="og:type" content="website" />
 <meta property="og:url" content="https://modula.systems/algorithms/manifold/orthogonal/" />
 <meta property="og:site_name" content="Modula" />
@@ -14,7 +14,7 @@
 <link rel="index" title="Index" href="../../../genindex/" /><link rel="search" title="Search" href="../../../search/" /><link rel="next" title="Frequently asked questions" href="../../../faq/" /><link rel="prev" title="Hypersphere" href="../hypersphere/" />
 
     <link rel="shortcut icon" href="../../../_static/favicon.ico"/><!-- Generated with Sphinx 7.0.0 and Furo 2024.08.06 -->
-        <title>Orthogonal matrices - docs.modula.systems</title>
+        <title>Orthogonal manifold - docs.modula.systems</title>
       <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../../../_static/styles/furo.css?digest=04c057b233f3c8d71940eee6080f658a04e2027d" />
     <link rel="stylesheet" type="text/css" href="../../../_static/copybutton.css" />
@@ -222,7 +222,7 @@
 <ul class="current">
 <li class="toctree-l1 current has-children"><a class="reference internal" href="../">Manifold duality maps</a><input checked="" class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" role="switch" type="checkbox"/><label for="toctree-checkbox-1"><div class="visually-hidden">Toggle navigation of Manifold duality maps</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="../hypersphere/">Hypersphere</a></li>
-<li class="toctree-l2 current current-page"><a class="current reference internal" href="#">Orthogonal matrices</a></li>
+<li class="toctree-l2 current current-page"><a class="current reference internal" href="#">Orthogonal manifold</a></li>
 </ul>
 </li>
 </ul>
@@ -275,14 +275,9 @@
           </label>
         </div>
         <article role="main" id="furo-main-content">
-          <section id="orthogonal-matrices">
-<h1>Orthogonal matrices<a class="headerlink" href="#orthogonal-matrices" title="Permalink to this heading">¶</a></h1>
+          <section id="orthogonal-manifold">
+<h1>Orthogonal manifold<a class="headerlink" href="#orthogonal-manifold" title="Permalink to this heading">¶</a></h1>
 <p>On this page, we will work out an algorithm for performing gradient descent on the manifold of orthogonal matrices while taking steps that are steepest under the spectral norm. The algorithm will solve for the matrix of unit spectral norm that maximizes the linearized improvement in loss while lying tangent to the manifold. The “retraction map”—which sends the update from the tangent space back to the manifold—can oftentimes be performed by a simple scalar multiplication.</p>
-<figure class="align-default" id="id2">
-<img alt="../../../_images/tangent.svg" class="plot-directive" src="../../../_images/tangent.svg" /><figcaption>
-<p><span class="caption-text">While orthogonal matrices are a more complicated manifold than the hypersphere, it’s helpful to keep in mind the same general picture of solving for a weight update in the tangent plane to a manifold.</span><a class="headerlink" href="#id2" title="Permalink to this image">¶</a></p>
-</figcaption>
-</figure>
 <section id="steepest-descent-on-the-orthogonal-manifold">
 <h2>Steepest descent on the orthogonal manifold<a class="headerlink" href="#steepest-descent-on-the-orthogonal-manifold" title="Permalink to this heading">¶</a></h2>
 <p>Consider a square weight matrix <span class="math notranslate nohighlight">\(W\in\mathbb{R}^{n \times n}\)</span> that is orthogonal, meaning that <span class="math notranslate nohighlight">\(W^\top W = I_n\)</span>. Suppose that the “gradient matrix” <span class="math notranslate nohighlight">\(G\in\mathbb{R}^{n\times n}\)</span> is the derivative of some loss function evaluated at <span class="math notranslate nohighlight">\(W\)</span>. Given step size <span class="math notranslate nohighlight">\(\eta &gt; 0\)</span>, we claim that the following weight update is steepest under the spectral norm while staying on the orthogonal manifold. First, we compute the matrix <span class="math notranslate nohighlight">\(X = [W^\top G - G^\top W]^\sharp\)</span>, and then we make the update:</p>
@@ -322,9 +317,9 @@
 </div>
 <p>Finally, if we use the orthogonal matrix <span class="math notranslate nohighlight">\(W\)</span> to make the change of variables <span class="math notranslate nohighlight">\(A = W X\)</span>, then we see that <span class="math notranslate nohighlight">\(A\)</span> belongs to the tangent space at <span class="math notranslate nohighlight">\(W\)</span> if and only if <span class="math notranslate nohighlight">\(X\)</span> is skew-symmetric: <span class="math notranslate nohighlight">\(X^\top + X = 0\)</span>. So the tangent space to the orthogonal manifold can be parameterized by skew-symmetric matrices.</p>
 </section>
-<section id="deriving-the-method">
-<h2>Deriving the method<a class="headerlink" href="#deriving-the-method" title="Permalink to this heading">¶</a></h2>
-<p>We start by solving for the matrix <span class="math notranslate nohighlight">\(A\)</span> that belongs to the tangent space to the orthogonal manifold at matrix <span class="math notranslate nohighlight">\(W\)</span> and maximizes the linearized improvement in loss <span class="math notranslate nohighlight">\(\mathrm{trace(G^\top A)}\)</span> under the constraint that <span class="math notranslate nohighlight">\(A\)</span> has unit spectral norm. Formally, we wish to solve:</p>
+<section id="steepest-direction-in-the-tangent-space">
+<h2>Steepest direction in the tangent space<a class="headerlink" href="#steepest-direction-in-the-tangent-space" title="Permalink to this heading">¶</a></h2>
+<p>We will solve for the matrix <span class="math notranslate nohighlight">\(A\)</span> that belongs to the tangent space to the orthogonal manifold at matrix <span class="math notranslate nohighlight">\(W\)</span> and maximizes the linearized improvement in loss <span class="math notranslate nohighlight">\(\mathrm{trace(G^\top A)}\)</span> under the constraint that <span class="math notranslate nohighlight">\(A\)</span> has unit spectral norm. Formally, we wish to solve:</p>
 <div class="math-wrapper docutils container">
 <div class="math notranslate nohighlight">
 \[\operatorname{arg max}_{\|A\|_*\leq 1 \text{ and } A^\top W + W^\top A = 0} \mathrm{trace(G^\top A)}.\]</div>
@@ -340,7 +335,11 @@
 \[\operatorname{arg max}_{\|X\|_*\leq 1 \text{ and } X^\top + X= 0} \mathrm{trace\left(\left[\frac{W^\top G - G^\top W}{2}\right]^\top X\right)}.\]</div>
 </div>
 <p>If we simply ignore the skew-symmetric constraint, the solution for <span class="math notranslate nohighlight">\(X\)</span> is given by <span class="math notranslate nohighlight">\(X = [W^\top G - G^\top W]^\sharp\)</span>. But this solution for <span class="math notranslate nohighlight">\(X\)</span> actually satisfies the skew-symmetric constraint! This is because the sharp-operator preserves skew-symmetry. An easy way to see this is that <span class="math notranslate nohighlight">\([W^\top G - G^\top W]^\sharp\)</span> can be computed by running an odd polynomial iteration (“Newton-Schulz”) on <span class="math notranslate nohighlight">\(W^\top G - G^\top W\)</span>, and odd polynomials preserve skew-symmetry. <a class="footnote-reference brackets" href="#youla" id="id1" role="doc-noteref"><span class="fn-bracket">[</span>1<span class="fn-bracket">]</span></a></p>
-<p>Undoing the change of variables, our tangent vector is given by <span class="math notranslate nohighlight">\(A = W X = W [W^\top G - G^\top W]^\sharp\)</span>. This suggests making the weight update <span class="math notranslate nohighlight">\(W \mapsto W - \eta W X = W (I_n - \eta X)\)</span>. While this update does take a step in the tangent space, it will actually diverge slightly from the orthogonal manifold. We can fix this issue by using the sharp-operator, i.e. <span class="math notranslate nohighlight">\(W \mapsto [W (I_n - \eta X)]^\sharp\)</span> to project the weights back to the manifold. But there is actually a shortcut: if <span class="math notranslate nohighlight">\(W^\top G - G^\top W\)</span> is full rank, then <span class="math notranslate nohighlight">\(X\)</span> is an orthogonal matrix and <span class="math notranslate nohighlight">\([W (I_n - \eta X)]^\top [W (I_n - \eta X)] = (1 + \eta^2) I_n\)</span>. Therefore, in this case, we can project back to the manifold simply by dividing through by the scalar <span class="math notranslate nohighlight">\(\sqrt{1+\eta^2}\)</span>. It’s worth noting that if <span class="math notranslate nohighlight">\(n\)</span> is odd, then <span class="math notranslate nohighlight">\(W^\top G - G^\top W\)</span> must have at least one zero singular value so it cannot be full rank. This issue can be avoided simply by making <span class="math notranslate nohighlight">\(n\)</span> even!</p>
+<p>Undoing the change of variables, our tangent vector is given by <span class="math notranslate nohighlight">\(A = W X = W [W^\top G - G^\top W]^\sharp\)</span>.</p>
+</section>
+<section id="finding-the-retraction-map">
+<h2>Finding the retraction map<a class="headerlink" href="#finding-the-retraction-map" title="Permalink to this heading">¶</a></h2>
+<p>The previous section suggests making the weight update <span class="math notranslate nohighlight">\(W \mapsto W - \eta W X = W (I_n - \eta X)\)</span>. This update takes a step in the tangent space and will actually diverge slightly from the orthogonal manifold. We can fix this issue by using the sharp-operator, i.e. <span class="math notranslate nohighlight">\(W \mapsto [W (I_n - \eta X)]^\sharp\)</span> to project the weights back to the manifold. But there is actually a shortcut: if <span class="math notranslate nohighlight">\(W^\top G - G^\top W\)</span> is full rank, then <span class="math notranslate nohighlight">\(X\)</span> is an orthogonal matrix and <span class="math notranslate nohighlight">\([W (I_n - \eta X)]^\top [W (I_n - \eta X)] = (1 + \eta^2) I_n\)</span>. Therefore, in this case, we can project back to the manifold simply by dividing through by the scalar <span class="math notranslate nohighlight">\(\sqrt{1+\eta^2}\)</span>. It’s worth noting that if <span class="math notranslate nohighlight">\(n\)</span> is odd, then <span class="math notranslate nohighlight">\(W^\top G - G^\top W\)</span> must have at least one zero singular value so it cannot be full rank. This issue can be avoided simply by making <span class="math notranslate nohighlight">\(n\)</span> even!</p>
 </section>
 <section id="open-problem-extending-to-the-stiefel-manifold">
 <h2>Open problem: Extending to the Stiefel Manifold<a class="headerlink" href="#open-problem-extending-to-the-stiefel-manifold" title="Permalink to this heading">¶</a></h2>
@@ -416,11 +415,12 @@
         <div class="toc-tree-container">
           <div class="toc-tree">
             <ul>
-<li><a class="reference internal" href="#">Orthogonal matrices</a><ul>
+<li><a class="reference internal" href="#">Orthogonal manifold</a><ul>
 <li><a class="reference internal" href="#steepest-descent-on-the-orthogonal-manifold">Steepest descent on the orthogonal manifold</a></li>
 <li><a class="reference internal" href="#non-riemannian-manifold-methods">Non-Riemannian manifold methods</a></li>
 <li><a class="reference internal" href="#the-structure-of-the-tangent-space">The structure of the tangent space</a></li>
-<li><a class="reference internal" href="#deriving-the-method">Deriving the method</a></li>
+<li><a class="reference internal" href="#steepest-direction-in-the-tangent-space">Steepest direction in the tangent space</a></li>
+<li><a class="reference internal" href="#finding-the-retraction-map">Finding the retraction map</a></li>
 <li><a class="reference internal" href="#open-problem-extending-to-the-stiefel-manifold">Open problem: Extending to the Stiefel Manifold</a></li>
 </ul>
 </li>

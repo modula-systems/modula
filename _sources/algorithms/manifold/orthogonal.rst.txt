@@ -1,11 +1,7 @@
-Orthogonal matrices
+Orthogonal manifold
 ====================
 
 On this page, we will work out an algorithm for performing gradient descent on the manifold of orthogonal matrices while taking steps that are steepest under the spectral norm. The algorithm will solve for the matrix of unit spectral norm that maximizes the linearized improvement in loss while lying tangent to the manifold. The "retraction map"---which sends the update from the tangent space back to the manifold---can oftentimes be performed by a simple scalar multiplication.
-
-.. plot:: figure/tangent.py
-   
-   While orthogonal matrices are a more complicated manifold than the hypersphere, it's helpful to keep in mind the same general picture of solving for a weight update in the tangent plane to a manifold.
 
 Steepest descent on the orthogonal manifold
 --------------------------------------------
@@ -54,10 +50,10 @@ So to be in the tangent space of a point :math:`W` on the manifold, a matrix :ma
 Finally, if we use the orthogonal matrix :math:`W` to make the change of variables :math:`A = W X`, then we see that :math:`A` belongs to the tangent space at :math:`W` if and only if :math:`X` is skew-symmetric: :math:`X^\top + X = 0`. So the tangent space to the orthogonal manifold can be parameterized by skew-symmetric matrices.
 
 
-Deriving the method
---------------------
+Steepest direction in the tangent space
+----------------------------------------
 
-We start by solving for the matrix :math:`A` that belongs to the tangent space to the orthogonal manifold at matrix :math:`W` and maximizes the linearized improvement in loss :math:`\mathrm{trace(G^\top A)}` under the constraint that :math:`A` has unit spectral norm. Formally, we wish to solve:
+We will solve for the matrix :math:`A` that belongs to the tangent space to the orthogonal manifold at matrix :math:`W` and maximizes the linearized improvement in loss :math:`\mathrm{trace(G^\top A)}` under the constraint that :math:`A` has unit spectral norm. Formally, we wish to solve:
 
 .. math::
 
@@ -76,7 +72,12 @@ Next, we decompose :math:`W^\top G = \frac{1}{2}[W^\top G + G^\top W] + \frac{1}
 
 If we simply ignore the skew-symmetric constraint, the solution for :math:`X` is given by :math:`X = [W^\top G - G^\top W]^\sharp`. But this solution for :math:`X` actually satisfies the skew-symmetric constraint! This is because the sharp-operator preserves skew-symmetry. An easy way to see this is that :math:`[W^\top G - G^\top W]^\sharp` can be computed by running an odd polynomial iteration ("Newton-Schulz") on :math:`W^\top G - G^\top W`, and odd polynomials preserve skew-symmetry. [#youla]_ 
 
-Undoing the change of variables, our tangent vector is given by :math:`A = W X = W [W^\top G - G^\top W]^\sharp`. This suggests making the weight update :math:`W \mapsto W - \eta W X = W (I_n - \eta X)`. While this update does take a step in the tangent space, it will actually diverge slightly from the orthogonal manifold. We can fix this issue by using the sharp-operator, i.e. :math:`W \mapsto [W (I_n - \eta X)]^\sharp` to project the weights back to the manifold. But there is actually a shortcut: if :math:`W^\top G - G^\top W` is full rank, then :math:`X` is an orthogonal matrix and :math:`[W (I_n - \eta X)]^\top [W (I_n - \eta X)] = (1 + \eta^2) I_n`. Therefore, in this case, we can project back to the manifold simply by dividing through by the scalar :math:`\sqrt{1+\eta^2}`. It's worth noting that if :math:`n` is odd, then :math:`W^\top G - G^\top W` must have at least one zero singular value so it cannot be full rank. This issue can be avoided simply by making :math:`n` even!
+Undoing the change of variables, our tangent vector is given by :math:`A = W X = W [W^\top G - G^\top W]^\sharp`.
+
+Finding the retraction map
+---------------------------
+
+The previous section suggests making the weight update :math:`W \mapsto W - \eta W X = W (I_n - \eta X)`. This update takes a step in the tangent space and will actually diverge slightly from the orthogonal manifold. We can fix this issue by using the sharp-operator, i.e. :math:`W \mapsto [W (I_n - \eta X)]^\sharp` to project the weights back to the manifold. But there is actually a shortcut: if :math:`W^\top G - G^\top W` is full rank, then :math:`X` is an orthogonal matrix and :math:`[W (I_n - \eta X)]^\top [W (I_n - \eta X)] = (1 + \eta^2) I_n`. Therefore, in this case, we can project back to the manifold simply by dividing through by the scalar :math:`\sqrt{1+\eta^2}`. It's worth noting that if :math:`n` is odd, then :math:`W^\top G - G^\top W` must have at least one zero singular value so it cannot be full rank. This issue can be avoided simply by making :math:`n` even!
 
 Open problem: Extending to the Stiefel Manifold
 ------------------------------------------------

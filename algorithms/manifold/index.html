@@ -7,10 +7,10 @@
 <meta property="og:type" content="website" />
 <meta property="og:url" content="https://modula.systems/algorithms/manifold/" />
 <meta property="og:site_name" content="Modula" />
-<meta property="og:description" content="While orthogonal matrices are a more complicated manifold than the hypersphere, it’s helpful to keep in mind the same general picture of solving for a weight update in the tangent plane to a manifo..." />
+<meta property="og:description" content="In this section we will derive steepest descent optimization algorithms for manifolds equipped with certain norms. These algorithms will be useful if we want to construct steepest descent optimizer..." />
 <meta property="og:image" content="https://docs.modula.systems/_static/logo-square.jpeg" />
 <meta property="og:image:alt" content="Modula" />
-<meta name="description" content="While orthogonal matrices are a more complicated manifold than the hypersphere, it’s helpful to keep in mind the same general picture of solving for a weight update in the tangent plane to a manifo..." />
+<meta name="description" content="In this section we will derive steepest descent optimization algorithms for manifolds equipped with certain norms. These algorithms will be useful if we want to construct steepest descent optimizer..." />
 <link rel="index" title="Index" href="../../genindex/" /><link rel="search" title="Search" href="../../search/" /><link rel="next" title="Hypersphere" href="hypersphere/" /><link rel="prev" title="Reading list" href="../../intro/reading-list/" />
 
     <link rel="shortcut icon" href="../../_static/favicon.ico"/><!-- Generated with Sphinx 7.0.0 and Furo 2024.08.06 -->
@@ -222,7 +222,7 @@
 <ul class="current">
 <li class="toctree-l1 current has-children current-page"><a class="current reference internal" href="#">Manifold duality maps</a><input checked="" class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" role="switch" type="checkbox"/><label for="toctree-checkbox-1"><div class="visually-hidden">Toggle navigation of Manifold duality maps</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
 <li class="toctree-l2"><a class="reference internal" href="hypersphere/">Hypersphere</a></li>
-<li class="toctree-l2"><a class="reference internal" href="orthogonal/">Orthogonal matrices</a></li>
+<li class="toctree-l2"><a class="reference internal" href="orthogonal/">Orthogonal manifold</a></li>
 </ul>
 </li>
 </ul>
@@ -279,15 +279,20 @@
 <h1>Manifold duality maps<a class="headerlink" href="#manifold-duality-maps" title="Permalink to this heading">¶</a></h1>
 <div class="toctree-wrapper compound">
 </div>
-<div class="warning admonition">
-<p class="admonition-title">Warning</p>
-<p>This page is still under construction.</p>
-</div>
-<figure class="align-default" id="id1">
-<img alt="../../_images/tangent.svg" class="plot-directive" src="../../_images/tangent.svg" /><figcaption>
-<p><span class="caption-text">While orthogonal matrices are a more complicated manifold than the hypersphere, it’s helpful to keep in mind the same general picture of solving for a weight update in the tangent plane to a manifold.</span><a class="headerlink" href="#id1" title="Permalink to this image">¶</a></p>
-</figcaption>
-</figure>
+<p>In this section we will derive steepest descent optimization algorithms for manifolds equipped with certain norms. These algorithms will be useful if we want to construct steepest descent optimizers for modules where the tensors obey some natural constraints. In particular, we will consider:</p>
+<ul class="simple">
+<li><p>for vectors: <a class="reference internal" href="hypersphere/"><span class="doc">steepest descent under the Euclidean norm on the hypersphere;</span></a></p></li>
+<li><p>for matrices: <a class="reference internal" href="orthogonal/"><span class="doc">steepest descent under the spectral norm on the orthogonal manifold.</span></a></p></li>
+</ul>
+<p>In each case, we will adopt the following strategy:</p>
+<ol class="arabic simple">
+<li><p>characterize the “tangent space” to the manifold;</p></li>
+<li><p>solve for the steepest direction in the tangent space under the given norm;</p></li>
+<li><p>work out a “retraction map”, which projects a step taken in the tangent space back to the manifold.</p></li>
+</ol>
+<p>We can think of the tangent space to the manifold as a plane lying tangent to the manifold. So each point on the manifold has its own tangent space. Since the manifold is curved, taking a discrete step in the tangent space will leave the manifold. Therefore we need to project back to the manifold using the retraction map. It’s always helpful to keep in mind the following picture:</p>
+<figure class="align-default">
+<img alt="../../_images/tangent.svg" class="plot-directive" src="../../_images/tangent.svg" /></figure>
 </section>
 
         </article>
