@@ -53,26 +53,27 @@ Finally, if we use the orthogonal matrix :math:`W` to make the change of variabl
 Steepest direction in the tangent space
 ----------------------------------------
 
-We will solve for the matrix :math:`A` that belongs to the tangent space to the orthogonal manifold at matrix :math:`W` and maximizes the linearized improvement in loss :math:`\mathrm{trace(G^\top A)}` under the constraint that :math:`A` has unit spectral norm. Formally, we wish to solve:
+We will solve for the matrix :math:`A` that belongs to the tangent space to the orthogonal manifold at matrix :math:`W` and maximizes the linearized improvement in loss :math:`\operatorname{trace}(G^\top A)` under the constraint that :math:`A` has unit spectral norm. Formally, we wish to solve:
 
 .. math::
 
-   \operatorname{arg max}_{\|A\|_*\leq 1 \text{ and } A^\top W + W^\top A = 0} \mathrm{trace(G^\top A)}.
+   \operatorname{arg max}_{A\in \mathbb{R}^{n\times n}: \|A\|_*\leq 1 \text{ and } A^\top W + W^\top A = 0}\; \operatorname{trace}(G^\top A).
 
 To simplify, we make the change of variables :math:`A = W X` so that we now only need to maximize over skew-symmetric matrices :math:`X` of unit spectral norm:
 
 .. math::
 
-   \operatorname{arg max}_{\|X\|_*\leq 1 \text{ and } X^\top + X= 0} \mathrm{trace([W^\top G]^\top X)}.
+   \operatorname{arg max}_{X\in \mathbb{R}^{n\times n}:\|X\|_*\leq 1 \text{ and } X^\top + X= 0}\; \operatorname{trace}([W^\top G]^\top X).
 
 Next, we decompose :math:`W^\top G = \frac{1}{2}[W^\top G + G^\top W] + \frac{1}{2}[W^\top G - G^\top W]` into its symmetric and skew-symmetric components and realize that, because :math:`X` is skew-symmetric, the contribution to the trace from the symmetric part of :math:`W^\top G` vanishes. So the problem becomes:
 
 .. math::
-   \operatorname{arg max}_{\|X\|_*\leq 1 \text{ and } X^\top + X= 0} \mathrm{trace\left(\left[\frac{W^\top G - G^\top W}{2}\right]^\top X\right)}.
+   \operatorname{arg max}_{X\in \mathbb{R}^{n\times n}:\|X\|_*\leq 1 \text{ and } X^\top + X= 0}\; \operatorname{trace}\left(\left[\frac{W^\top G - G^\top W}{2}\right]^\top X\right).
 
 If we simply ignore the skew-symmetric constraint, the solution for :math:`X` is given by :math:`X = [W^\top G - G^\top W]^\sharp`. But this solution for :math:`X` actually satisfies the skew-symmetric constraint! This is because the sharp-operator preserves skew-symmetry. An easy way to see this is that :math:`[W^\top G - G^\top W]^\sharp` can be computed by running an odd polynomial iteration ("Newton-Schulz") on :math:`W^\top G - G^\top W`, and odd polynomials preserve skew-symmetry. [#youla]_ 
 
 Undoing the change of variables, our tangent vector is given by :math:`A = W X = W [W^\top G - G^\top W]^\sharp`.
+
 
 Finding the retraction map
 ---------------------------
@@ -84,4 +85,4 @@ Open problem: Extending to the Stiefel Manifold
 
 I initially thought that this solution easily extended to the *Stiefel manifold*—i.e. the set of :math:`m \times n` semi-orthogonal matrices. But this turns out not to be the case: the algorithm we derived is generally not optimal if :math:`W` is rectangular. To see this, let's consider an :math:`m \times n` matrix :math:`W` with :math:`m > n`, and suppose that it belongs to the Stiefel manifold :math:`W^\top W = I_n`. The problem with our derivation is that the change of variables :math:`A = W X` no longer parameterizes the full set of :math:`m \times n` matrices. Instead, we need to make the change of variable :math:`A = WX + \overline{W}Y` where the columns of :math:`\overline{W}` are the "missing" columns of :math:`W`. In other words, the combined matrix :math:`[W | \overline{W}]` is a square orthogonal matrix. For this parameterization, the tangent space to the Stiefel manifold is obtained by requiring that :math:`X\in\mathbb{R}^{n\times n}` is skew-symmetric while :math:`Y\in\mathbb{R}^{(m-n)\times n}` is completely unconstrained. I do not know how to analytically solve the resulting maximization problem in this parameterization.
 
-.. [#youla] In fact, any odd function applied entrywise to the singular values of a matrix will preserve skew symmetry. To see this, one needs to understand the spectral structure of skew-symmetric matrices. An :math:`n\times n` matrix :math:`X` is skew symmetric if and only if it can be written :math:`X = \sum_{i=1}^k \sigma_i (u_iv_i^\top - v_i u_i^\top)`, where the :math:`\sigma_i` are non-negative, the :math:`\{u_i\}\cup\{v_i\}` are all orthonormal and :math:`k \leq \lfloor n/2 \rfloor`. In other words, :math:`X` must admit an SVD where the singular values come in pairs with conjugate singular vectors. But applying an odd function :math:`f` to the singular values yields :math:`\sum_{i=1}^k f(\sigma_i) (u_iv_i^\top - v_i u_i^\top)`, which leaves the skew-symmetric structure intact. For more on reading on the spectral structure of skew-symmetric matrices, see `(Haber, 2016) <https://scipp.ucsc.edu/~haber/ph218/pfaffian15.pdf>`_ or `(Youla, 1961) <https://www.cambridge.org/core/journals/canadian-journal-of-mathematics/article/normal-form-for-a-matrix-under-the-unitary-congruence-group/964D0AA8DAC0CDB9079F04331B61859D>`_.
+.. [#youla] In fact, any odd function applied entrywise to the singular values of a matrix will preserve skew symmetry. To see this, one needs to understand the spectral structure of skew-symmetric matrices. An :math:`n\times n` matrix :math:`X` is skew symmetric if and only if it can be written :math:`X = \sum_{i=1}^k \sigma_i (u_iv_i^\top - v_i u_i^\top)`, where the :math:`\sigma_i` are non-negative, the :math:`\{u_i\}\cup\{v_i\}` are all orthonormal and :math:`k \leq \lfloor n/2 \rfloor`. In other words, :math:`X` must admit an SVD where the singular values come in pairs with conjugate singular vectors. But applying an odd function :math:`f` to the singular values yields :math:`\sum_{i=1}^k f(\sigma_i) (u_iv_i^\top - v_i u_i^\top)`, which leaves the skew-symmetric structure intact. For more reading on the spectral structure of skew-symmetric matrices, see `(Haber, 2016) <https://scipp.ucsc.edu/~haber/ph218/pfaffian15.pdf>`_ or `(Youla, 1961) <https://www.cambridge.org/core/journals/canadian-journal-of-mathematics/article/normal-form-for-a-matrix-under-the-unitary-congruence-group/964D0AA8DAC0CDB9079F04331B61859D>`_.

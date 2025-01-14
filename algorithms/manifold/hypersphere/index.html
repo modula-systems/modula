@@ -7,10 +7,10 @@
 <meta property="og:type" content="website" />
 <meta property="og:url" content="https://modula.systems/algorithms/manifold/hypersphere/" />
 <meta property="og:site_name" content="Modula" />
-<meta property="og:description" content="The structure of the tangent space: Steepest direction in the tangent space: Finding the retraction map:" />
+<meta property="og:description" content="On this page, we will work out an algorithm for performing steepest descent under the Euclidean norm on the hypersphere. While this algorithm may seem obvious This is a good warmup before we move o..." />
 <meta property="og:image" content="https://docs.modula.systems/_static/logo-square.jpeg" />
 <meta property="og:image:alt" content="Modula" />
-<meta name="description" content="The structure of the tangent space: Steepest direction in the tangent space: Finding the retraction map:" />
+<meta name="description" content="On this page, we will work out an algorithm for performing steepest descent under the Euclidean norm on the hypersphere. While this algorithm may seem obvious This is a good warmup before we move o..." />
 <link rel="index" title="Index" href="../../../genindex/" /><link rel="search" title="Search" href="../../../search/" /><link rel="next" title="Orthogonal manifold" href="../orthogonal/" /><link rel="prev" title="Manifold duality maps" href="../" />
 
     <link rel="shortcut icon" href="../../../_static/favicon.ico"/><!-- Generated with Sphinx 7.0.0 and Furo 2024.08.06 -->
@@ -277,18 +277,50 @@
         <article role="main" id="furo-main-content">
           <section id="hypersphere">
 <h1>Hypersphere<a class="headerlink" href="#hypersphere" title="Permalink to this heading">¶</a></h1>
-<div class="warning admonition">
-<p class="admonition-title">Warning</p>
-<p>This page is still under construction.</p>
+<p>On this page, we will work out an algorithm for performing steepest descent under the Euclidean norm on the hypersphere. While this algorithm may seem obvious This is a good warmup before we move on to more complicated examples.</p>
+<section id="steepest-descent-on-the-hypersphere">
+<h2>Steepest descent on the hypersphere<a class="headerlink" href="#steepest-descent-on-the-hypersphere" title="Permalink to this heading">¶</a></h2>
+<p>Consider a weight vector <span class="math notranslate nohighlight">\(w\in\mathbb{R}^{n}\)</span> on the unit hypersphere, meaning that the squared Euclidean norm <span class="math notranslate nohighlight">\(\|w\|_2^2 = \sum_{i=1}^n w_i^2 = 1\)</span>. Suppose that the “gradient vector” <span class="math notranslate nohighlight">\(g\in\mathbb{R}^{n}\)</span> is the derivative of some loss function evaluated at <span class="math notranslate nohighlight">\(w\)</span>. Given step size <span class="math notranslate nohighlight">\(\eta &gt; 0\)</span>, we claim that the following weight update is steepest under the Euclidean norm while staying on the unit hypersphere:</p>
+<div class="math-wrapper docutils container">
+<div class="math notranslate nohighlight">
+\[w \mapsto \frac{1}{\sqrt{1+\eta^2}} \times \left[w - \eta \times \frac{ (I_n - w w^\top)g}{\left\|(I_n - w w^\top)g\right\|_2}\right].\]</div>
 </div>
+<p>So we simply project the gradient on to the subspace orthogonal to the weight vector and normalize to obtain a unit vector. We offload the problem of setting the size of the update to choosing the step size parameter <span class="math notranslate nohighlight">\(\eta\)</span>. Dividing through by <span class="math notranslate nohighlight">\(\sqrt{1 + \eta^2}\)</span> projects the update back to the hypersphere.</p>
+</section>
 <section id="the-structure-of-the-tangent-space">
 <h2>The structure of the tangent space<a class="headerlink" href="#the-structure-of-the-tangent-space" title="Permalink to this heading">¶</a></h2>
+<p>The tangent space to the unit hypersphere at vector <span class="math notranslate nohighlight">\(w\)</span> is simply the set of vectors orthogonal to <span class="math notranslate nohighlight">\(w\)</span>:</p>
+<div class="math-wrapper docutils container">
+<div class="math notranslate nohighlight">
+\[\{ a \in \mathbb{R}^n : w^\top a = 0 \}.\]</div>
+</div>
+<p>While it’s probably overkill, let’s show this formally. The tangent space at <span class="math notranslate nohighlight">\(w\)</span> is the set of possible velocities of curves passing through <span class="math notranslate nohighlight">\(w\)</span>. For a real-valued parameter <span class="math notranslate nohighlight">\(t\)</span>, consider a curve <span class="math notranslate nohighlight">\(w(t)\)</span> on the unit hypersphere. If we differentiate the condition <span class="math notranslate nohighlight">\(w(t)^\top w(t) = 1\)</span>, we find that <span class="math notranslate nohighlight">\(\frac{\partial w(t)}{\partial t}^\top w(t) = 0\)</span>. This means that a tangent vector at <span class="math notranslate nohighlight">\(w\)</span> must be orthogonal to <span class="math notranslate nohighlight">\(w\)</span>. Conversely, if a vector <span class="math notranslate nohighlight">\(a\)</span> satisfies <span class="math notranslate nohighlight">\(a^\top w = 0\)</span>, then <span class="math notranslate nohighlight">\(a\)</span> is a tangent vector to the manifold at <span class="math notranslate nohighlight">\(w\)</span>, as can be seen by studying the curve <span class="math notranslate nohighlight">\(w(t) = w\cdot cos(t) + a\cdot sin(t)\)</span> at <span class="math notranslate nohighlight">\(t = 0\)</span>. So the tangent space really is <span class="math notranslate nohighlight">\(\{ a \in \mathbb{R}^n : w^\top a = 0 \}\)</span>.</p>
 </section>
 <section id="steepest-direction-in-the-tangent-space">
 <h2>Steepest direction in the tangent space<a class="headerlink" href="#steepest-direction-in-the-tangent-space" title="Permalink to this heading">¶</a></h2>
+<p>To find the steepest direction in the tangent space under the Euclidean norm, we must solve:</p>
+<div class="math-wrapper docutils container">
+<div class="math notranslate nohighlight">
+\[\operatorname{arg max}_{a \in \mathbb{R}^n: \|a\|_2\leq 1 \text{ and } a^\top w = 0}\; g^\top a.\]</div>
+</div>
+<p>We can solve this problem using the method of Lagrange multipliers. We write down the Lagrangian:</p>
+<div class="math-wrapper docutils container">
+<div class="math notranslate nohighlight">
+\[\mathcal{L}(a, \lambda, \mu) = g^\top a - \frac{\lambda}{2} a^\top a - \mu\,a^\top w.\]</div>
+</div>
+<p>Taking the derivative with respect to <span class="math notranslate nohighlight">\(a\)</span> and setting to zero, we find that <span class="math notranslate nohighlight">\(a = (g - \mu w) / \lambda\)</span>. We can solve for <span class="math notranslate nohighlight">\(\lambda\)</span> and <span class="math notranslate nohighlight">\(\mu\)</span> by substituting in the constraints that <span class="math notranslate nohighlight">\(a^\top a = 1\)</span> and <span class="math notranslate nohighlight">\(a^\top w = 0\)</span>. Finally, we obtain:</p>
+<div class="math-wrapper docutils container">
+<div class="math notranslate nohighlight">
+\[a = \frac{ (I_n - w w^\top)g}{\left\|(I_n - w w^\top)g\right\|_2}.\]</div>
+</div>
 </section>
 <section id="finding-the-retraction-map">
 <h2>Finding the retraction map<a class="headerlink" href="#finding-the-retraction-map" title="Permalink to this heading">¶</a></h2>
+<p>Making a weight update <span class="math notranslate nohighlight">\(w \mapsto w - \eta\cdot a\)</span> along the steepest direction in the tangent space that we calculated in the previous section will leave the hypersphere. In fact, by Pythagoras’ theorem, we have that <span class="math notranslate nohighlight">\(\|w - \eta\cdot a\|_2 = \sqrt{1 + \eta^2}\)</span>. So to project the update back to the manifold, we can simply divide through by this scalar:</p>
+<div class="math-wrapper docutils container">
+<div class="math notranslate nohighlight">
+\[w \mapsto \frac{1}{\sqrt{1+\eta^2}} \times \left[w - \eta \times \frac{ (I_n - w w^\top)g}{\left\|(I_n - w w^\top)g\right\|_2}\right].\]</div>
+</div>
 </section>
 </section>
 
@@ -355,6 +387,7 @@
           <div class="toc-tree">
             <ul>
 <li><a class="reference internal" href="#">Hypersphere</a><ul>
+<li><a class="reference internal" href="#steepest-descent-on-the-hypersphere">Steepest descent on the hypersphere</a></li>
 <li><a class="reference internal" href="#the-structure-of-the-tangent-space">The structure of the tangent space</a></li>
 <li><a class="reference internal" href="#steepest-direction-in-the-tangent-space">Steepest direction in the tangent space</a></li>
 <li><a class="reference internal" href="#finding-the-retraction-map">Finding the retraction map</a></li>
@@ -377,5 +410,6 @@
     <script src="../../../_static/copybutton.js"></script>
     <script src="../../../_static/tabs.js"></script>
     <script src="../../../_static/design-tabs.js"></script>
+    <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     </body>
 </html>
