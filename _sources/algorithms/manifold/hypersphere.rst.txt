@@ -11,7 +11,7 @@ Consider a weight vector :math:`w\in\mathbb{R}^{n}` on the unit hypersphere, mea
 .. math::
    w \mapsto \frac{1}{\sqrt{1+\eta^2}} \times \left[w - \eta \times \frac{ (I_n - w w^\top)g}{\left\|(I_n - w w^\top)g\right\|_2}\right].
 
-So we simply project the gradient on to the subspace orthogonal to the weight vector and normalize to obtain a unit vector. We offload the problem of setting the size of the update to choosing the step size parameter :math:`\eta`. Dividing through by :math:`\sqrt{1 + \eta^2}` projects the update back to the hypersphere.
+So we simply project the gradient on to the subspace orthogonal to the weight vector and normalize to obtain a unit vector. We offload the problem of setting the size of the update to choosing the step size parameter :math:`\eta`. Dividing through by :math:`\sqrt{1 + \eta^2}` projects the updated weights back to the hypersphere.
 
 The structure of the tangent space
 -----------------------------------
@@ -21,7 +21,7 @@ The tangent space to the unit hypersphere at vector :math:`w` is simply the set 
 .. math::
    \{ a \in \mathbb{R}^n : w^\top a = 0 \}.
 
-While it's probably overkill, let's show this formally. The tangent space at :math:`w` is the set of possible velocities of curves passing through :math:`w`. For a real-valued parameter :math:`t`, consider a curve :math:`w(t)` on the unit hypersphere. If we differentiate the condition :math:`w(t)^\top w(t) = 1`, we find that :math:`\frac{\partial w(t)}{\partial t}^\top w(t) = 0`. This means that a tangent vector at :math:`w` must be orthogonal to :math:`w`. Conversely, if a vector :math:`a` satisfies :math:`a^\top w = 0`, then :math:`a` is a tangent vector to the manifold at :math:`w`, as can be seen by studying the curve :math:`w(t) = w\cdot cos(t) + a\cdot sin(t)` at :math:`t = 0`. So the tangent space really is :math:`\{ a \in \mathbb{R}^n : w^\top a = 0 \}`.
+While it's probably overkill, let's show this formally. The tangent space at :math:`w` is the set of possible velocities of curves passing through :math:`w`. For a real-valued parameter :math:`t`, consider a curve :math:`w(t)` on the unit hypersphere. If we differentiate the condition :math:`w(t)^\top w(t) = 1`, we find that :math:`\frac{\partial w(t)}{\partial t}^\top w(t) = 0`. This means that a tangent vector at :math:`w` must be orthogonal to :math:`w`. Conversely, if a vector :math:`a` satisfies :math:`a^\top w = 0` then :math:`a` is a tangent vector to the manifold at :math:`w`, as can be seen by studying the curve :math:`w(t) = w\cdot cos(t) + a\cdot sin(t)` at :math:`t = 0`. So the tangent space really is :math:`\{ a \in \mathbb{R}^n : w^\top a = 0 \}`.
 
 Steepest direction in the tangent space
 ----------------------------------------
