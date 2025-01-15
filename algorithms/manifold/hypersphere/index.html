@@ -7,10 +7,10 @@
 <meta property="og:type" content="website" />
 <meta property="og:url" content="https://modula.systems/algorithms/manifold/hypersphere/" />
 <meta property="og:site_name" content="Modula" />
-<meta property="og:description" content="On this page, we will work out an algorithm for performing steepest descent under the Euclidean norm on the hypersphere. While this algorithm may seem obvious This is a good warmup before we move o..." />
+<meta property="og:description" content="On this page, we will work out an algorithm for performing steepest descent under the Euclidean norm on the hypersphere. While this algorithm may seem obvious, it is a good warmup and the technical..." />
 <meta property="og:image" content="https://docs.modula.systems/_static/logo-square.jpeg" />
 <meta property="og:image:alt" content="Modula" />
-<meta name="description" content="On this page, we will work out an algorithm for performing steepest descent under the Euclidean norm on the hypersphere. While this algorithm may seem obvious This is a good warmup before we move o..." />
+<meta name="description" content="On this page, we will work out an algorithm for performing steepest descent under the Euclidean norm on the hypersphere. While this algorithm may seem obvious, it is a good warmup and the technical..." />
 <link rel="index" title="Index" href="../../../genindex/" /><link rel="search" title="Search" href="../../../search/" /><link rel="next" title="Orthogonal manifold" href="../orthogonal/" /><link rel="prev" title="Manifold duality maps" href="../" />
 
     <link rel="shortcut icon" href="../../../_static/favicon.ico"/><!-- Generated with Sphinx 7.0.0 and Furo 2024.08.06 -->
@@ -277,7 +277,7 @@
         <article role="main" id="furo-main-content">
           <section id="hypersphere">
 <h1>Hypersphere<a class="headerlink" href="#hypersphere" title="Permalink to this heading">¶</a></h1>
-<p>On this page, we will work out an algorithm for performing steepest descent under the Euclidean norm on the hypersphere. While this algorithm may seem obvious This is a good warmup before we move on to more complicated examples.</p>
+<p>On this page, we will work out an algorithm for performing steepest descent under the Euclidean norm on the hypersphere. While this algorithm may seem obvious, it is a good warmup and the technical scaffolding will help in more complicated examples.</p>
 <section id="steepest-descent-on-the-hypersphere">
 <h2>Steepest descent on the hypersphere<a class="headerlink" href="#steepest-descent-on-the-hypersphere" title="Permalink to this heading">¶</a></h2>
 <p>Consider a weight vector <span class="math notranslate nohighlight">\(w\in\mathbb{R}^{n}\)</span> on the unit hypersphere, meaning that the squared Euclidean norm <span class="math notranslate nohighlight">\(\|w\|_2^2 = \sum_{i=1}^n w_i^2 = 1\)</span>. Suppose that the “gradient vector” <span class="math notranslate nohighlight">\(g\in\mathbb{R}^{n}\)</span> is the derivative of some loss function evaluated at <span class="math notranslate nohighlight">\(w\)</span>. Given step size <span class="math notranslate nohighlight">\(\eta &gt; 0\)</span>, we claim that the following weight update is steepest under the Euclidean norm while staying on the unit hypersphere:</p>

@@ -1,7 +1,7 @@
 Hypersphere
 ============
 
-On this page, we will work out an algorithm for performing steepest descent under the Euclidean norm on the hypersphere. While this algorithm may seem obvious This is a good warmup before we move on to more complicated examples.
+On this page, we will work out an algorithm for performing steepest descent under the Euclidean norm on the hypersphere. While this algorithm may seem obvious, it is a good warmup and the technical scaffolding will help in more complicated examples.
 
 Steepest descent on the hypersphere
 ------------------------------------
