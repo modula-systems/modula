@@ -1,177 +1,200 @@
-import copy
-import torch 
-
-from modula.vector import Vector
-
 class Module:
     def __init__(self):
-        self.mass = None
-        self.sensitivity = None
-        self.length = None
         self.children = []
-        
-    def forward(self, x, w):
-        raise NotImplementedError
 
-    def initialize(self, device, dtype):
-        raise NotImplementedError
-
-    def normalize(self, w, target_norm):
-        raise NotImplementedError
-
-    def regularize(self, w, strength):
-        raise NotImplementedError
-
-    def tare(self, absolute=1, relative=None):
-        if relative is not None:
-            self.mass *= relative
-            for child in self.children:
-                child.tare(relative = relative)
-        else:
-            self.tare(relative = absolute / self.mass)
-
-    def print_submodules(self):
-        for child in self.children:
-            child.print_submodules()
+        self.atoms = None           # number of atoms: int
+        self.bonds = None           # number of bonds: int
+        self.smooth = None          # is this module smooth?: bool
+        self.sensitivity = None     # input Lipschitz estimate: float > 0
+        self.mass = None            # proportional contribution of module toward feature learning of any supermodule: float >= 0
 
     def __str__(self):
-        return f"Module of mass {self.mass} and sensitivity {self.sensitivity}."
+        string = self.__class__.__name__
+        string += f"\n...consists of {self.atoms} atoms and {self.bonds} bonds"
+        string += f"\n...{'smooth' if self.smooth else 'non-smooth'}"
+        string += f"\n...input sensitivity is {self.sensitivity}"
+        string += f"\n...contributes proportion {self.mass} to feature learning of any supermodule"
+        return string
+
+    def tare(self, absolute=1.0, relative=None):
+        if relative is None:
+            self.tare(relative = absolute / self.mass)
+        else:
+            self.mass *= relative
+            for m in self.children:
+                m.tare(relative = relative)
+
+    def forward(self, x, w):
+        # Input and weight list --> output and list of internal activations.
+        raise NotImplementedError
+
+    def backward(self, w, grad_output):
+        # Weight list and output gradient --> weight gradient list and input gradient.
+        raise NotImplementedError
+
+    def initialize(self):
+        # Return a weight list.
+        raise NotImplementedError
+
+    def normalize(self, grad_w, target_norm):
+        # Weight gradient list and number --> normalized weight gradient list
+        raise NotImplementedError
+
+    def __matmul__(self, other):
+        return CompositeModule(self, other)
+
+    def __add__(self, other):
+        return Add() @ TupleModule((self, other))
+
+    def __rmul__(self, scalar):
+        return Mul(scalar) @ self
 
     def __call__(self, x, w):
         return self.forward(x, w)
 
-    def __matmul__(self, other):
-        if isinstance(other, tuple): other = TupleModule(other)
-        return CompositeModule(self, other)
+class Atom(Module):
+    def __init__(self):
+        super().__init__()
+        self.atoms = 1
+        self.bonds = 0
 
-    def __rmatmul__(self, other):
-        if isinstance(other, tuple): other = TupleModule(other)
-        return other @ self
+class Bond(Module):
+    def __init__(self):
+        super().__init__()
+        self.atoms = 0
+        self.bonds = 1
+        self.mass = 0
 
-    def __add__(self, other):
-        return Add() @ (self, other)
+    def initialize(self):
+        return []
 
-    def __mul__(self, other):
-        assert other != 0, "cannot multiply a module by zero"
-        return self @ Mul(other)
-
-    def __rmul__(self, other):
-        assert other != 0, "cannot multiply a module by zero"
-        return Mul(other) @ self
-
-    def __truediv__(self, other):
-        assert other != 0, "cannot divide a module by zero"
-        return self * (1/other)
-
-    def __pow__(self, other):
-        assert other >= 0 and other % 1 == 0, "nonnegative integer powers only"
-        if other > 0:
-            return copy.deepcopy(self) @ self ** (other - 1)
-        else:
-            return Mul(1.0)
-
+    def normalize(self, grad_w, target_norm=1.0):
+        return []
 
 class CompositeModule(Module):
     def __init__(self, m1, m0):
         super().__init__()
         self.children = (m0, m1)
-        self.length = m0.length + m1.length
-        self.mass = m0.mass + m1.mass
-        self.sensitivity = m1.sensitivity * m0.sensitivity
-        
+
+        self.atoms       = m0.atoms + m1.atoms
+        self.bonds       = m0.bonds + m1.bonds
+        self.smooth      = m0.smooth and m1.smooth
+        self.mass        = m0.mass + m1.mass
+        self.sensitivity = m0.sensitivity * m1.sensitivity
+
     def forward(self, x, w):
         m0, m1 = self.children
-        w0 = w[:m0.length]
-        w1 = w[m0.length:]
-        return m1.forward(m0.forward(x, w0), w1)
+        w0 = w[:m0.atoms]
+        w1 = w[m0.atoms:]
+        x0, activations0 = m0.forward(x, w0)
+        x1, activations1 = m1.forward(x0, w1)
+        return x1, activations0 + activations1
 
-    def initialize(self, device, dtype=torch.float32):
+    def initialize(self):
         m0, m1 = self.children
-        return m0.initialize(device, dtype=dtype) & m1.initialize(device, dtype=dtype)
+        return m0.initialize() + m1.initialize()
 
-    def normalize(self, w, target_norm=1):
+    def backward(self, w, acts, grad_output):
+        m0, m1 = self.children
+        w0 = w[:m0.atoms]
+        w1 = w[m0.atoms:]
+        acts0 = acts[:m0.atoms+m0.bonds]
+        acts1 = acts[m0.atoms+m0.bonds:]
+
+        grad_w1, grad_input1 = m1.backward(w1, acts1, grad_output)
+        grad_w0, grad_input0 = m0.backward(w0, acts0, grad_input1)
+
+        return grad_w0 + grad_w1, grad_input0
+
+    def normalize(self, grad_w, target_norm=1.0):
         if self.mass > 0:
             m0, m1 = self.children
-            w0 = Vector(w[:m0.length])
-            w1 = Vector(w[m0.length:])
-            m0.normalize(w0, target_norm=m0.mass / self.mass * target_norm / m1.sensitivity)
-            m1.normalize(w1, target_norm=m1.mass / self.mass * target_norm)
+            grad_w0, grad_w1 = grad_w[:m0.atoms], grad_w[m0.atoms:]
+            grad_w0 = m0.normalize(grad_w0, target_norm = target_norm * m0.mass / self.mass / m1.sensitivity)
+            grad_w1 = m1.normalize(grad_w1, target_norm = target_norm * m1.mass / self.mass)
+            normalized_grad_w = grad_w0 + grad_w1
         else:
-            w *= 0
-
-    def regularize(self, w, strength):
-        if self.mass > 0:
-            m0, m1 = self.children
-            w0 = Vector(w[:m0.length])
-            w1 = Vector(w[m0.length:])
-            m0.regularize(w0, strength=m0.mass / self.mass * strength / m1.sensitivity)
-            m1.regularize(w1, strength=m1.mass / self.mass * strength)
-
+            normalized_grad_w = [0 * grad_weight for grad_weight in grad_w]
+        return normalized_grad_w
 
 class TupleModule(Module):
-    def __init__(self, tuple_of_modules):
+    def __init__(self, python_tuple_of_modules):
         super().__init__()
-        self.children = tuple_of_modules
-        self.length      = sum(child.length      for child in self.children)
-        self.mass        = sum(child.mass        for child in self.children)
-        self.sensitivity = sum(child.sensitivity for child in self.children)
-        
+        self.children = python_tuple_of_modules
+        self.atoms       = sum(m.atoms       for m in self.children)
+        self.bonds       = sum(m.bonds       for m in self.children)
+        self.smooth      = all(m.smooth      for m in self.children)
+        self.mass        = sum(m.mass        for m in self.children)
+        self.sensitivity = sum(m.sensitivity for m in self.children)
+
     def forward(self, x, w):
-        output = []
-        for child in self.children:
-            w_child = w[:child.length]
-            output.append(child.forward(x, w_child))
-            w = w[child.length:]
-        return output
+        output_list = []
+        act_list = []
+        for m in self.children:
+            output, act = m.forward(x, w[:m.atoms])
+            output_list.append(output)
+            act_list += act
+            w = w[m.atoms:]
+        return output_list, act_list
 
-    def initialize(self, device, dtype=torch.float32):
-        vector = Vector()
-        for child in self.children:
-            vector &= child.initialize(device, dtype=dtype)
-        return vector
+    def backward(self, w, acts, grad_output):
+        grad_w = []
+        grad_input = 0
+        for m, grad_output_m in zip(self.children, grad_output):
+            grad_w_m, grad_input_m = m.backward(w[:m.atoms], acts[:m.atoms+m.bonds], grad_output_m)
+            grad_w += grad_w_m
+            grad_input += grad_input_m
+            w = w[m.atoms:]
+            acts = acts[m.atoms+m.bonds:]
+        return grad_w, grad_input
 
-    def normalize(self, w, target_norm=1):
+    def initialize(self):
+        return sum([m.initialize() for m in self.children], [])
+
+    def normalize(self, grad_w, target_norm=1.0):
         if self.mass > 0:
-            for child in self.children:
-                w_child = Vector(w[:child.length])
-                child.normalize(w_child, target_norm=child.mass / self.mass * target_norm)
-                w = Vector(w[child.length:])
+            normalized_grad_w = []
+            for m in self.children:
+                grad_w_m = grad_w[:m.atoms]
+                grad_w_m = m.normalize(grad_w_m, target_norm = target_norm * m.mass / self.mass)
+                normalized_grad_w += grad_w_m
+                grad_w = grad_w[m.atoms:]
         else:
-            w *= 0
+            normalized_grad_w = [0 * grad_weight for grad_weight in grad_w]
+        return normalized_grad_w
 
-    def regularize(self, w, strength):
-        if self.mass > 0:
-            for child in self.children:
-                w_child = Vector(w[:child.length])
-                child.regularize(w_child, strength=child.mass / self.mass * strength)
-                w = Vector(w[child.length:])
-
-
-class Mul(Module):
-    def __init__(self, alpha):
-        super().__init__()
-        self.mass = 0
-        self.sensitivity = abs(alpha)
-        self.length = 0
-        self.initialize = lambda device, dtype : Vector()
-        self.normalize  = lambda w, target_norm : None
-        self.regularize = lambda w, strength : None
-        self.alpha = alpha
-
-    def forward(self, x, _):
-        if isinstance(x, list):
-            return [self.forward(xi, _) for xi in x]
-        else:
-            return self.alpha * x
-
-
-class Add(Module):
+class Identity(Bond):
     def __init__(self):
         super().__init__()
-        self.mass = 0
+        self.smooth = True
         self.sensitivity = 1
-        self.length = 0
-        self.initialize = lambda device, dtype : Vector()
-        self.normalize  = lambda w, target_norm : None
-        self.regularize = lambda w, strength : None
-        self.forward    = lambda x, w : sum(x)
+
+    def forward(self, x, w):
+        return x, [None]
+
+    def backward(self, w, acts, grad_output):
+        return [], grad_output
+
+class Add(Bond):
+    def __init__(self):
+        super().__init__()
+        self.smooth = True
+        self.sensitivity = 1
+
+    def forward(self, x, w):
+        return sum(x), [None]
+
+    def backward(self, w, acts, grad_output):
+        return [], (grad_output, grad_output)
+
+class Mul(Bond):
+    def __init__(self, scalar):
+        super().__init__()
+        self.smooth = True
+        self.sensitivity = scalar
+
+    def forward(self, x, w):
+        return x * self.sensitivity, [None]
+
+    def backward(self, w, acts, grad_output):
+        return [], grad_output * self.sensitivity
