@@ -1,0 +1,26 @@
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "modula"
+version = "0.0.0.0.0.2"
+authors = [
+    { name="Jeremy Bernstein", email="jbernstein@mit.edu" },
+]
+description = "Automatically normalize NN training in the modular norm."
+readme = "README.md"
+requires-python = ">=3.9"
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "License :: OSI Approved :: MIT License", 
+    "Operating System :: OS Independent",
+]
+dependencies = [
+    "torch>=2.0.0",
+]
+
+[project.urls]
+"Homepage" = "https://modula.systems/"
+"Repository" = "https://github.com/modula-systems/modula"
+"Bug Tracker" = "https://github.com/modula-systems/modula/issues"
