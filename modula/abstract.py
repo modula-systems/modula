@@ -36,7 +36,11 @@ class Module:
         # Return a weight list.
         raise NotImplementedError
 
-    def normalize(self, grad_w, target_norm):
+    def project(self, w):
+        # Return a weight list.
+        raise NotImplementedError
+
+    def dualize(self, grad_w, target_norm):
         # Weight gradient list and number --> normalized weight gradient list
         raise NotImplementedError
 
@@ -68,7 +72,10 @@ class Bond(Module):
     def initialize(self):
         return []
 
-    def normalize(self, grad_w, target_norm=1.0):
+    def project(self, w):
+        return []
+
+    def dualize(self, grad_w, target_norm=1.0):
         return []
 
 class CompositeModule(Module):
@@ -94,6 +101,12 @@ class CompositeModule(Module):
         m0, m1 = self.children
         return m0.initialize() + m1.initialize()
 
+    def project(self, w):
+        m0, m1 = self.children
+        w0 = w[:m0.atoms]
+        w1 = w[m0.atoms:]
+        return m0.project(w0) + m1.project(w1)
+
     def backward(self, w, acts, grad_output):
         m0, m1 = self.children
         w0 = w[:m0.atoms]
@@ -106,16 +119,16 @@ class CompositeModule(Module):
 
         return grad_w0 + grad_w1, grad_input0
 
-    def normalize(self, grad_w, target_norm=1.0):
+    def dualize(self, grad_w, target_norm=1.0):
         if self.mass > 0:
             m0, m1 = self.children
             grad_w0, grad_w1 = grad_w[:m0.atoms], grad_w[m0.atoms:]
-            grad_w0 = m0.normalize(grad_w0, target_norm = target_norm * m0.mass / self.mass / m1.sensitivity)
-            grad_w1 = m1.normalize(grad_w1, target_norm = target_norm * m1.mass / self.mass)
-            normalized_grad_w = grad_w0 + grad_w1
+            d_w0 = m0.dualize(grad_w0, target_norm = target_norm * m0.mass / self.mass / m1.sensitivity)
+            d_w1 = m1.dualize(grad_w1, target_norm = target_norm * m1.mass / self.mass)
+            d_w = d_w0 + d_w1
         else:
-            normalized_grad_w = [0 * grad_weight for grad_weight in grad_w]
-        return normalized_grad_w
+            d_w = [0 * grad_weight for grad_weight in grad_w]
+        return d_w
 
 class TupleModule(Module):
     def __init__(self, python_tuple_of_modules):
@@ -151,17 +164,25 @@ class TupleModule(Module):
     def initialize(self):
         return sum([m.initialize() for m in self.children], [])
 
-    def normalize(self, grad_w, target_norm=1.0):
+    def project(self, w):
+        projected_w = []
+        for m in self.children:
+            projected_w_m = m.project(w[:m.atoms])
+            projected_w.append(projected_w_m)
+            w = w[m.atoms:]
+        return projected_w
+
+    def dualize(self, grad_w, target_norm=1.0):
         if self.mass > 0:
-            normalized_grad_w = []
+            d_w = []
             for m in self.children:
                 grad_w_m = grad_w[:m.atoms]
-                grad_w_m = m.normalize(grad_w_m, target_norm = target_norm * m.mass / self.mass)
-                normalized_grad_w += grad_w_m
+                d_w_m = m.dualize(grad_w_m, target_norm = target_norm * m.mass / self.mass)
+                d_w += d_w_m
                 grad_w = grad_w[m.atoms:]
         else:
-            normalized_grad_w = [0 * grad_weight for grad_weight in grad_w]
-        return normalized_grad_w
+            d_w = [0 * grad_weight for grad_weight in grad_w]
+        return d_w
 
 class Identity(Bond):
     def __init__(self):

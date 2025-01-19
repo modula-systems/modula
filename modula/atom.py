@@ -24,23 +24,19 @@ class Linear(Atom):
         return [grad_weight], grad_input
 
     def initialize(self):
-        # semi-orthogonal init
-        A = np.random.normal(size=(self.fanout, self.fanin))
-        A = A if self.fanout > self.fanin else A.T
-        Q = np.linalg.qr(A, mode='reduced')[0]
-        Q = Q if self.fanout > self.fanin else Q.T
-        return [Q]
+        weight = np.random.normal(size=(self.fanout, self.fanin))
+        return [weight]
 
-    def normalize(self, grad_w, target_norm=1.0):
+    def project(self, w):
+        weight = w[0]
+        weight = weight / np.linalg.norm(weight)
+        for _ in range(10):
+            weight = 3/2 * weight - 1/2 * weight @ weight.T @ weight
+        return [weight]
+
+    def dualize(self, grad_w, target_norm=1.0):
         grad_weight = grad_w[0]
-        spectral_norm = np.linalg.norm(grad_weight, ord=2)
-        return [grad_weight / spectral_norm * target_norm]
-
-class ShampooLinear(Linear):
-    def __init__(self, fanout, fanin):
-        super().__init__(fanout, fanin)
-
-    def normalize(self, grad_w, target_norm=1.0):
-        grad_weight = grad_w[0]
-        U, S, Vt = np.linalg.svd(grad_weight, full_matrices=False)
-        return [U @ Vt * target_norm]
+        grad_weight = grad_weight / np.linalg.norm(grad_weight)
+        for _ in range(10):
+            grad_weight = 3/2 * grad_weight - 1/2 * grad_weight @ grad_weight.T @ grad_weight
+        return [grad_weight * target_norm]

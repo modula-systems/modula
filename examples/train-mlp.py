@@ -1,18 +1,16 @@
 import numpy as np
 import matplotlib.pyplot as plt
+from tqdm import tqdm
 
-from modula.atom import Linear, ShampooLinear
-from modula.bond import ReLU
+from modula.compound import MLP
 from modula.error import SquareError
 
-def train(module, error, input, target, steps, init_lr, normalize, tqdm=False):
-    train_loss_list = []
-    w = module.initialize()
+def train(module, error, input, target, steps, init_lr, dualize):
 
-    if tqdm:
-        from tqdm.notebook import tqdm
-    else:
-        tqdm = lambda x: x
+    w = module.initialize()
+    w = module.project(w)
+
+    train_loss_list = []
 
     for step in tqdm(range(steps)):
         schedule = 1 - step / steps
@@ -21,11 +19,16 @@ def train(module, error, input, target, steps, init_lr, normalize, tqdm=False):
         loss = error(output, target)
         error_grad = error.grad(output, target)
         grad_w, _ = module.backward(w, activations, error_grad)
-        if normalize:
-            grad_w = module.normalize(grad_w)
 
-        for weight, grad_weight in zip(w, grad_w):
-            weight -= init_lr * schedule * grad_weight
+        if dualize:
+            d_w = module.dualize(grad_w)
+        else:
+            d_w = grad_w
+
+        for weight, d_weight in zip(w, d_w):
+            weight -= init_lr * schedule * d_weight
+
+        w = module.project(w)
 
         train_loss_list.append(loss)
 
@@ -33,44 +36,47 @@ def train(module, error, input, target, steps, init_lr, normalize, tqdm=False):
 
 input_dim = 11
 width = 100
+depth = 3
 output_dim = 6
 batch_size = 32
 steps = 1001
-lr_list = 10.0 ** np.arange(-4, 1)
+lr_list = 10.0 ** np.arange(-4, 3)
 
 error = SquareError()
 
 x = np.random.rand(input_dim, batch_size)
 y = np.random.rand(output_dim, batch_size)
 
-results = {}
-config_list = [(False, False), (True, False), (True, True)]
+sensitivity = 10
+results = {'dualized': {}, 'non_dualized': {}}
 
-for normalize, shampoo in config_list:
+print(f"sensitivity: {sensitivity}")
+for init_lr in lr_list:
+    print(f"init_lr: {init_lr}")
 
-    print("running config:", "normalize", normalize, "shampoo", shampoo)
-    for init_lr in lr_list:
-        print("init_lr", init_lr)
+    m = sensitivity * MLP(output_dim, input_dim, width, depth)
 
-        M = ShampooLinear if shampoo else Linear
-        m = M(output_dim, width) @ ReLU() @ M(width, input_dim)
+    # Train with dualization
+    loss_history = train(m, error, x, y, steps, init_lr, dualize=True)
+    results['dualized'][init_lr] = loss_history[-1]
+    
+    # Train without dualization 
+    loss_history = train(m, error, x, y, steps, init_lr, dualize=False)
+    results['non_dualized'][init_lr] = loss_history[-1]
 
-        results[(normalize, shampoo, init_lr)] = train(m, error, x, y, steps, init_lr, normalize)
+plt.figure(figsize=(8, 6))
 
-config_titles = ["Vanilla gradient descent", "Modular normalization using $G/||G||_*$", "Modular normalization using $G^0$"]
+dualized_losses = [results['dualized'][lr] for lr in lr_list]
+non_dualized_losses = [results['non_dualized'][lr] for lr in lr_list]
 
-fig, ax = plt.subplots(1, len(config_list), figsize=(10, 3), sharey=True)
+plt.plot(lr_list, dualized_losses, 'o-', label='With dualization')
+plt.plot(lr_list, non_dualized_losses, 'o-', label='Without dualization')
 
-for i, (normalize, shampoo) in enumerate(config_list):
-    for init_lr in lr_list:
-        ax[i].plot(results[(normalize, shampoo, init_lr)], label=init_lr)
-    ax[i].set_title(config_titles[i])
-    ax[i].set_xlabel("Training iteration")
-    ax[i].set_yscale("log")
-
-ax[0].set_ylabel("Training loss")
-ax[0].legend(title="Learning rate:", frameon=False)
-ax[0].set_ylim(None, 1)
-
-plt.tight_layout()
+plt.xscale('log')
+plt.yscale('log')
+plt.xlabel('Learning rate')
+plt.ylabel('Final loss')
+plt.title(f'Final Loss vs Learning Rate (Sensitivity = {sensitivity})')
+plt.legend(frameon=False)
+plt.grid(True)
 plt.show()
