@@ -34,9 +34,6 @@ The docs currently contain some original research contributions not published an
    :maxdepth: 2
    :caption: Introduction:
 
-   .. bad-scaling
-   .. golden-rules
-   .. history
    intro/reading-list
 
 .. .. toctree::
@@ -56,6 +53,13 @@ The docs currently contain some original research contributions not published an
    :caption: Algorithms:
 
    algorithms/manifold/index
+
+.. toctree::
+   :hidden:
+   :maxdepth: 2
+   :caption: Examples:
+
+   examples/hello-world
 
 .. toctree::
    :hidden:
