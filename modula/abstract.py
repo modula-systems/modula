@@ -1,3 +1,5 @@
+import jax
+
 class Module:
     def __init__(self):
         self.children = []
@@ -24,6 +26,12 @@ class Module:
             for m in self.children:
                 m.tare(relative = relative)
 
+    def jit(self):
+        self.forward  = jax.jit(self.forward)
+        self.backward = jax.jit(self.backward)
+        self.project  = jax.jit(self.project)
+        self.dualize  = jax.jit(self.dualize)
+
     def forward(self, x, w):
         # Input and weight list --> output and list of internal activations.
         raise NotImplementedError
@@ -32,7 +40,7 @@ class Module:
         # Weight list and output gradient --> weight gradient list and input gradient.
         raise NotImplementedError
 
-    def initialize(self):
+    def initialize(self, key):
         # Return a weight list.
         raise NotImplementedError
 
@@ -69,7 +77,7 @@ class Bond(Module):
         self.bonds = 1
         self.mass = 0
 
-    def initialize(self):
+    def initialize(self, key):
         return []
 
     def project(self, w):
@@ -97,9 +105,10 @@ class CompositeModule(Module):
         x1, activations1 = m1.forward(x0, w1)
         return x1, activations0 + activations1
 
-    def initialize(self):
+    def initialize(self, key):
         m0, m1 = self.children
-        return m0.initialize() + m1.initialize()
+        key, subkey = jax.random.split(key)
+        return m0.initialize(key) + m1.initialize(subkey)
 
     def project(self, w):
         m0, m1 = self.children
@@ -161,8 +170,12 @@ class TupleModule(Module):
             acts = acts[m.atoms+m.bonds:]
         return grad_w, grad_input
 
-    def initialize(self):
-        return sum([m.initialize() for m in self.children], [])
+    def initialize(self, key):
+        w = []
+        for m in self.children:
+            key, subkey = jax.random.split(key)
+            w.append(m.initialize(subkey))
+        return w
 
     def project(self, w):
         projected_w = []

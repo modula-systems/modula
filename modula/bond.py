@@ -1,4 +1,4 @@
-import numpy as np
+import jax.numpy as jnp
 
 from modula.abstract import Bond
 
@@ -9,7 +9,7 @@ class ReLU(Bond):
         self.sensitivity = 1
 
     def forward(self, x, w):
-        return np.maximum(0, x), [x]
+        return jnp.maximum(0, x), [x]
 
     def backward(self, w, acts, grad_output):
         input = acts[0]
