@@ -3,22 +3,23 @@
   <head><meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width,initial-scale=1"/>
     <meta name="color-scheme" content="light dark"><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
-<meta property="og:title" content="Compound modules" />
+<meta property="og:title" content="Hello, World!" />
 <meta property="og:type" content="website" />
-<meta property="og:url" content="https://modula.systems/theory/compound/" />
+<meta property="og:url" content="https://modula.systems/examples/hello-world/" />
 <meta property="og:site_name" content="Modula" />
 <meta property="og:image" content="https://docs.modula.systems/_static/logo-square.jpeg" />
 <meta property="og:image:alt" content="Modula" />
-<link rel="index" title="Index" href="../../genindex/" /><link rel="search" title="Search" href="../../search/" />
+<link rel="index" title="Index" href="../../genindex/" /><link rel="search" title="Search" href="../../search/" /><link rel="next" title="Hello, MNIST!" href="../hello-mnist/" /><link rel="prev" title="Orthogonal manifold" href="../../algorithms/manifold/orthogonal/" />
 
     <link rel="shortcut icon" href="../../_static/favicon.ico"/><!-- Generated with Sphinx 7.0.0 and Furo 2024.08.06 -->
-        <title>Compound modules - docs.modula.systems</title>
+        <title>Hello, World! - docs.modula.systems</title>
       <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../../_static/styles/furo.css?digest=04c057b233f3c8d71940eee6080f658a04e2027d" />
     <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css" />
     <link rel="stylesheet" type="text/css" href="../../_static/tabs.css" />
     <link rel="stylesheet" type="text/css" href="../../_static/plot_directive.css" />
     <link rel="stylesheet" type="text/css" href="../../_static/sphinx-design.4cbf315f70debaebd550c87a6162cf0f.min.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/nbsphinx-code-cells.css" />
     <link rel="stylesheet" type="text/css" href="../../_static/styles/furo-extensions.css?digest=cf727022eb7470bc603c08d2e55c3247faec75c9" />
     <link rel="stylesheet" type="text/css" href="../../_static/custom.css" />
     
@@ -225,9 +226,9 @@
 </li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Examples:</span></p>
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="../../examples/hello-world/">Hello, World!</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../examples/hello-mnist/">Hello, MNIST!</a></li>
+<ul class="current">
+<li class="toctree-l1 current current-page"><a class="current reference internal" href="#">Hello, World!</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../hello-mnist/">Hello, MNIST!</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">More on Modula:</span></p>
 <ul>
@@ -254,12 +255,12 @@
         </a>
         <div class="content-icon-container">
           <div class="view-this-page">
-  <a class="muted-link" href="https://github.com/modula-systems/modula/blob/main/docs/source/theory/compound/index.rst?plain=true" title="View this page">
+  <a class="muted-link" href="https://github.com/modula-systems/modula/blob/main/docs/source/examples/hello-world.nblink?plain=true" title="View this page">
     <svg><use href="#svg-eye"></use></svg>
     <span class="visually-hidden">View this page</span>
   </a>
 </div><div class="edit-this-page">
-  <a class="muted-link" href="https://github.com/modula-systems/modula/edit/main/docs/source/theory/compound/index.rst" title="Edit this page">
+  <a class="muted-link" href="https://github.com/modula-systems/modula/edit/main/docs/source/examples/hello-world.nblink" title="Edit this page">
     <svg><use href="#svg-pencil"></use></svg>
     <span class="visually-hidden">Edit this page</span>
   </a>
@@ -278,13 +279,114 @@
           </label>
         </div>
         <article role="main" id="furo-main-content">
-          <section id="compound-modules">
-<h1>Compound modules<a class="headerlink" href="#compound-modules" title="Permalink to this heading">¶</a></h1>
-<div class="toctree-wrapper compound">
+          <section id="Hello,-World!">
+<h1>Hello, World!<a class="headerlink" href="#Hello,-World!" title="Permalink to this heading">¶</a></h1>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[5]:
+</pre></div>
 </div>
-<div class="warning admonition">
-<p class="admonition-title">Warning</p>
-<p>This page is still under construction.</p>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">jax</span>
+<span class="kn">import</span> <span class="nn">jax.numpy</span> <span class="k">as</span> <span class="nn">jnp</span>
+
+<span class="n">input_dim</span> <span class="o">=</span> <span class="mi">28</span> <span class="o">*</span> <span class="mi">28</span>
+<span class="n">output_dim</span> <span class="o">=</span> <span class="mi">10</span>
+<span class="n">batch_size</span> <span class="o">=</span> <span class="mi">128</span>
+
+<span class="c1"># Generate random training data</span>
+<span class="n">key</span> <span class="o">=</span> <span class="n">jax</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">PRNGKey</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+<span class="n">inputs</span> <span class="o">=</span> <span class="n">jax</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">normal</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="p">(</span><span class="n">input_dim</span><span class="p">,</span> <span class="n">batch_size</span><span class="p">))</span>
+<span class="n">targets</span> <span class="o">=</span> <span class="n">jax</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">normal</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="p">(</span><span class="n">output_dim</span><span class="p">,</span> <span class="n">batch_size</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[4]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">modula.atom</span> <span class="kn">import</span> <span class="n">Linear</span>
+<span class="kn">from</span> <span class="nn">modula.bond</span> <span class="kn">import</span> <span class="n">ReLU</span>
+
+<span class="n">width</span> <span class="o">=</span> <span class="mi">256</span>
+
+<span class="n">mlp</span> <span class="o">=</span> <span class="n">Linear</span><span class="p">(</span><span class="n">output_dim</span><span class="p">,</span> <span class="n">width</span><span class="p">)</span>
+<span class="n">mlp</span> <span class="o">@=</span> <span class="n">ReLU</span><span class="p">()</span> <span class="o">@</span> <span class="n">Linear</span><span class="p">(</span><span class="n">width</span><span class="p">,</span> <span class="n">width</span><span class="p">)</span>
+<span class="n">mlp</span> <span class="o">@=</span> <span class="n">ReLU</span><span class="p">()</span> <span class="o">@</span> <span class="n">Linear</span><span class="p">(</span><span class="n">width</span><span class="p">,</span> <span class="n">input_dim</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="n">mlp</span><span class="p">)</span>
+
+<span class="n">mlp</span><span class="o">.</span><span class="n">jit</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+CompositeModule
+...consists of 3 atoms and 2 bonds
+...non-smooth
+...input sensitivity is 1
+...contributes proportion 3 to feature learning of any supermodule
+</pre></div></div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[12]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">modula.error</span> <span class="kn">import</span> <span class="n">SquareError</span>
+
+<span class="n">steps</span> <span class="o">=</span> <span class="mi">1000</span>
+<span class="n">learning_rate</span> <span class="o">=</span> <span class="mf">0.1</span>
+<span class="n">error</span> <span class="o">=</span> <span class="n">SquareError</span><span class="p">()</span>
+
+<span class="n">key</span> <span class="o">=</span> <span class="n">jax</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">PRNGKey</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+<span class="n">w</span> <span class="o">=</span> <span class="n">mlp</span><span class="o">.</span><span class="n">initialize</span><span class="p">(</span><span class="n">key</span><span class="p">)</span>
+<span class="n">w</span> <span class="o">=</span> <span class="n">mlp</span><span class="o">.</span><span class="n">project</span><span class="p">(</span><span class="n">w</span><span class="p">)</span>
+
+<span class="k">for</span> <span class="n">step</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">steps</span><span class="p">):</span>
+    <span class="c1"># compute outputs and activations</span>
+    <span class="n">outputs</span><span class="p">,</span> <span class="n">activations</span> <span class="o">=</span> <span class="n">mlp</span><span class="p">(</span><span class="n">inputs</span><span class="p">,</span> <span class="n">w</span><span class="p">)</span>
+
+    <span class="c1"># compute loss</span>
+    <span class="n">loss</span> <span class="o">=</span> <span class="n">error</span><span class="p">(</span><span class="n">outputs</span><span class="p">,</span> <span class="n">targets</span><span class="p">)</span>
+
+    <span class="c1"># compute error gradient</span>
+    <span class="n">error_grad</span> <span class="o">=</span> <span class="n">error</span><span class="o">.</span><span class="n">grad</span><span class="p">(</span><span class="n">outputs</span><span class="p">,</span> <span class="n">targets</span><span class="p">)</span>
+
+    <span class="c1"># compute gradient of weights</span>
+    <span class="n">grad_w</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">mlp</span><span class="o">.</span><span class="n">backward</span><span class="p">(</span><span class="n">w</span><span class="p">,</span> <span class="n">activations</span><span class="p">,</span> <span class="n">error_grad</span><span class="p">)</span>
+
+    <span class="c1"># dualize gradient</span>
+    <span class="n">d_w</span> <span class="o">=</span> <span class="n">mlp</span><span class="o">.</span><span class="n">dualize</span><span class="p">(</span><span class="n">grad_w</span><span class="p">)</span>
+
+    <span class="c1"># compute scheduled learning rate</span>
+    <span class="n">lr</span> <span class="o">=</span> <span class="n">learning_rate</span> <span class="o">*</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">step</span> <span class="o">/</span> <span class="n">steps</span><span class="p">)</span>
+
+    <span class="c1"># update weights</span>
+    <span class="n">w</span> <span class="o">=</span> <span class="p">[</span><span class="n">weight</span> <span class="o">-</span> <span class="n">lr</span> <span class="o">*</span> <span class="n">d_weight</span> <span class="k">for</span> <span class="n">weight</span><span class="p">,</span> <span class="n">d_weight</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">w</span><span class="p">,</span> <span class="n">d_w</span><span class="p">)]</span>
+
+    <span class="k">if</span> <span class="n">step</span> <span class="o">%</span> <span class="mi">100</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Step </span><span class="si">{</span><span class="n">step</span><span class="si">}</span><span class="s2">, Loss </span><span class="si">{</span><span class="n">loss</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<br/></pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+Step 0, Loss 0.9790326952934265
+Step 100, Loss 0.0018738203216344118
+Step 200, Loss 0.0014391584554687142
+Step 300, Loss 0.0010814154520630836
+Step 400, Loss 0.0008106177556328475
+Step 500, Loss 0.0005738214822486043
+Step 600, Loss 0.0003808117180597037
+Step 700, Loss 0.00022766715846955776
+Step 800, Loss 0.00011454012565081939
+Step 900, Loss 3.979807297582738e-05
+</pre></div></div>
 </div>
 </section>
 
@@ -293,8 +395,26 @@
       <footer>
         
         <div class="related-pages">
-          
-          
+          <a class="next-page" href="../hello-mnist/">
+              <div class="page-info">
+                <div class="context">
+                  <span>Next</span>
+                </div>
+                <div class="title">Hello, MNIST!</div>
+              </div>
+              <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
+            </a>
+          <a class="prev-page" href="../../algorithms/manifold/orthogonal/">
+              <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
+              <div class="page-info">
+                <div class="context">
+                  <span>Previous</span>
+                </div>
+                
+                <div class="title">Orthogonal manifold</div>
+                
+              </div>
+            </a>
         </div>
         <div class="bottom-of-page">
           <div class="left-details">
@@ -335,5 +455,7 @@
     <script src="../../_static/tabs.js"></script>
     <script src="../../_static/design-tabs.js"></script>
     <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <script>window.MathJax = {"tex": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "processEscapes": true}, "options": {"ignoreHtmlClass": "tex2jax_ignore|mathjax_ignore|document", "processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     </body>
 </html>

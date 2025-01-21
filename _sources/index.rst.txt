@@ -59,6 +59,7 @@ The docs currently contain some original research contributions not published an
    :maxdepth: 2
    :caption: Examples:
 
+   examples/hello-world
    examples/hello-mnist
 
 .. toctree::
