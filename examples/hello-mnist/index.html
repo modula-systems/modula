@@ -18,8 +18,8 @@
     <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css" />
     <link rel="stylesheet" type="text/css" href="../../_static/tabs.css" />
     <link rel="stylesheet" type="text/css" href="../../_static/plot_directive.css" />
-    <link rel="stylesheet" type="text/css" href="../../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
     <link rel="stylesheet" type="text/css" href="../../_static/sphinx-design.4cbf315f70debaebd550c87a6162cf0f.min.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/nbsphinx-code-cells.css" />
     <link rel="stylesheet" type="text/css" href="../../_static/styles/furo-extensions.css?digest=cf727022eb7470bc603c08d2e55c3247faec75c9" />
     <link rel="stylesheet" type="text/css" href="../../_static/custom.css" />
     
@@ -254,12 +254,12 @@
         </a>
         <div class="content-icon-container">
           <div class="view-this-page">
-  <a class="muted-link" href="https://github.com/modula-systems/modula/blob/main/docs/source/examples/hello-mnist.ipynb?plain=true" title="View this page">
+  <a class="muted-link" href="https://github.com/modula-systems/modula/blob/main/docs/source/examples/hello-mnist.nblink?plain=true" title="View this page">
     <svg><use href="#svg-eye"></use></svg>
     <span class="visually-hidden">View this page</span>
   </a>
 </div><div class="edit-this-page">
-  <a class="muted-link" href="https://github.com/modula-systems/modula/edit/main/docs/source/examples/hello-mnist.ipynb" title="Edit this page">
+  <a class="muted-link" href="https://github.com/modula-systems/modula/edit/main/docs/source/examples/hello-mnist.nblink" title="Edit this page">
     <svg><use href="#svg-pencil"></use></svg>
     <span class="visually-hidden">Edit this page</span>
   </a>
@@ -278,177 +278,206 @@
           </label>
         </div>
         <article role="main" id="furo-main-content">
-          <section id="hello-mnist">
-<h1>Hello, MNIST!<a class="headerlink" href="#hello-mnist" title="Permalink to this heading">¶</a></h1>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">data.mnist</span> <span class="kn">import</span> <span class="n">load_mnist</span>
+          <section id="Hello,-MNIST!">
+<h1>Hello, MNIST!<a class="headerlink" href="#Hello,-MNIST!" title="Permalink to this heading">¶</a></h1>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[1]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>from data.mnist import load_mnist
 
-<span class="c1"># Load the MNIST dataset</span>
-<span class="n">train_images</span><span class="p">,</span> <span class="n">train_labels</span><span class="p">,</span> <span class="n">test_images</span><span class="p">,</span> <span class="n">test_labels</span> <span class="o">=</span> <span class="n">load_mnist</span><span class="p">()</span>
+# Load the MNIST dataset
+train_images, train_labels, test_images, test_labels = load_mnist()
 
-<span class="c1"># Print shapes to verify loading</span>
-<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Training images shape: </span><span class="si">{</span><span class="n">train_images</span><span class="o">.</span><span class="n">shape</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Training labels shape: </span><span class="si">{</span><span class="n">train_labels</span><span class="o">.</span><span class="n">shape</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Test images shape: </span><span class="si">{</span><span class="n">test_images</span><span class="o">.</span><span class="n">shape</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Test labels shape: </span><span class="si">{</span><span class="n">test_labels</span><span class="o">.</span><span class="n">shape</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+# Print shapes to verify loading
+print(f&quot;Training images shape: {train_images.shape}&quot;)
+print(f&quot;Training labels shape: {train_labels.shape}&quot;)
+print(f&quot;Test images shape: {test_images.shape}&quot;)
+print(f&quot;Test labels shape: {test_labels.shape}&quot;)
 </pre></div>
 </div>
 </div>
-<div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Training images shape: (60000, 28, 28)
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+Training images shape: (60000, 28, 28)
 Training labels shape: (60000,)
 Test images shape: (10000, 28, 28)
 Test labels shape: (10000,)
+</pre></div></div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[2]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>import matplotlib.pyplot as plt
+
+# Create a figure with 5 subplots
+fig, axes = plt.subplots(1, 5, figsize=(10, 3))
+
+# Plot each image and its label
+for i in range(5):
+    axes[i].imshow(train_images[i], cmap=&#39;gray&#39;)
+    axes[i].set_title(f&#39;Label: {train_labels[i]}&#39;)
+    axes[i].axis(&#39;off&#39;)
+
+plt.tight_layout()
+plt.show()
 </pre></div>
 </div>
 </div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
 </div>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+<div class="output_area docutils container">
+<img alt="../../_images/examples_hello-mnist_2_0.png" src="../../_images/examples_hello-mnist_2_0.png" />
+</div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[3]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>import jax
+import jax.numpy as jnp
 
-<span class="c1"># Create a figure with 5 subplots</span>
-<span class="n">fig</span><span class="p">,</span> <span class="n">axes</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">3</span><span class="p">))</span>
+def one_hot(x, k, dtype=jnp.float32):
+    &quot;&quot;&quot;Create a one-hot encoding of x of size k.&quot;&quot;&quot;
+    return jnp.array(x[:, None] == jnp.arange(k), dtype)
 
-<span class="c1"># Plot each image and its label</span>
-<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">5</span><span class="p">):</span>
-    <span class="n">axes</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">train_images</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">cmap</span><span class="o">=</span><span class="s1">&#39;gray&#39;</span><span class="p">)</span>
-    <span class="n">axes</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Label: </span><span class="si">{</span><span class="n">train_labels</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
-    <span class="n">axes</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">axis</span><span class="p">(</span><span class="s1">&#39;off&#39;</span><span class="p">)</span>
+# Reshape images and convert labels
+X_train = train_images.reshape(train_images.shape[0], -1).T
+y_train = one_hot(train_labels, 10).T
 
-<span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+# Get a batch
+def get_batch(key, batch_size):
+    idx = jax.random.choice(key, X_train.shape[1], shape=(batch_size,))
+    return X_train[:, idx], y_train[:, idx]
 </pre></div>
 </div>
 </div>
-<div class="cell_output docutils container">
-<img alt="../../_images/c78c51f00861d063ecf2665029e9357f2da0de549e3f8c04134465a745e6a5a8.png" src="../../_images/c78c51f00861d063ecf2665029e9357f2da0de549e3f8c04134465a745e6a5a8.png" />
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[4]:
+</pre></div>
 </div>
-</div>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">jax</span>
-<span class="kn">import</span> <span class="nn">jax.numpy</span> <span class="k">as</span> <span class="nn">jnp</span>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>from modula.atom import Linear
+from modula.bond import ReLU
 
-<span class="k">def</span> <span class="nf">one_hot</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">k</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">jnp</span><span class="o">.</span><span class="n">float32</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Create a one-hot encoding of x of size k.&quot;&quot;&quot;</span>
-    <span class="k">return</span> <span class="n">jnp</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">x</span><span class="p">[:,</span> <span class="kc">None</span><span class="p">]</span> <span class="o">==</span> <span class="n">jnp</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">k</span><span class="p">),</span> <span class="n">dtype</span><span class="p">)</span>
+input_dim = 28 * 28
+output_dim = 10
+width = 256
 
-<span class="c1"># Reshape images and convert labels</span>
-<span class="n">X_train</span> <span class="o">=</span> <span class="n">train_images</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">train_images</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">T</span>
-<span class="n">y_train</span> <span class="o">=</span> <span class="n">one_hot</span><span class="p">(</span><span class="n">train_labels</span><span class="p">,</span> <span class="mi">10</span><span class="p">)</span><span class="o">.</span><span class="n">T</span>
+mlp = Linear(output_dim, width)
+mlp @= ReLU() @ Linear(width, width)
+mlp @= ReLU() @ Linear(width, input_dim)
 
-<span class="c1"># Get a batch</span>
-<span class="k">def</span> <span class="nf">get_batch</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">batch_size</span><span class="p">):</span>
-    <span class="n">idx</span> <span class="o">=</span> <span class="n">jax</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">X_train</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">shape</span><span class="o">=</span><span class="p">(</span><span class="n">batch_size</span><span class="p">,))</span>
-    <span class="k">return</span> <span class="n">X_train</span><span class="p">[:,</span> <span class="n">idx</span><span class="p">],</span> <span class="n">y_train</span><span class="p">[:,</span> <span class="n">idx</span><span class="p">]</span>
+print(mlp)
+
+mlp.jit()
 </pre></div>
 </div>
 </div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
 </div>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">modula.atom</span> <span class="kn">import</span> <span class="n">Linear</span>
-<span class="kn">from</span> <span class="nn">modula.bond</span> <span class="kn">import</span> <span class="n">ReLU</span>
-
-<span class="n">input_dim</span> <span class="o">=</span> <span class="mi">28</span> <span class="o">*</span> <span class="mi">28</span>
-<span class="n">output_dim</span> <span class="o">=</span> <span class="mi">10</span>
-<span class="n">width</span> <span class="o">=</span> <span class="mi">256</span>
-
-<span class="n">mlp</span> <span class="o">=</span> <span class="n">Linear</span><span class="p">(</span><span class="n">output_dim</span><span class="p">,</span> <span class="n">width</span><span class="p">)</span>
-<span class="n">mlp</span> <span class="o">@=</span> <span class="n">ReLU</span><span class="p">()</span> <span class="o">@</span> <span class="n">Linear</span><span class="p">(</span><span class="n">width</span><span class="p">,</span> <span class="n">width</span><span class="p">)</span> 
-<span class="n">mlp</span> <span class="o">@=</span> <span class="n">ReLU</span><span class="p">()</span> <span class="o">@</span> <span class="n">Linear</span><span class="p">(</span><span class="n">width</span><span class="p">,</span> <span class="n">input_dim</span><span class="p">)</span>
-
-<span class="nb">print</span><span class="p">(</span><span class="n">mlp</span><span class="p">)</span>
-
-<span class="n">mlp</span><span class="o">.</span><span class="n">jit</span><span class="p">()</span>
-</pre></div>
-</div>
-</div>
-<div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CompositeModule
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+CompositeModule
 ...consists of 3 atoms and 2 bonds
 ...non-smooth
 ...input sensitivity is 1
 ...contributes proportion 3 to feature learning of any supermodule
+</pre></div></div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[5]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>from tqdm.notebook import tqdm
+
+from modula.error import SquareError
+
+batch_size = 128
+steps = 1000
+learning_rate = 0.1
+
+error = SquareError()
+
+w = mlp.initialize(jax.random.PRNGKey(0))
+w = mlp.project(w)
+
+progress_bar = tqdm(range(steps), desc=f&quot;Loss: {0:.4f}&quot;)
+for step in progress_bar:
+    key = jax.random.PRNGKey(step)
+    inputs, targets = get_batch(key, batch_size)
+
+    outputs, activations = mlp(inputs, w)
+    loss = error(outputs, targets)
+    error_grad = error.grad(outputs, targets)
+    grad_w, _ = mlp.backward(w, activations, error_grad)
+    d_w = mlp.dualize(grad_w)
+    w = [weight - learning_rate * d_weight for weight, d_weight in zip(w, d_w)]
+    progress_bar.set_description(f&quot;Loss: {loss:.4f}&quot;)
 </pre></div>
 </div>
 </div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
 </div>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">tqdm.notebook</span> <span class="kn">import</span> <span class="n">tqdm</span>
-
-<span class="kn">from</span> <span class="nn">modula.error</span> <span class="kn">import</span> <span class="n">SquareError</span>
-
-<span class="n">batch_size</span> <span class="o">=</span> <span class="mi">128</span>
-<span class="n">steps</span> <span class="o">=</span> <span class="mi">1000</span>
-<span class="n">learning_rate</span> <span class="o">=</span> <span class="mf">0.1</span>
-
-<span class="n">error</span> <span class="o">=</span> <span class="n">SquareError</span><span class="p">()</span>
-
-<span class="n">w</span> <span class="o">=</span> <span class="n">mlp</span><span class="o">.</span><span class="n">initialize</span><span class="p">(</span><span class="n">jax</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">PRNGKey</span><span class="p">(</span><span class="mi">0</span><span class="p">))</span>
-<span class="n">w</span> <span class="o">=</span> <span class="n">mlp</span><span class="o">.</span><span class="n">project</span><span class="p">(</span><span class="n">w</span><span class="p">)</span>
-    
-<span class="n">progress_bar</span> <span class="o">=</span> <span class="n">tqdm</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="n">steps</span><span class="p">),</span> <span class="n">desc</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;Loss: </span><span class="si">{</span><span class="mi">0</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-<span class="k">for</span> <span class="n">step</span> <span class="ow">in</span> <span class="n">progress_bar</span><span class="p">:</span>
-    <span class="n">key</span> <span class="o">=</span> <span class="n">jax</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">PRNGKey</span><span class="p">(</span><span class="n">step</span><span class="p">)</span>
-    <span class="n">inputs</span><span class="p">,</span> <span class="n">targets</span> <span class="o">=</span> <span class="n">get_batch</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">batch_size</span><span class="p">)</span>
-    
-    <span class="n">outputs</span><span class="p">,</span> <span class="n">activations</span> <span class="o">=</span> <span class="n">mlp</span><span class="p">(</span><span class="n">inputs</span><span class="p">,</span> <span class="n">w</span><span class="p">)</span>
-    <span class="n">loss</span> <span class="o">=</span> <span class="n">error</span><span class="p">(</span><span class="n">outputs</span><span class="p">,</span> <span class="n">targets</span><span class="p">)</span>
-    <span class="n">error_grad</span> <span class="o">=</span> <span class="n">error</span><span class="o">.</span><span class="n">grad</span><span class="p">(</span><span class="n">outputs</span><span class="p">,</span> <span class="n">targets</span><span class="p">)</span>
-    <span class="n">grad_w</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">mlp</span><span class="o">.</span><span class="n">backward</span><span class="p">(</span><span class="n">w</span><span class="p">,</span> <span class="n">activations</span><span class="p">,</span> <span class="n">error_grad</span><span class="p">)</span>
-    <span class="n">d_w</span> <span class="o">=</span> <span class="n">mlp</span><span class="o">.</span><span class="n">dualize</span><span class="p">(</span><span class="n">grad_w</span><span class="p">)</span>
-    <span class="n">w</span> <span class="o">=</span> <span class="p">[</span><span class="n">weight</span> <span class="o">-</span> <span class="n">learning_rate</span> <span class="o">*</span> <span class="n">d_weight</span> <span class="k">for</span> <span class="n">weight</span><span class="p">,</span> <span class="n">d_weight</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">w</span><span class="p">,</span> <span class="n">d_w</span><span class="p">)]</span>
-    <span class="n">progress_bar</span><span class="o">.</span><span class="n">set_description</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Loss: </span><span class="si">{</span><span class="n">loss</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-</pre></div>
-</div>
-</div>
-<div class="cell_output docutils container">
+<div class="output_area docutils container">
 <script type="application/vnd.jupyter.widget-view+json">{"model_id": "843eaab5f76d4293b9c6a22eddfd720c", "version_major": 2, "version_minor": 0}</script></div>
 </div>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Get predictions for test images</span>
-<span class="n">X_test</span> <span class="o">=</span> <span class="n">test_images</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">test_images</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">T</span>
-<span class="n">test_outputs</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">mlp</span><span class="p">(</span><span class="n">X_test</span><span class="p">,</span> <span class="n">w</span><span class="p">)</span>
-<span class="n">predicted_labels</span> <span class="o">=</span> <span class="n">jnp</span><span class="o">.</span><span class="n">argmax</span><span class="p">(</span><span class="n">test_outputs</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[6]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span># Get predictions for test images
+X_test = test_images.reshape(test_images.shape[0], -1).T
+test_outputs, _ = mlp(X_test, w)
+predicted_labels = jnp.argmax(test_outputs, axis=0)
 
-<span class="c1"># Create a figure with subplots for multiple test images</span>
-<span class="n">n_samples</span> <span class="o">=</span> <span class="mi">5</span>  <span class="c1"># Number of test images to display</span>
-<span class="n">fig</span><span class="p">,</span> <span class="n">axes</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">n_samples</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">3</span><span class="p">))</span>
+# Create a figure with subplots for multiple test images
+n_samples = 5  # Number of test images to display
+fig, axes = plt.subplots(1, n_samples, figsize=(10, 3))
 
-<span class="c1"># Plot each test image with true and predicted labels</span>
-<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_samples</span><span class="p">):</span>
-    <span class="n">axes</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">test_images</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">cmap</span><span class="o">=</span><span class="s1">&#39;gray&#39;</span><span class="p">)</span>
-    <span class="n">true_label</span> <span class="o">=</span> <span class="n">test_labels</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
-    <span class="n">pred_label</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">predicted_labels</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>  <span class="c1"># Convert from JAX array to integer</span>
-    <span class="n">axes</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Predicted label: </span><span class="si">{</span><span class="n">pred_label</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
-    <span class="n">axes</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">axis</span><span class="p">(</span><span class="s1">&#39;off&#39;</span><span class="p">)</span>
+# Plot each test image with true and predicted labels
+for i in range(n_samples):
+    axes[i].imshow(test_images[i], cmap=&#39;gray&#39;)
+    true_label = test_labels[i]
+    pred_label = int(predicted_labels[i])  # Convert from JAX array to integer
+    axes[i].set_title(f&#39;Predicted label: {pred_label}&#39;)
+    axes[i].axis(&#39;off&#39;)
 
-<span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+plt.tight_layout()
+plt.show()
 
-<span class="c1"># Print accuracy for these samples</span>
-<span class="n">correct</span> <span class="o">=</span> <span class="p">(</span><span class="n">predicted_labels</span><span class="p">[:</span><span class="n">n_samples</span><span class="p">]</span> <span class="o">==</span> <span class="n">test_labels</span><span class="p">[:</span><span class="n">n_samples</span><span class="p">])</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span>
-<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Accuracy on shown samples: </span><span class="si">{</span><span class="n">correct</span><span class="si">}</span><span class="s2">/</span><span class="si">{</span><span class="n">n_samples</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+# Print accuracy for these samples
+correct = (predicted_labels[:n_samples] == test_labels[:n_samples]).sum()
+print(f&quot;Accuracy on shown samples: {correct}/{n_samples}&quot;)
 
-<span class="c1"># Calculate and print overall test accuracy</span>
-<span class="n">total_correct</span> <span class="o">=</span> <span class="p">(</span><span class="n">predicted_labels</span> <span class="o">==</span> <span class="n">test_labels</span><span class="p">)</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span>
-<span class="n">total_samples</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">test_labels</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Overall test accuracy: </span><span class="si">{</span><span class="mi">100</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">total_correct</span><span class="o">/</span><span class="n">total_samples</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2">%&quot;</span><span class="p">)</span>
+# Calculate and print overall test accuracy
+total_correct = (predicted_labels == test_labels).sum()
+total_samples = len(test_labels)
+print(f&quot;Overall test accuracy: {100 * total_correct/total_samples:.2f}%&quot;)
 </pre></div>
 </div>
 </div>
-<div class="cell_output docutils container">
-<img alt="../../_images/f6b7ce18a8514e373ffaf0c2a522e59ac69677b06ba676b10e4b3fe85d9b33a5.png" src="../../_images/f6b7ce18a8514e373ffaf0c2a522e59ac69677b06ba676b10e4b3fe85d9b33a5.png" />
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Accuracy on shown samples: 5/5
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../../_images/examples_hello-mnist_6_0.png" src="../../_images/examples_hello-mnist_6_0.png" />
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+Accuracy on shown samples: 5/5
 Overall test accuracy: 97.51%
-</pre></div>
-</div>
-</div>
+</pre></div></div>
 </div>
 </section>
 
@@ -516,5 +545,8 @@ Overall test accuracy: 97.51%
     <script src="../../_static/copybutton.js"></script>
     <script src="../../_static/tabs.js"></script>
     <script src="../../_static/design-tabs.js"></script>
+    <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <script>window.MathJax = {"tex": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "processEscapes": true}, "options": {"ignoreHtmlClass": "tex2jax_ignore|mathjax_ignore|document", "processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     </body>
 </html>
