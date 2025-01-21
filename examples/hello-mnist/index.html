@@ -284,16 +284,16 @@
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[1]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>from data.mnist import load_mnist
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">data.mnist</span> <span class="kn">import</span> <span class="n">load_mnist</span>
 
-# Load the MNIST dataset
-train_images, train_labels, test_images, test_labels = load_mnist()
+<span class="c1"># Load the MNIST dataset</span>
+<span class="n">train_images</span><span class="p">,</span> <span class="n">train_labels</span><span class="p">,</span> <span class="n">test_images</span><span class="p">,</span> <span class="n">test_labels</span> <span class="o">=</span> <span class="n">load_mnist</span><span class="p">()</span>
 
-# Print shapes to verify loading
-print(f&quot;Training images shape: {train_images.shape}&quot;)
-print(f&quot;Training labels shape: {train_labels.shape}&quot;)
-print(f&quot;Test images shape: {test_images.shape}&quot;)
-print(f&quot;Test labels shape: {test_labels.shape}&quot;)
+<span class="c1"># Print shapes to verify loading</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Training images shape: </span><span class="si">{</span><span class="n">train_images</span><span class="o">.</span><span class="n">shape</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Training labels shape: </span><span class="si">{</span><span class="n">train_labels</span><span class="o">.</span><span class="n">shape</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Test images shape: </span><span class="si">{</span><span class="n">test_images</span><span class="o">.</span><span class="n">shape</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Test labels shape: </span><span class="si">{</span><span class="n">test_labels</span><span class="o">.</span><span class="n">shape</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -312,19 +312,19 @@ Test labels shape: (10000,)
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[2]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>import matplotlib.pyplot as plt
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
 
-# Create a figure with 5 subplots
-fig, axes = plt.subplots(1, 5, figsize=(10, 3))
+<span class="c1"># Create a figure with 5 subplots</span>
+<span class="n">fig</span><span class="p">,</span> <span class="n">axes</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">3</span><span class="p">))</span>
 
-# Plot each image and its label
-for i in range(5):
-    axes[i].imshow(train_images[i], cmap=&#39;gray&#39;)
-    axes[i].set_title(f&#39;Label: {train_labels[i]}&#39;)
-    axes[i].axis(&#39;off&#39;)
+<span class="c1"># Plot each image and its label</span>
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">5</span><span class="p">):</span>
+    <span class="n">axes</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">train_images</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">cmap</span><span class="o">=</span><span class="s1">&#39;gray&#39;</span><span class="p">)</span>
+    <span class="n">axes</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Label: </span><span class="si">{</span><span class="n">train_labels</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+    <span class="n">axes</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">axis</span><span class="p">(</span><span class="s1">&#39;off&#39;</span><span class="p">)</span>
 
-plt.tight_layout()
-plt.show()
+<span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
 </pre></div>
 </div>
 </div>
@@ -339,21 +339,21 @@ plt.show()
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[3]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>import jax
-import jax.numpy as jnp
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">jax</span>
+<span class="kn">import</span> <span class="nn">jax.numpy</span> <span class="k">as</span> <span class="nn">jnp</span>
 
-def one_hot(x, k, dtype=jnp.float32):
-    &quot;&quot;&quot;Create a one-hot encoding of x of size k.&quot;&quot;&quot;
-    return jnp.array(x[:, None] == jnp.arange(k), dtype)
+<span class="k">def</span> <span class="nf">one_hot</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">k</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">jnp</span><span class="o">.</span><span class="n">float32</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Create a one-hot encoding of x of size k.&quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">jnp</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">x</span><span class="p">[:,</span> <span class="kc">None</span><span class="p">]</span> <span class="o">==</span> <span class="n">jnp</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">k</span><span class="p">),</span> <span class="n">dtype</span><span class="p">)</span>
 
-# Reshape images and convert labels
-X_train = train_images.reshape(train_images.shape[0], -1).T
-y_train = one_hot(train_labels, 10).T
+<span class="c1"># Reshape images and convert labels</span>
+<span class="n">X_train</span> <span class="o">=</span> <span class="n">train_images</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">train_images</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">T</span>
+<span class="n">y_train</span> <span class="o">=</span> <span class="n">one_hot</span><span class="p">(</span><span class="n">train_labels</span><span class="p">,</span> <span class="mi">10</span><span class="p">)</span><span class="o">.</span><span class="n">T</span>
 
-# Get a batch
-def get_batch(key, batch_size):
-    idx = jax.random.choice(key, X_train.shape[1], shape=(batch_size,))
-    return X_train[:, idx], y_train[:, idx]
+<span class="c1"># Get a batch</span>
+<span class="k">def</span> <span class="nf">get_batch</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">batch_size</span><span class="p">):</span>
+    <span class="n">idx</span> <span class="o">=</span> <span class="n">jax</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">X_train</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">shape</span><span class="o">=</span><span class="p">(</span><span class="n">batch_size</span><span class="p">,))</span>
+    <span class="k">return</span> <span class="n">X_train</span><span class="p">[:,</span> <span class="n">idx</span><span class="p">],</span> <span class="n">y_train</span><span class="p">[:,</span> <span class="n">idx</span><span class="p">]</span>
 </pre></div>
 </div>
 </div>
@@ -361,20 +361,20 @@ def get_batch(key, batch_size):
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[4]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>from modula.atom import Linear
-from modula.bond import ReLU
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">modula.atom</span> <span class="kn">import</span> <span class="n">Linear</span>
+<span class="kn">from</span> <span class="nn">modula.bond</span> <span class="kn">import</span> <span class="n">ReLU</span>
 
-input_dim = 28 * 28
-output_dim = 10
-width = 256
+<span class="n">input_dim</span> <span class="o">=</span> <span class="mi">28</span> <span class="o">*</span> <span class="mi">28</span>
+<span class="n">output_dim</span> <span class="o">=</span> <span class="mi">10</span>
+<span class="n">width</span> <span class="o">=</span> <span class="mi">256</span>
 
-mlp = Linear(output_dim, width)
-mlp @= ReLU() @ Linear(width, width)
-mlp @= ReLU() @ Linear(width, input_dim)
+<span class="n">mlp</span> <span class="o">=</span> <span class="n">Linear</span><span class="p">(</span><span class="n">output_dim</span><span class="p">,</span> <span class="n">width</span><span class="p">)</span>
+<span class="n">mlp</span> <span class="o">@=</span> <span class="n">ReLU</span><span class="p">()</span> <span class="o">@</span> <span class="n">Linear</span><span class="p">(</span><span class="n">width</span><span class="p">,</span> <span class="n">width</span><span class="p">)</span>
+<span class="n">mlp</span> <span class="o">@=</span> <span class="n">ReLU</span><span class="p">()</span> <span class="o">@</span> <span class="n">Linear</span><span class="p">(</span><span class="n">width</span><span class="p">,</span> <span class="n">input_dim</span><span class="p">)</span>
 
-print(mlp)
+<span class="nb">print</span><span class="p">(</span><span class="n">mlp</span><span class="p">)</span>
 
-mlp.jit()
+<span class="n">mlp</span><span class="o">.</span><span class="n">jit</span><span class="p">()</span>
 </pre></div>
 </div>
 </div>
@@ -394,31 +394,31 @@ CompositeModule
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[5]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>from tqdm.notebook import tqdm
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">tqdm.notebook</span> <span class="kn">import</span> <span class="n">tqdm</span>
 
-from modula.error import SquareError
+<span class="kn">from</span> <span class="nn">modula.error</span> <span class="kn">import</span> <span class="n">SquareError</span>
 
-batch_size = 128
-steps = 1000
-learning_rate = 0.1
+<span class="n">batch_size</span> <span class="o">=</span> <span class="mi">128</span>
+<span class="n">steps</span> <span class="o">=</span> <span class="mi">1000</span>
+<span class="n">learning_rate</span> <span class="o">=</span> <span class="mf">0.1</span>
 
-error = SquareError()
+<span class="n">error</span> <span class="o">=</span> <span class="n">SquareError</span><span class="p">()</span>
 
-w = mlp.initialize(jax.random.PRNGKey(0))
-w = mlp.project(w)
+<span class="n">w</span> <span class="o">=</span> <span class="n">mlp</span><span class="o">.</span><span class="n">initialize</span><span class="p">(</span><span class="n">jax</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">PRNGKey</span><span class="p">(</span><span class="mi">0</span><span class="p">))</span>
+<span class="n">w</span> <span class="o">=</span> <span class="n">mlp</span><span class="o">.</span><span class="n">project</span><span class="p">(</span><span class="n">w</span><span class="p">)</span>
 
-progress_bar = tqdm(range(steps), desc=f&quot;Loss: {0:.4f}&quot;)
-for step in progress_bar:
-    key = jax.random.PRNGKey(step)
-    inputs, targets = get_batch(key, batch_size)
+<span class="n">progress_bar</span> <span class="o">=</span> <span class="n">tqdm</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="n">steps</span><span class="p">),</span> <span class="n">desc</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;Loss: </span><span class="si">{</span><span class="mi">0</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">step</span> <span class="ow">in</span> <span class="n">progress_bar</span><span class="p">:</span>
+    <span class="n">key</span> <span class="o">=</span> <span class="n">jax</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">PRNGKey</span><span class="p">(</span><span class="n">step</span><span class="p">)</span>
+    <span class="n">inputs</span><span class="p">,</span> <span class="n">targets</span> <span class="o">=</span> <span class="n">get_batch</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">batch_size</span><span class="p">)</span>
 
-    outputs, activations = mlp(inputs, w)
-    loss = error(outputs, targets)
-    error_grad = error.grad(outputs, targets)
-    grad_w, _ = mlp.backward(w, activations, error_grad)
-    d_w = mlp.dualize(grad_w)
-    w = [weight - learning_rate * d_weight for weight, d_weight in zip(w, d_w)]
-    progress_bar.set_description(f&quot;Loss: {loss:.4f}&quot;)
+    <span class="n">outputs</span><span class="p">,</span> <span class="n">activations</span> <span class="o">=</span> <span class="n">mlp</span><span class="p">(</span><span class="n">inputs</span><span class="p">,</span> <span class="n">w</span><span class="p">)</span>
+    <span class="n">loss</span> <span class="o">=</span> <span class="n">error</span><span class="p">(</span><span class="n">outputs</span><span class="p">,</span> <span class="n">targets</span><span class="p">)</span>
+    <span class="n">error_grad</span> <span class="o">=</span> <span class="n">error</span><span class="o">.</span><span class="n">grad</span><span class="p">(</span><span class="n">outputs</span><span class="p">,</span> <span class="n">targets</span><span class="p">)</span>
+    <span class="n">grad_w</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">mlp</span><span class="o">.</span><span class="n">backward</span><span class="p">(</span><span class="n">w</span><span class="p">,</span> <span class="n">activations</span><span class="p">,</span> <span class="n">error_grad</span><span class="p">)</span>
+    <span class="n">d_w</span> <span class="o">=</span> <span class="n">mlp</span><span class="o">.</span><span class="n">dualize</span><span class="p">(</span><span class="n">grad_w</span><span class="p">)</span>
+    <span class="n">w</span> <span class="o">=</span> <span class="p">[</span><span class="n">weight</span> <span class="o">-</span> <span class="n">learning_rate</span> <span class="o">*</span> <span class="n">d_weight</span> <span class="k">for</span> <span class="n">weight</span><span class="p">,</span> <span class="n">d_weight</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">w</span><span class="p">,</span> <span class="n">d_w</span><span class="p">)]</span>
+    <span class="n">progress_bar</span><span class="o">.</span><span class="n">set_description</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Loss: </span><span class="si">{</span><span class="n">loss</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -432,34 +432,34 @@ for step in progress_bar:
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[6]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span># Get predictions for test images
-X_test = test_images.reshape(test_images.shape[0], -1).T
-test_outputs, _ = mlp(X_test, w)
-predicted_labels = jnp.argmax(test_outputs, axis=0)
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Get predictions for test images</span>
+<span class="n">X_test</span> <span class="o">=</span> <span class="n">test_images</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">test_images</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">T</span>
+<span class="n">test_outputs</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">mlp</span><span class="p">(</span><span class="n">X_test</span><span class="p">,</span> <span class="n">w</span><span class="p">)</span>
+<span class="n">predicted_labels</span> <span class="o">=</span> <span class="n">jnp</span><span class="o">.</span><span class="n">argmax</span><span class="p">(</span><span class="n">test_outputs</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
 
-# Create a figure with subplots for multiple test images
-n_samples = 5  # Number of test images to display
-fig, axes = plt.subplots(1, n_samples, figsize=(10, 3))
+<span class="c1"># Create a figure with subplots for multiple test images</span>
+<span class="n">n_samples</span> <span class="o">=</span> <span class="mi">5</span>  <span class="c1"># Number of test images to display</span>
+<span class="n">fig</span><span class="p">,</span> <span class="n">axes</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">n_samples</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">3</span><span class="p">))</span>
 
-# Plot each test image with true and predicted labels
-for i in range(n_samples):
-    axes[i].imshow(test_images[i], cmap=&#39;gray&#39;)
-    true_label = test_labels[i]
-    pred_label = int(predicted_labels[i])  # Convert from JAX array to integer
-    axes[i].set_title(f&#39;Predicted label: {pred_label}&#39;)
-    axes[i].axis(&#39;off&#39;)
+<span class="c1"># Plot each test image with true and predicted labels</span>
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_samples</span><span class="p">):</span>
+    <span class="n">axes</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">test_images</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">cmap</span><span class="o">=</span><span class="s1">&#39;gray&#39;</span><span class="p">)</span>
+    <span class="n">true_label</span> <span class="o">=</span> <span class="n">test_labels</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+    <span class="n">pred_label</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">predicted_labels</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>  <span class="c1"># Convert from JAX array to integer</span>
+    <span class="n">axes</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Predicted label: </span><span class="si">{</span><span class="n">pred_label</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+    <span class="n">axes</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">axis</span><span class="p">(</span><span class="s1">&#39;off&#39;</span><span class="p">)</span>
 
-plt.tight_layout()
-plt.show()
+<span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
 
-# Print accuracy for these samples
-correct = (predicted_labels[:n_samples] == test_labels[:n_samples]).sum()
-print(f&quot;Accuracy on shown samples: {correct}/{n_samples}&quot;)
+<span class="c1"># Print accuracy for these samples</span>
+<span class="n">correct</span> <span class="o">=</span> <span class="p">(</span><span class="n">predicted_labels</span><span class="p">[:</span><span class="n">n_samples</span><span class="p">]</span> <span class="o">==</span> <span class="n">test_labels</span><span class="p">[:</span><span class="n">n_samples</span><span class="p">])</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Accuracy on shown samples: </span><span class="si">{</span><span class="n">correct</span><span class="si">}</span><span class="s2">/</span><span class="si">{</span><span class="n">n_samples</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 
-# Calculate and print overall test accuracy
-total_correct = (predicted_labels == test_labels).sum()
-total_samples = len(test_labels)
-print(f&quot;Overall test accuracy: {100 * total_correct/total_samples:.2f}%&quot;)
+<span class="c1"># Calculate and print overall test accuracy</span>
+<span class="n">total_correct</span> <span class="o">=</span> <span class="p">(</span><span class="n">predicted_labels</span> <span class="o">==</span> <span class="n">test_labels</span><span class="p">)</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span>
+<span class="n">total_samples</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">test_labels</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Overall test accuracy: </span><span class="si">{</span><span class="mi">100</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">total_correct</span><span class="o">/</span><span class="n">total_samples</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2">%&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
