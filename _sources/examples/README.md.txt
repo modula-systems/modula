@@ -1,0 +1,1 @@
+Jupyter notebooks are automatically copied from `examples` to `docs/source/examples` on build
