@@ -7,8 +7,10 @@
 <meta property="og:type" content="website" />
 <meta property="og:url" content="https://modula.systems/examples/hello-world/" />
 <meta property="og:site_name" content="Modula" />
+<meta property="og:description" content="On this page, we will build a simple training loop to fit an MLP to some randomly generated data. We start by sampling some data. Modula uses JAX to handle array computations, so we use JAX to samp..." />
 <meta property="og:image" content="https://docs.modula.systems/_static/logo-square.jpeg" />
 <meta property="og:image:alt" content="Modula" />
+<meta name="description" content="On this page, we will build a simple training loop to fit an MLP to some randomly generated data. We start by sampling some data. Modula uses JAX to handle array computations, so we use JAX to samp..." />
 <link rel="index" title="Index" href="../../genindex/" /><link rel="search" title="Search" href="../../search/" /><link rel="next" title="Hello, MNIST!" href="../hello-mnist/" /><link rel="prev" title="Orthogonal manifold" href="../../algorithms/manifold/orthogonal/" />
 
     <link rel="shortcut icon" href="../../_static/favicon.ico"/><!-- Generated with Sphinx 7.0.0 and Furo 2024.08.06 -->
@@ -281,26 +283,27 @@
         <article role="main" id="furo-main-content">
           <section id="Hello,-World!">
 <h1>Hello, World!<a class="headerlink" href="#Hello,-World!" title="Permalink to this heading">¶</a></h1>
+<p>On this page, we will build a simple training loop to fit an MLP to some randomly generated data. We start by sampling some data. Modula uses JAX to handle array computations, so we use JAX to sample the data. JAX requires us to explicitly pass in the state of the random number generator.</p>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[5]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[1]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">jax</span>
 <span class="kn">import</span> <span class="nn">jax.numpy</span> <span class="k">as</span> <span class="nn">jnp</span>
 
-<span class="n">input_dim</span> <span class="o">=</span> <span class="mi">28</span> <span class="o">*</span> <span class="mi">28</span>
+<span class="n">input_dim</span> <span class="o">=</span> <span class="mi">784</span>
 <span class="n">output_dim</span> <span class="o">=</span> <span class="mi">10</span>
 <span class="n">batch_size</span> <span class="o">=</span> <span class="mi">128</span>
 
-<span class="c1"># Generate random training data</span>
 <span class="n">key</span> <span class="o">=</span> <span class="n">jax</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">PRNGKey</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
 <span class="n">inputs</span> <span class="o">=</span> <span class="n">jax</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">normal</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="p">(</span><span class="n">input_dim</span><span class="p">,</span> <span class="n">batch_size</span><span class="p">))</span>
 <span class="n">targets</span> <span class="o">=</span> <span class="n">jax</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">normal</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="p">(</span><span class="n">output_dim</span><span class="p">,</span> <span class="n">batch_size</span><span class="p">))</span>
 </pre></div>
 </div>
 </div>
+<p>Next, we will build our neural network. We import the basic Linear and ReLU modules. And we compose them by using the <code class="docutils literal notranslate"><span class="pre">&#64;</span></code> operator. Calling <code class="docutils literal notranslate"><span class="pre">mlp.jit()</span></code> tries to make all the internal module methods more efficient using <a class="reference external" href="https://jax.readthedocs.io/en/latest/jit-compilation.html">just-in-time compilation</a> from JAX.</p>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[4]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[2]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">modula.atom</span> <span class="kn">import</span> <span class="n">Linear</span>
@@ -309,8 +312,10 @@
 <span class="n">width</span> <span class="o">=</span> <span class="mi">256</span>
 
 <span class="n">mlp</span> <span class="o">=</span> <span class="n">Linear</span><span class="p">(</span><span class="n">output_dim</span><span class="p">,</span> <span class="n">width</span><span class="p">)</span>
-<span class="n">mlp</span> <span class="o">@=</span> <span class="n">ReLU</span><span class="p">()</span> <span class="o">@</span> <span class="n">Linear</span><span class="p">(</span><span class="n">width</span><span class="p">,</span> <span class="n">width</span><span class="p">)</span>
-<span class="n">mlp</span> <span class="o">@=</span> <span class="n">ReLU</span><span class="p">()</span> <span class="o">@</span> <span class="n">Linear</span><span class="p">(</span><span class="n">width</span><span class="p">,</span> <span class="n">input_dim</span><span class="p">)</span>
+<span class="n">mlp</span> <span class="o">@=</span> <span class="n">ReLU</span><span class="p">()</span>
+<span class="n">mlp</span> <span class="o">@=</span> <span class="n">Linear</span><span class="p">(</span><span class="n">width</span><span class="p">,</span> <span class="n">width</span><span class="p">)</span>
+<span class="n">mlp</span> <span class="o">@=</span> <span class="n">ReLU</span><span class="p">()</span>
+<span class="n">mlp</span> <span class="o">@=</span> <span class="n">Linear</span><span class="p">(</span><span class="n">width</span><span class="p">,</span> <span class="n">input_dim</span><span class="p">)</span>
 
 <span class="nb">print</span><span class="p">(</span><span class="n">mlp</span><span class="p">)</span>
 
@@ -330,15 +335,24 @@ CompositeModule
 ...contributes proportion 3 to feature learning of any supermodule
 </pre></div></div>
 </div>
-<div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[12]:
+<p>Next, we choose our error measure. Error measures allow us to both compute the loss of the model, and also to compute the derivative of the loss with respect to model outputs. For simplicity we will just use squared error.</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[3]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">modula.error</span> <span class="kn">import</span> <span class="n">SquareError</span>
 
-<span class="n">steps</span> <span class="o">=</span> <span class="mi">1000</span>
-<span class="n">learning_rate</span> <span class="o">=</span> <span class="mf">0.1</span>
 <span class="n">error</span> <span class="o">=</span> <span class="n">SquareError</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<p>Finally we are ready to train our model. The method <code class="docutils literal notranslate"><span class="pre">mlp.backward</span></code> takes as input the weights, activations and the gradient of the error. It returns the gradient of the loss with respect to both the model weights and the inputs. The method <code class="docutils literal notranslate"><span class="pre">mlp.dualize</span></code> takes in the gradient of the weights and solves for the vector of unit modular norm that maximizes the linearized improvement in loss.</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[4]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">steps</span> <span class="o">=</span> <span class="mi">1000</span>
+<span class="n">learning_rate</span> <span class="o">=</span> <span class="mf">0.1</span>
 
 <span class="n">key</span> <span class="o">=</span> <span class="n">jax</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">PRNGKey</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
 <span class="n">w</span> <span class="o">=</span> <span class="n">mlp</span><span class="o">.</span><span class="n">initialize</span><span class="p">(</span><span class="n">key</span><span class="p">)</span>
@@ -367,7 +381,7 @@ CompositeModule
     <span class="n">w</span> <span class="o">=</span> <span class="p">[</span><span class="n">weight</span> <span class="o">-</span> <span class="n">lr</span> <span class="o">*</span> <span class="n">d_weight</span> <span class="k">for</span> <span class="n">weight</span><span class="p">,</span> <span class="n">d_weight</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">w</span><span class="p">,</span> <span class="n">d_w</span><span class="p">)]</span>
 
     <span class="k">if</span> <span class="n">step</span> <span class="o">%</span> <span class="mi">100</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
-        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Step </span><span class="si">{</span><span class="n">step</span><span class="si">}</span><span class="s2">, Loss </span><span class="si">{</span><span class="n">loss</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Step </span><span class="si">{</span><span class="n">step</span><span class="si">:</span><span class="s2">3d</span><span class="si">}</span><span class="s2"> </span><span class="se">\t</span><span class="s2"> Loss </span><span class="si">{</span><span class="n">loss</span><span class="si">:</span><span class="s2">.6f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 <br/></pre></div>
 </div>
 </div>
@@ -376,16 +390,16 @@ CompositeModule
 </div>
 <div class="output_area docutils container">
 <div class="highlight"><pre>
-Step 0, Loss 0.9790326952934265
-Step 100, Loss 0.0018738203216344118
-Step 200, Loss 0.0014391584554687142
-Step 300, Loss 0.0010814154520630836
-Step 400, Loss 0.0008106177556328475
-Step 500, Loss 0.0005738214822486043
-Step 600, Loss 0.0003808117180597037
-Step 700, Loss 0.00022766715846955776
-Step 800, Loss 0.00011454012565081939
-Step 900, Loss 3.979807297582738e-05
+Step   0         Loss 0.976274
+Step 100         Loss 0.001985
+Step 200         Loss 0.001541
+Step 300         Loss 0.001189
+Step 400         Loss 0.000884
+Step 500         Loss 0.000625
+Step 600         Loss 0.000413
+Step 700         Loss 0.000251
+Step 800         Loss 0.000130
+Step 900         Loss 0.000049
 </pre></div></div>
 </div>
 </section>
