@@ -412,8 +412,8 @@ CompositeModule
 
 <span class="n">error</span> <span class="o">=</span> <span class="n">SquareError</span><span class="p">()</span>
 
-<span class="n">w</span> <span class="o">=</span> <span class="n">mlp</span><span class="o">.</span><span class="n">initialize</span><span class="p">(</span><span class="n">jax</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">PRNGKey</span><span class="p">(</span><span class="mi">0</span><span class="p">))</span>
-<span class="n">w</span> <span class="o">=</span> <span class="n">mlp</span><span class="o">.</span><span class="n">project</span><span class="p">(</span><span class="n">w</span><span class="p">)</span>
+<span class="n">key</span> <span class="o">=</span> <span class="n">jax</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">PRNGKey</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+<span class="n">w</span> <span class="o">=</span> <span class="n">mlp</span><span class="o">.</span><span class="n">initialize</span><span class="p">(</span><span class="n">key</span><span class="p">)</span>
 
 <span class="n">progress_bar</span> <span class="o">=</span> <span class="n">tqdm</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="n">steps</span><span class="p">),</span> <span class="n">desc</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;Loss: </span><span class="si">{</span><span class="mi">0</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 <span class="k">for</span> <span class="n">step</span> <span class="ow">in</span> <span class="n">progress_bar</span><span class="p">:</span>
@@ -434,7 +434,7 @@ CompositeModule
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<script type="application/vnd.jupyter.widget-view+json">{"model_id": "8a432072d1bb4a39b5438417ac15d5f5", "version_major": 2, "version_minor": 0}</script></div>
+<script type="application/vnd.jupyter.widget-view+json">{"model_id": "d26bcf36d33e4b108018d97c00b975fc", "version_major": 2, "version_minor": 0}</script></div>
 </div>
 <p>And finally let’s plot some test predictions.</p>
 <div class="nbinput docutils container">
@@ -483,7 +483,7 @@ CompositeModule
 <div class="output_area docutils container">
 <div class="highlight"><pre>
 Accuracy on shown samples: 5/5
-Overall test accuracy: 97.58%
+Overall test accuracy: 97.52%
 </pre></div></div>
 </div>
 </section>

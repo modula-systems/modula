@@ -356,7 +356,6 @@ CompositeModule
 
 <span class="n">key</span> <span class="o">=</span> <span class="n">jax</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">PRNGKey</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
 <span class="n">w</span> <span class="o">=</span> <span class="n">mlp</span><span class="o">.</span><span class="n">initialize</span><span class="p">(</span><span class="n">key</span><span class="p">)</span>
-<span class="n">w</span> <span class="o">=</span> <span class="n">mlp</span><span class="o">.</span><span class="n">project</span><span class="p">(</span><span class="n">w</span><span class="p">)</span>
 
 <span class="k">for</span> <span class="n">step</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">steps</span><span class="p">):</span>
     <span class="c1"># compute outputs and activations</span>
@@ -391,15 +390,15 @@ CompositeModule
 <div class="output_area docutils container">
 <div class="highlight"><pre>
 Step   0         Loss 0.976274
-Step 100         Loss 0.001985
-Step 200         Loss 0.001541
-Step 300         Loss 0.001189
-Step 400         Loss 0.000884
-Step 500         Loss 0.000625
-Step 600         Loss 0.000413
-Step 700         Loss 0.000251
-Step 800         Loss 0.000130
-Step 900         Loss 0.000049
+Step 100         Loss 0.001989
+Step 200         Loss 0.001537
+Step 300         Loss 0.001194
+Step 400         Loss 0.000885
+Step 500         Loss 0.000627
+Step 600         Loss 0.000420
+Step 700         Loss 0.000255
+Step 800         Loss 0.000134
+Step 900         Loss 0.000053
 </pre></div></div>
 </div>
 </section>
