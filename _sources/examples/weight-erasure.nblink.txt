@@ -1,0 +1,6 @@
+{
+    "path": "../../../examples/weight-erasure.ipynb",
+    "extra-media": [
+        "../../../examples/assets/erasure.png"
+    ]
+}

@@ -61,6 +61,7 @@ The docs currently contain some original research contributions not published an
 
    examples/hello-world
    examples/hello-mnist
+   examples/weight-erasure
 
 .. toctree::
    :hidden:
