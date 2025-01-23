@@ -286,7 +286,7 @@
 <h1>Weight erasure<a class="headerlink" href="#Weight-erasure" title="Permalink to this heading">¶</a></h1>
 <p>You might have heard the claim that <em>“during training, the weights of a wide enough neural network move a vanishing distance from their initial values”</em>. For instance, <a class="reference external" href="https://arxiv.org/abs/1902.06720">Lee et al. (2019)</a> suggest that wide enough neural networks never leave the linearization around their initial weights. And <a class="reference external" href="https://arxiv.org/abs/2012.02550">Jesus et al. (2020)</a> conduct an intriguing experiment seemingly in support of this narrative. At initialization, they “watermark”
 one of the weight matrices with an image of the letter “a”. They find that the “a” is still visible at the end of training (left) so long as the training does not diverge (right).</p>
-<img alt="Jesus et al. (2020)" src="examples/assets/erasure.png" />
+<img alt="Jesus et al. (2020)" src="../../_images/erasure.png" />
 <p>In this notebook, we will investigate this phenomenon by replicating the experiment of <a class="reference external" href="https://arxiv.org/abs/2012.02550">Jesus et al. (2020)</a>. We will show that duality-based optimizers exhibit qualitatively different behaviour to vanilla gradient descent, controverting the idea that the weights don’t move in very wide neural networks and supporting what we described in our paper on <a class="reference external" href="https://arxiv.org/abs/2410.21265">modular duality</a>. At the end of the notebook, we will show how these
 results can be understood simply in terms of the <em>stable rank</em> of the weight updates.</p>
 <section id="Setup:-Creating-a-watermark">
