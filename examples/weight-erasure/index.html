@@ -288,7 +288,8 @@
 one of the weight matrices with an image of the letter “a”. They find that the “a” is still visible at the end of training (left) so long as the training does not diverge (right).</p>
 <img alt="Jesus et al. (2020)" src="../../_images/erasure.png" />
 <p>In this notebook, we will investigate this phenomenon by replicating the experiment of <a class="reference external" href="https://arxiv.org/abs/2012.02550">Jesus et al. (2020)</a>. We will show that duality-based optimizers exhibit qualitatively different behaviour to vanilla gradient descent, controverting the idea that the weights don’t move in very wide neural networks and supporting what we described in our paper on <a class="reference external" href="https://arxiv.org/abs/2410.21265">modular duality</a>. At the end of the notebook, we will show how these
-results can be understood simply in terms of the <em>stable rank</em> of the weight updates.</p>
+results can be understood simply in terms of the “stable rank” of the weight updates.</p>
+<p>I believe that this experiment underscores the importance of metrized deep learning for understanding the basic numerical properties of neural networks.</p>
 <section id="Setup:-Creating-a-watermark">
 <h2>Setup: Creating a watermark<a class="headerlink" href="#Setup:-Creating-a-watermark" title="Permalink to this heading">¶</a></h2>
 <p>To begin, we write a helper function to create a JAX array containing the letter “a” in a square matrix.</p>
@@ -351,7 +352,7 @@ results can be understood simply in terms of the <em>stable rank</em> of the wei
 </section>
 <section id="Watermarking-the-initial-weights">
 <h2>Watermarking the initial weights<a class="headerlink" href="#Watermarking-the-initial-weights" title="Permalink to this heading">¶</a></h2>
-<p>For our main experiment, we will train an MLP on the CIFAR-10 dataset. Let’s first download the data and define a function to get a batch of data.</p>
+<p>For our main experiment, we will train an MLP with watermarked weights on the CIFAR-10 dataset. Let’s first download the data and define a function to get a batch of data.</p>
 <div class="nbinput nblast docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[3]:
 </pre></div>
@@ -391,7 +392,7 @@ results can be understood simply in terms of the <em>stable rank</em> of the wei
 </pre></div>
 </div>
 </div>
-<p>And finally, let’s watermark the initial weights of the MLP.</p>
+<p>And finally, let’s watermark the initial weights of an MLP of width 1024.</p>
 <div class="nbinput docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[5]:
 </pre></div>
@@ -419,7 +420,6 @@ results can be understood simply in terms of the <em>stable rank</em> of the wei
 <span class="n">ax2</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s1">&#39;Watermarked initial weights&#39;</span><span class="p">)</span>
 <span class="n">ax2</span><span class="o">.</span><span class="n">axis</span><span class="p">(</span><span class="s1">&#39;off&#39;</span><span class="p">)</span>
 
-<span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
 </pre></div>
 </div>
@@ -508,7 +508,7 @@ Running experiments with dualize = True
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<script type="application/vnd.jupyter.widget-view+json">{"model_id": "bfc32aa06f0140a189214cd0f8816567", "version_major": 2, "version_minor": 0}</script></div>
+<script type="application/vnd.jupyter.widget-view+json">{"model_id": "35e4417021784b1a941a9205a7ff035d", "version_major": 2, "version_minor": 0}</script></div>
 </div>
 <div class="nboutput docutils container">
 <div class="prompt empty docutils container">
@@ -522,7 +522,7 @@ Running experiments with dualize = False
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<script type="application/vnd.jupyter.widget-view+json">{"model_id": "e5a11f6cfdb845c58cbbf7b7a0d4da74", "version_major": 2, "version_minor": 0}</script></div>
+<script type="application/vnd.jupyter.widget-view+json">{"model_id": "44b5882bbd0b4a64a7316d2377c299f8", "version_major": 2, "version_minor": 0}</script></div>
 </div>
 <p>And finally, we plot the results. For each learning rate, we plot the final training accuracy (averaged over the last 50 steps). And we overlay the image of the final weight matrix for each point on the plot.</p>
 <div class="nbinput docutils container">
@@ -565,6 +565,7 @@ Running experiments with dualize = False
 
 <span class="n">main_ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s1">&#39;Learning rate&#39;</span><span class="p">)</span>
 <span class="n">main_ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s1">&#39;Training accuracy after 1000 steps&#39;</span><span class="p">)</span>
+<span class="n">main_ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s1">&#39;Effect of dualization on weight erasure&#39;</span><span class="p">)</span>
 
 <span class="n">plt</span><span class="o">.</span><span class="n">rcParams</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="s1">&#39;font.size&#39;</span><span class="p">:</span> <span class="mi">16</span><span class="p">})</span>
 <span class="n">main_ax</span><span class="o">.</span><span class="n">tick_params</span><span class="p">(</span><span class="n">labelsize</span><span class="o">=</span><span class="mi">16</span><span class="p">)</span>
@@ -584,14 +585,103 @@ Running experiments with dualize = False
 <img alt="../../_images/examples_weight-erasure_17_0.png" src="../../_images/examples_weight-erasure_17_0.png" />
 </div>
 </div>
+<p>We make three main observations from this plot:</p>
+<ol class="arabic simple">
+<li><p>The network reaches a significantly higher training accuracy with dualization than without.</p></li>
+<li><p>With dualization, the letter “a” is completely erased at the maximum stable learning rate.</p></li>
+<li><p>Without dualization, the letter “a” is not erased, even at the maximum stable learning rate.</p></li>
+</ol>
+<p>In short, not only do duality-based optimizers train faster, but they also operate in a qualitatively different numerical regime. Unlike for standard gradient descent, the weights evolve in a way that is visible to the human eye.</p>
 </section>
 <section id="Interpretation-via-the-stable-rank">
 <h2>Interpretation via the stable rank<a class="headerlink" href="#Interpretation-via-the-stable-rank" title="Permalink to this heading">¶</a></h2>
-<p>TODO</p>
+<p>We can understand the results from the previous section by considering the stable rank of the weight updates. The stable rank of a matrix <span class="math notranslate nohighlight">\(M\in\mathbb{R}^{m\times n}\)</span> is defined to be the ratio of the squared Frobenius norm to the squared spectral norm:</p>
+<div class="math-wrapper docutils container">
+<div class="math notranslate nohighlight">
+\[\operatorname{srank}M := \frac{\|M\|_F^2}{\|M\|_*^2}.\]</div>
+</div>
+<p>This quantity is important for our discussion because we can characterize the size of the entries of a matrix in terms of the stable rank of the matrix and the spectral norm of the matrix:</p>
+<div class="math-wrapper docutils container">
+<div class="math notranslate nohighlight">
+\[\textrm{average entry size of } M = \frac{\|M\|_F}{\sqrt{mn}} = \sqrt{\frac{\operatorname{srank}M}{mn}} \times \|M\|_*.\]</div>
+</div>
+<p>So, for two weight updates of the same spectral norm, the amount that the weight entries move will vary depending on the stable rank of the weight update. Our claim is basically that:</p>
+<ul class="simple">
+<li><p>raw gradients tend to have very small stable rank,</p></li>
+<li><p>dualized gradients tend to have high stable rank,</p></li>
+</ul>
+<p>and this explains the difference in erasure between gradient descent and dualized gradient descent. In fact, this observation is what made us think of running this experiment in the first place.</p>
+<p>To understand the source of the difference in stable rank between gradients and dualized gradients, we need to think about what the duality map for linear layers actually does to the gradient matrix. The duality map takes any non-zero singular value of the gradient matrix and sets it to 1. You can check that this operation inflates the stable rank of the gradient matrix to equal the rank.</p>
+<p>To test this claim, let’s measure the stable rank of gradients and dualized gradients for a range of widths:</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[9]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+
+<span class="n">stable_rank_grads</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="n">stable_rank_dualized_grads</span> <span class="o">=</span> <span class="p">[]</span>
+
+<span class="n">srank</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">jnp</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="nb">ord</span><span class="o">=</span><span class="s1">&#39;fro&#39;</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span> <span class="o">/</span> <span class="n">jnp</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="nb">ord</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span>
+
+<span class="n">widths</span> <span class="o">=</span> <span class="p">[</span><span class="mi">32</span><span class="p">,</span> <span class="mi">64</span><span class="p">,</span> <span class="mi">128</span><span class="p">,</span> <span class="mi">256</span><span class="p">,</span> <span class="mi">512</span><span class="p">,</span> <span class="mi">1024</span><span class="p">,</span> <span class="mi">2048</span><span class="p">,</span> <span class="mi">4096</span><span class="p">,</span> <span class="mi">8192</span><span class="p">]</span>
+<span class="n">batch_size</span> <span class="o">=</span> <span class="mi">512</span>
+
+<span class="k">for</span> <span class="n">width</span> <span class="ow">in</span> <span class="n">widths</span><span class="p">:</span>
+    <span class="n">mlp</span> <span class="o">=</span> <span class="n">MLP</span><span class="p">(</span><span class="n">X_train</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">y_train</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">width</span><span class="p">)</span>
+    <span class="n">key</span> <span class="o">=</span> <span class="n">jax</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">PRNGKey</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+    <span class="n">w</span> <span class="o">=</span> <span class="n">mlp</span><span class="o">.</span><span class="n">initialize</span><span class="p">(</span><span class="n">key</span><span class="p">)</span>
+
+    <span class="n">inputs</span><span class="p">,</span> <span class="n">targets</span> <span class="o">=</span> <span class="n">get_batch</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">batch_size</span><span class="p">)</span>
+    <span class="n">error</span> <span class="o">=</span> <span class="n">modula</span><span class="o">.</span><span class="n">error</span><span class="o">.</span><span class="n">SquareError</span><span class="p">()</span>
+
+    <span class="n">outputs</span><span class="p">,</span> <span class="n">activations</span> <span class="o">=</span> <span class="n">mlp</span><span class="p">(</span><span class="n">inputs</span><span class="p">,</span> <span class="n">w</span><span class="p">)</span>
+    <span class="n">error_grad</span> <span class="o">=</span> <span class="n">error</span><span class="o">.</span><span class="n">grad</span><span class="p">(</span><span class="n">outputs</span><span class="p">,</span> <span class="n">targets</span><span class="p">)</span>
+    <span class="n">grad_w</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">mlp</span><span class="o">.</span><span class="n">backward</span><span class="p">(</span><span class="n">w</span><span class="p">,</span> <span class="n">activations</span><span class="p">,</span> <span class="n">error_grad</span><span class="p">)</span>
+    <span class="n">d_w</span> <span class="o">=</span> <span class="n">mlp</span><span class="o">.</span><span class="n">dualize</span><span class="p">(</span><span class="n">grad_w</span><span class="p">)</span>
+
+    <span class="n">stable_rank_grads</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">srank</span><span class="p">(</span><span class="n">grad_w</span><span class="p">[</span><span class="mi">1</span><span class="p">]))</span>
+    <span class="n">stable_rank_dualized_grads</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">srank</span><span class="p">(</span><span class="n">d_w</span><span class="p">[</span><span class="mi">1</span><span class="p">]))</span>
+</pre></div>
+</div>
+</div>
+<p>And let’s plot the results:</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[10]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">6</span><span class="p">))</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">widths</span><span class="p">,</span> <span class="n">stable_rank_grads</span><span class="p">,</span> <span class="s1">&#39;o-&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Gradients&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">widths</span><span class="p">,</span> <span class="n">stable_rank_dualized_grads</span><span class="p">,</span> <span class="s1">&#39;o-&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Dualized gradients&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">axvline</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="n">batch_size</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;r&#39;</span><span class="p">,</span> <span class="n">linestyle</span><span class="o">=</span><span class="s1">&#39;--&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Batch size&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">axhline</span><span class="p">(</span><span class="n">y</span><span class="o">=</span><span class="n">batch_size</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;r&#39;</span><span class="p">,</span> <span class="n">linestyle</span><span class="o">=</span><span class="s1">&#39;--&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xscale</span><span class="p">(</span><span class="s1">&#39;log&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">yscale</span><span class="p">(</span><span class="s1">&#39;log&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s1">&#39;Hidden layer width&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s1">&#39;Stable rank&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">frameon</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">loc</span><span class="o">=</span><span class="s1">&#39;right&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s1">&#39;Effect of dualization on the stable rank of weight updates&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../../_images/examples_weight-erasure_22_0.png" src="../../_images/examples_weight-erasure_22_0.png" />
+</div>
+</div>
+<p>As we can see, the stable rank of the gradients is very small at all widths. Meanwhile, the stable rank of the dualized gradients increases with width until the width reaches the batch size, at which point it plateaus. This is expected because the rank of the gradients is capped by the batch size, and dualization cannot inflate the stable rank beyond the rank itself.</p>
+</section>
+<section id="Conclusion">
+<h2>Conclusion<a class="headerlink" href="#Conclusion" title="Permalink to this heading">¶</a></h2>
+<p>In this notebook, we have shown that duality-based optimizers exhibit qualitatively different numerical behaviour to standard gradient descent. When training a width 1024 neural network with vanilla gradient descent, the weights hardly move at all from their initial values. But when training with dualized gradient descent, the weights move substantially in a way that is visible to the human eye. This underscores the importance of metrized deep learning for understanding basic numerical
+properties of neural networks.</p>
 </section>
 <section id="Acknowledgements">
 <h2>Acknowledgements<a class="headerlink" href="#Acknowledgements" title="Permalink to this heading">¶</a></h2>
-<p>I became aware of the weight erasure experiment of <a class="reference external" href="https://arxiv.org/abs/2012.02550">Jesus et al. (2020)</a> through <a class="reference external" href="https://x.com/norabelrose/status/1844768462717292980">a tweet</a> of Nora Belrose. Thanks also to Tongzhou Wang for running a different version of these experiments.</p>
+<p>I became aware of the weight erasure experiment of <a class="reference external" href="https://arxiv.org/abs/2012.02550">Jesus et al. (2020)</a> thanks to <a class="reference external" href="https://x.com/norabelrose/status/1844768462717292980">a tweet</a> of Nora Belrose. Tongzhou Wang ran some <a class="reference external" href="https://x.com/ssnl_tz/status/1845179813755224406">initial experiments</a> on this question after <a class="reference external" href="https://x.com/jxbz/status/1845146670365016427">I tweeted about it</a>.</p>
 </section>
 </section>
 
@@ -662,6 +752,7 @@ Running experiments with dualize = False
 <li><a class="reference internal" href="#Watermarking-the-initial-weights">Watermarking the initial weights</a></li>
 <li><a class="reference internal" href="#Running-the-experiment">Running the experiment</a></li>
 <li><a class="reference internal" href="#Interpretation-via-the-stable-rank">Interpretation via the stable rank</a></li>
+<li><a class="reference internal" href="#Conclusion">Conclusion</a></li>
 <li><a class="reference internal" href="#Acknowledgements">Acknowledgements</a></li>
 </ul>
 </li>
