@@ -7,8 +7,10 @@
 <meta property="og:type" content="website" />
 <meta property="og:url" content="https://modula.systems/intro/reading-list/" />
 <meta property="og:site_name" content="Modula" />
+<meta property="og:description" content="There are two main academic papers for understanding Modula. The first is called “Scalable optimization in the modular norm”. In this paper, we construct a recursive procedure for assigning a norm ..." />
 <meta property="og:image" content="https://docs.modula.systems/_static/logo-square.jpeg" />
 <meta property="og:image:alt" content="Modula" />
+<meta name="description" content="There are two main academic papers for understanding Modula. The first is called “Scalable optimization in the modular norm”. In this paper, we construct a recursive procedure for assigning a norm ..." />
 <link rel="index" title="Index" href="../../genindex/" /><link rel="search" title="Search" href="../../search/" /><link rel="next" title="Manifold duality maps" href="../../algorithms/manifold/" /><link rel="prev" title="Welcome to the Modula docs!" href="../../" />
 
     <link rel="shortcut icon" href="../../_static/favicon.ico"/><!-- Generated with Sphinx 7.0.0 and Furo 2024.08.06 -->
@@ -189,7 +191,7 @@
           <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
         </button>
       </div>
-      <label class="toc-overlay-icon toc-header-icon no-toc" for="__toc">
+      <label class="toc-overlay-icon toc-header-icon" for="__toc">
         <div class="visually-hidden">Toggle table of contents sidebar</div>
         <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
       </label>
@@ -273,7 +275,7 @@
               <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
             </button>
           </div>
-          <label class="toc-overlay-icon toc-content-icon no-toc" for="__toc">
+          <label class="toc-overlay-icon toc-content-icon" for="__toc">
             <div class="visually-hidden">Toggle table of contents sidebar</div>
             <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
           </label>
@@ -281,10 +283,53 @@
         <article role="main" id="furo-main-content">
           <section id="reading-list">
 <h1>Reading list<a class="headerlink" href="#reading-list" title="Permalink to this heading">¶</a></h1>
-<div class="warning admonition">
-<p class="admonition-title">Warning</p>
-<p>This page is still under construction.</p>
+<p>There are two main academic papers for understanding Modula. The first is called <em>“Scalable optimization in the modular norm”</em>. In this paper, we construct a recursive procedure for assigning a norm to the weight space of general neural architectures. Neural networks are automatically Lipschitz and (when possible) Lipschitz smooth in this norm with respect to their weights. The construction also provides means to track input-output Lipschitz properties. The paper is available here:</p>
+<blockquote>
+<div><div class="line-block">
+<div class="line">📘 <a class="reference external" href="https://arxiv.org/abs/2405.14813">Scalable optimization in the modular norm</a></div>
+<div class="line-block">
+<div class="line">Tim Large, Yang Liu, Minyoung Huh, Hyojin Bahng, Phillip Isola &amp; Jeremy Bernstein</div>
+<div class="line">NeurIPS 2024</div>
 </div>
+</div>
+</div></blockquote>
+<p>The second paper builds on the first and is called <em>“Modular duality in deep learning”</em>. In this paper, we take the modular norm and use it to derive optimizers via a procedure called “modular dualization”. Modular dualization chooses a weight update <span class="math notranslate nohighlight">\(\Delta w\)</span> to minimize the linearization of the loss <span class="math notranslate nohighlight">\(\mathcal{L}(w)\)</span> subject to a constraint on the modular norm <span class="math notranslate nohighlight">\(\|\Delta w\|_{M}\)</span> of the weight update. In symbols, we solve:</p>
+<div class="math-wrapper docutils container">
+<div class="math notranslate nohighlight">
+\[\Delta w = \operatorname{arg min}_{\Delta w : \|\Delta w\|_{M} \leq \eta} \;\langle \Delta w, \nabla \mathcal{L}(w) \rangle,\]</div>
+</div>
+<p>where <span class="math notranslate nohighlight">\(\eta\)</span> sets the learning rate. Due to the structure of the modular norm, this duality procedure can be solved recursively leveraging the modular structure of the neural architecture. This procedure leads to modular optimization algorithms, where different layer types can have different optimization rules depending on which norm is assigned to that layer. The paper is available here:</p>
+<blockquote>
+<div><div class="line-block">
+<div class="line">📗 <a class="reference external" href="https://arxiv.org/abs/2410.21265">Modular duality in deep learning</a></div>
+<div class="line-block">
+<div class="line">Jeremy Bernstein &amp; Laker Newhouse</div>
+<div class="line">arXiv 2024</div>
+</div>
+</div>
+</div></blockquote>
+<p>There are many other papers by myself and other authors that I feel contain important ideas on this topic. Here are some of them:</p>
+<section id="optimization">
+<h2>Optimization<a class="headerlink" href="#optimization" title="Permalink to this heading">¶</a></h2>
+<ul class="simple">
+<li><p><a class="reference external" href="https://papers.nips.cc/paper_files/paper/2015/hash/f50a6c02a3fc5a3a5d4d9391f05f3efc-Abstract.html">Preconditioned spectral descent for deep learning</a></p></li>
+<li><p><a class="reference external" href="https://arxiv.org/abs/1708.00523">The duality structure gradient descent algorithm: analysis and applications to neural networks</a></p></li>
+<li><p><a class="reference external" href="https://arxiv.org/abs/2002.03432">On the distance between two neural networks and the stability of learning</a></p></li>
+<li><p><a class="reference external" href="https://arxiv.org/abs/2304.05187">Automatic gradient descent: Deep learning without hyperparameters</a></p></li>
+<li><p><a class="reference external" href="https://arxiv.org/abs/2310.17813">A spectral condition for feature learning</a></p></li>
+<li><p><a class="reference external" href="https://arxiv.org/abs/2308.00190">Universal majorization-minimization algorithms</a></p></li>
+<li><p><a class="reference external" href="https://arxiv.org/abs/2409.20325">Old optimizer, new norm: An anthology</a></p></li>
+<li><p><a class="reference external" href="https://kellerjordan.github.io/posts/muon/">Muon: An optimizer for hidden layers in neural networks</a></p></li>
+</ul>
+</section>
+<section id="generalization">
+<h2>Generalization<a class="headerlink" href="#generalization" title="Permalink to this heading">¶</a></h2>
+<ul class="simple">
+<li><p><a class="reference external" href="https://arxiv.org/abs/1706.08498">Spectrally-normalized margin bounds for neural networks</a></p></li>
+<li><p><a class="reference external" href="https://arxiv.org/abs/1707.09564">A PAC-Bayesian approach to spectrally-normalized margin bounds for neural networks</a></p></li>
+<li><p><a class="reference external" href="https://arxiv.org/abs/2205.03940">Investigating generalization by controlling normalized margin</a></p></li>
+</ul>
+</section>
 </section>
 
         </article>
@@ -337,8 +382,28 @@
         
       </footer>
     </div>
-    <aside class="toc-drawer no-toc">
+    <aside class="toc-drawer">
       
+      
+      <div class="toc-sticky toc-scroll">
+        <div class="toc-title-container">
+          <span class="toc-title">
+            On this page
+          </span>
+        </div>
+        <div class="toc-tree-container">
+          <div class="toc-tree">
+            <ul>
+<li><a class="reference internal" href="#">Reading list</a><ul>
+<li><a class="reference internal" href="#optimization">Optimization</a></li>
+<li><a class="reference internal" href="#generalization">Generalization</a></li>
+</ul>
+</li>
+</ul>
+
+          </div>
+        </div>
+      </div>
       
       
     </aside>
@@ -352,5 +417,7 @@
     <script src="../../_static/tabs.js"></script>
     <script src="../../_static/design-tabs.js"></script>
     <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <script>window.MathJax = {"tex": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "processEscapes": true}, "options": {"ignoreHtmlClass": "tex2jax_ignore|mathjax_ignore|document", "processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     </body>
 </html>
