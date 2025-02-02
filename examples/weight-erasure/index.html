@@ -473,7 +473,7 @@ findings.</p>
             <span class="n">d_w</span> <span class="o">=</span> <span class="n">module</span><span class="o">.</span><span class="n">dualize</span><span class="p">(</span><span class="n">grad_w</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="c1"># divide by 3 since module.dualize also does so for 3 layer MLP</span>
-            <span class="n">d_w</span> <span class="o">=</span> <span class="p">[</span><span class="n">g</span> <span class="o">/</span> <span class="n">spec_norm</span><span class="p">(</span><span class="n">g</span><span class="p">)</span> <span class="o">/</span> <span class="mi">3</span> <span class="k">for</span> <span class="n">g</span> <span class="ow">in</span> <span class="n">grad_w</span><span class="p">]</span>
+            <span class="n">d_w</span> <span class="o">=</span> <span class="p">[</span><span class="n">g</span> <span class="o">/</span> <span class="n">spec_norm</span><span class="p">(</span><span class="n">g</span><span class="p">)</span> <span class="o">/</span> <span class="mi">3</span> <span class="o">*</span> <span class="n">jnp</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">g</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">/</span><span class="n">g</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span> <span class="k">for</span> <span class="n">g</span> <span class="ow">in</span> <span class="n">grad_w</span><span class="p">]</span>
 
         <span class="n">w</span> <span class="o">=</span> <span class="p">[</span><span class="n">weight</span> <span class="o">-</span> <span class="n">lr</span> <span class="o">*</span> <span class="n">d_weight</span> <span class="k">for</span> <span class="n">weight</span><span class="p">,</span> <span class="n">d_weight</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">w</span><span class="p">,</span> <span class="n">d_w</span><span class="p">)]</span>
 
@@ -521,7 +521,7 @@ Running experiments with dualize = True
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<script type="application/vnd.jupyter.widget-view+json">{"model_id": "8ba0ea780b884ad4b5e5c3899370f5ca", "version_major": 2, "version_minor": 0}</script></div>
+<script type="application/vnd.jupyter.widget-view+json">{"model_id": "3cf31771563c45ac9ce70419840adb78", "version_major": 2, "version_minor": 0}</script></div>
 </div>
 <div class="nboutput docutils container">
 <div class="prompt empty docutils container">
@@ -535,7 +535,7 @@ Running experiments with dualize = False
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<script type="application/vnd.jupyter.widget-view+json">{"model_id": "21ad236b34644d8483b4dd2de0e616c3", "version_major": 2, "version_minor": 0}</script></div>
+<script type="application/vnd.jupyter.widget-view+json">{"model_id": "66c583e2878e4d01a175ad40b9284990", "version_major": 2, "version_minor": 0}</script></div>
 </div>
 <p>And finally, we plot the results. For each learning rate, we plot the final training accuracy (averaged over the last 50 steps). And we overlay the image of the final weight matrix for each point on the plot.</p>
 <div class="nbinput docutils container">
