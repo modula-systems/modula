@@ -7,11 +7,11 @@
 <meta property="og:type" content="website" />
 <meta property="og:url" content="https://modula.systems/algorithms/newton-schulz/" />
 <meta property="og:site_name" content="Modula" />
-<meta property="og:description" content="History of orthogonalization: procrustes problem, loewdin symmetrization, sharp-operator: frank-wolfe? nesterov?, neural nets: carlin, kovarik, bjorck and bowie, higham: newton-schulz, anil and gro..." />
+<meta property="og:description" content="On this page, we will work out a family of iterative algorithms for “orthogonalizing a matrix”, by which we mean transforming either the rows or the columns of the matrix to form an orthonormal set..." />
 <meta property="og:image" content="https://docs.modula.systems/_static/logo-square.jpeg" />
 <meta property="og:image:alt" content="Modula" />
-<meta name="description" content="History of orthogonalization: procrustes problem, loewdin symmetrization, sharp-operator: frank-wolfe? nesterov?, neural nets: carlin, kovarik, bjorck and bowie, higham: newton-schulz, anil and gro..." />
-<link rel="index" title="Index" href="../../genindex/" /><link rel="search" title="Search" href="../../search/" /><link rel="next" title="Manifold duality maps" href="../manifold/" /><link rel="prev" title="Reading list" href="../../intro/reading-list/" />
+<meta name="description" content="On this page, we will work out a family of iterative algorithms for “orthogonalizing a matrix”, by which we mean transforming either the rows or the columns of the matrix to form an orthonormal set..." />
+<link rel="index" title="Index" href="../../genindex/" /><link rel="search" title="Search" href="../../search/" />
 
     <link rel="shortcut icon" href="../../_static/favicon.ico"/><!-- Generated with Sphinx 7.0.0 and Furo 2024.08.06 -->
         <title>Newton-Schulz - docs.modula.systems</title>
@@ -219,8 +219,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../../intro/reading-list/">Reading list</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Algorithms:</span></p>
-<ul class="current">
-<li class="toctree-l1 current current-page"><a class="current reference internal" href="#">Newton-Schulz</a></li>
+<ul>
 <li class="toctree-l1 has-children"><a class="reference internal" href="../manifold/">Manifold duality maps</a><input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" role="switch" type="checkbox"/><label for="toctree-checkbox-1"><div class="visually-hidden">Toggle navigation of Manifold duality maps</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
 <li class="toctree-l2"><a class="reference internal" href="../manifold/hypersphere/">Hypersphere</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../manifold/orthogonal/">Orthogonal manifold</a></li>
@@ -284,17 +283,34 @@
         <article role="main" id="furo-main-content">
           <section id="newton-schulz">
 <h1>Newton-Schulz<a class="headerlink" href="#newton-schulz" title="Permalink to this heading">¶</a></h1>
-<div class="warning admonition">
-<p class="admonition-title">Warning</p>
-<p>This page is still under construction.</p>
+<p>On this page, we will work out a family of iterative algorithms for “orthogonalizing a matrix”, by which we mean transforming either the rows or the columns of the matrix to form an orthonormal set of vectors.
+In particular, we will consider the map that sends a matrix <span class="math notranslate nohighlight">\(M\in\mathbb{R}^{m\times n}\)</span> with reduced SVD <span class="math notranslate nohighlight">\(M = U \Sigma V^\top\)</span> to the matrix <span class="math notranslate nohighlight">\(U V^\top\)</span>. This operation can be thought of as “snapping the singular values of <span class="math notranslate nohighlight">\(M\)</span> to one”—although the iterations we consider will actually fix zero singular values at zero. We will refer to the orthogonalized matrix corresponding to <span class="math notranslate nohighlight">\(M\)</span> as <span class="math notranslate nohighlight">\(M^\sharp\)</span>—pronounced “M sharp”—so that:</p>
+<div class="math-wrapper docutils container">
+<div class="math notranslate nohighlight">
+\[M = U \Sigma V^\top \mapsto M^\sharp = U V^\top.\]</div>
 </div>
-<section id="history-of-orthogonalization">
-<h2>History of orthogonalization<a class="headerlink" href="#history-of-orthogonalization" title="Permalink to this heading">¶</a></h2>
+<p>This “sharp operation” is sometimes referred to as <a class="reference external" href="https://en.wikipedia.org/wiki/Orthogonalization">“symmetric orthogonalization”</a> because no row or column of the matrix <span class="math notranslate nohighlight">\(M\)</span> is treated as special in the procedure. This is in contrast to <a class="reference external" href="https://en.wikipedia.org/wiki/Gram%E2%80%93Schmidt_process">Gram-Schmidt orthogonalization</a>, which involves first picking out a certain row or column vector as special and then orthogonalizing the remaining vectors against this vector.</p>
+<section id="steepest-descent-under-the-spectral-norm">
+<h2>Steepest descent under the spectral norm<a class="headerlink" href="#steepest-descent-under-the-spectral-norm" title="Permalink to this heading">¶</a></h2>
+<p>The reason we care about orthogonalization and the sharp operator in the context of neural network optimization is that it is an essential primitive for solving the problem of “steepest descent under the spectral norm”. For a matrix <span class="math notranslate nohighlight">\(G\in\mathbb{R}^{m\times n}\)</span> thought of as the gradient of a loss function, the sharp operator solves the following problem:</p>
+<div class="math-wrapper docutils container">
+<div class="math notranslate nohighlight">
+\[G^\sharp = \operatorname{arg max}_{\Delta W \in \mathbb{R}^{m\times n} \,:\, \|\Delta W\|_* \leq 1} \langle G , \Delta W \rangle,\]</div>
+</div>
+<p>where <span class="math notranslate nohighlight">\(\langle \cdot, \cdot \rangle\)</span> denotes the Frobenius inner product and <span class="math notranslate nohighlight">\(\|\cdot\|_*\)</span> denotes the spectral norm. In words, the sharp operator tells us the direction <span class="math notranslate nohighlight">\(\Delta W\)</span> in matrix space that squeezes out the most linearized change in loss <span class="math notranslate nohighlight">\(\langle G, \Delta W \rangle\)</span> while keeping the spectral norm under control. Keeping the spectral norm of the weight update under control is important as it allows us to guarantee that the features of the model change by a controlled amount.</p>
+</section>
+<section id="historical-connections">
+<h2>Historical connections<a class="headerlink" href="#historical-connections" title="Permalink to this heading">¶</a></h2>
+<p>The procedure of symmetric orthogonalization appears in a number of different contexts:</p>
 <ul class="simple">
-<li><p>procrustes problem</p></li>
-<li><p>loewdin symmetrization</p></li>
-<li><p>sharp-operator: frank-wolfe? nesterov?</p></li>
-<li><p>neural nets: carlin</p></li>
+<li><p>it is used to solve the <a class="reference external" href="https://en.wikipedia.org/wiki/Orthogonal_Procrustes_problem">orthogonal Procrustes problem</a>.</p></li>
+<li><p>it is used to compute the “orthogonal polar factor” in the <a class="reference external" href="https://en.wikipedia.org/wiki/Polar_decomposition">polar decomposition</a> of a matrix.</p></li>
+<li><p>it was used by <a class="reference external" href="https://en.wikipedia.org/wiki/Per-Olov_L%C3%B6wdin">Per-Olov Löwdin</a> in the 1950s to perform atomic and molecular orbital calculations.</p></li>
+<li><p>it is used in <a class="reference external" href="https://proceedings.mlr.press/v28/jaggi13">Frank-Wolfe optimization</a> over the spectral norm ball.</p></li>
+<li><p><a class="reference external" href="https://papers.nips.cc/paper_files/paper/2015/hash/f50a6c02a3fc5a3a5d4d9391f05f3efc-Abstract.html">Preconditioned Spectral Descent for Deep Learning</a>.</p></li>
+</ul>
+<p>Newton-Schulz iteration</p>
+<ul class="simple">
 <li><p>kovarik, bjorck and bowie</p></li>
 <li><p>higham: newton-schulz</p></li>
 <li><p>anil and grosse: for weights not updates</p></li>
@@ -309,8 +325,8 @@
 <div class="math notranslate nohighlight">
 \[f(x) = \frac{3}{2}x - \frac{1}{2}x^3\]</div>
 </div>
-<iframe src="https://www.desmos.com/calculator/qzvof94grn?embed" width="48%" height="300px" frameborder="0"></iframe>&nbsp;&nbsp;&nbsp;
-<iframe src="https://www.desmos.com/calculator/2d0ekimums?embed" width="48%" height="300px" frameborder="0"></iframe><p>some more text</p>
+<iframe src="https://www.desmos.com/calculator/qzvof94grn?embed" width="47%" height="300px" frameborder="0" style="margin-right: 4%"></iframe>
+<iframe src="https://www.desmos.com/calculator/2d0ekimums?embed" width="47%" height="300px" frameborder="0"></iframe><p>some more text</p>
 </section>
 <section id="a-quintic-iteration">
 <h2>A quintic iteration<a class="headerlink" href="#a-quintic-iteration" title="Permalink to this heading">¶</a></h2>
@@ -318,16 +334,16 @@
 <div class="math notranslate nohighlight">
 \[f(x) = 3x - \frac{16}{5}x^3 + \frac{6}{5}x^5\]</div>
 </div>
-<iframe src="https://www.desmos.com/calculator/fjjjpsnl2g?embed" width="48%" height="300px" frameborder="0"></iframe>&nbsp;&nbsp;&nbsp;
-<iframe src="https://www.desmos.com/calculator/1aqrfjge22?embed" width="48%" height="300px" frameborder="0"></iframe></section>
+<iframe src="https://www.desmos.com/calculator/fjjjpsnl2g?embed" width="47%" height="300px" frameborder="0" style="margin-right: 4%"></iframe>
+<iframe src="https://www.desmos.com/calculator/1aqrfjge22?embed" width="47%" height="300px" frameborder="0"></iframe></section>
 <section id="a-speedy-iteration">
 <h2>A speedy iteration<a class="headerlink" href="#a-speedy-iteration" title="Permalink to this heading">¶</a></h2>
 <div class="math-wrapper docutils container">
 <div class="math notranslate nohighlight">
 \[f(x) = 3.4445x - 4.7750x^3 + 2.0315x^5\]</div>
 </div>
-<iframe src="https://www.desmos.com/calculator/4xsjfwa5vh?embed" width="48%" height="300px" frameborder="0"></iframe>&nbsp;&nbsp;&nbsp;
-<iframe src="https://www.desmos.com/calculator/9yjpijk1fv?embed" width="48%" height="300px" frameborder="0"></iframe></section>
+<iframe src="https://www.desmos.com/calculator/4xsjfwa5vh?embed" width="47%" height="300px" frameborder="0" style="margin-right: 4%"></iframe>
+<iframe src="https://www.desmos.com/calculator/9yjpijk1fv?embed" width="47%" height="300px" frameborder="0"></iframe></section>
 </section>
 
         </article>
@@ -335,26 +351,8 @@
       <footer>
         
         <div class="related-pages">
-          <a class="next-page" href="../manifold/">
-              <div class="page-info">
-                <div class="context">
-                  <span>Next</span>
-                </div>
-                <div class="title">Manifold duality maps</div>
-              </div>
-              <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
-            </a>
-          <a class="prev-page" href="../../intro/reading-list/">
-              <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
-              <div class="page-info">
-                <div class="context">
-                  <span>Previous</span>
-                </div>
-                
-                <div class="title">Reading list</div>
-                
-              </div>
-            </a>
+          
+          
         </div>
         <div class="bottom-of-page">
           <div class="left-details">
@@ -393,7 +391,8 @@
           <div class="toc-tree">
             <ul>
 <li><a class="reference internal" href="#">Newton-Schulz</a><ul>
-<li><a class="reference internal" href="#history-of-orthogonalization">History of orthogonalization</a></li>
+<li><a class="reference internal" href="#steepest-descent-under-the-spectral-norm">Steepest descent under the spectral norm</a></li>
+<li><a class="reference internal" href="#historical-connections">Historical connections</a></li>
 <li><a class="reference internal" href="#polynomial-iterations">Polynomial iterations</a></li>
 <li><a class="reference internal" href="#a-cubic-iteration">A cubic iteration</a></li>
 <li><a class="reference internal" href="#a-quintic-iteration">A quintic iteration</a></li>
