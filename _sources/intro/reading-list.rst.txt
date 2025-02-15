@@ -40,3 +40,12 @@ Generalization
 - `Spectrally-normalized margin bounds for neural networks <https://arxiv.org/abs/1706.08498>`_
 - `A PAC-Bayesian approach to spectrally-normalized margin bounds for neural networks <https://arxiv.org/abs/1707.09564>`_
 - `Investigating generalization by controlling normalized margin <https://arxiv.org/abs/2205.03940>`_
+
+New developments
+-----------------
+
+- `Preconditioning and normalization in optimizing deep neural networks <https://github.com/ZQZCalin/trainit/blob/master/optimizers/muon/mango_report.pdf>`_
+- `Improving SOAP using iterative whitening and Muon <https://nikhilvyas.github.io/SOAP_Muon.pdf>`_
+- `On the concurrence of layer-wise preconditioning methods and provable feature learning <https://arxiv.org/abs/2502.01763>`_
+- `A note on the convergence of Muon and further improvements <https://arxiv.org/abs/2502.02900>`_
+- `Training deep learning models with norm-constrained LMOs <https://arxiv.org/abs/2502.07529>`_

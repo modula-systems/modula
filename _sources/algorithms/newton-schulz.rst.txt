@@ -1,20 +1,31 @@
 Newton-Schulz
 ==============
 
-On this page, we will work out a family of iterative algorithms for "orthogonalizing" a matrix, by which we mean transforming either the rows or the columns of the matrix to form an orthonormal set of vectors. These so-called "Newton-Schulz" iterations are a useful family of algorithms to keep in your toolbox. We proposed using these iterations for neural net optimization in our workshop paper:
+On this page, we will work out a family of iterative algorithms for "orthogonalizing" a matrix, by which we mean transforming either the rows or the columns of the matrix to form an orthonormal set of vectors. These so-called "Newton-Schulz" iterations are a useful family of algorithms to keep in your toolbox. We proposed using these iterations for neural net optimization in our paper:
 
-   | 📗 `Old optimizer, new norm: An anthology <https://arxiv.org/abs/2409.20325>`_
+   | 📗 `Modular duality in deep learning <https://arxiv.org/abs/2410.21265>`_
    |     Jeremy Bernstein & Laker Newhouse
-   |     OPT 2024
+   |     arXiv 2024
 
-and we used a particular `cursed quintic iteration <#a-cursed-quintic-iteration>`_ in the `Muon optimizer <https://kellerjordan.github.io/posts/muon/>`_.
+Before that, we included the iteration in an appendix of our `workshop paper <https://arxiv.org/abs/2409.20325>`_, and before that I actually worked out `the ideas <https://x.com/jxbz/status/1821610284223791156>`_
+`directly <https://x.com/jxbz/status/1821685090709336319>`_
+`on <https://x.com/jxbz/status/1824076109647925260>`_ `Twitter <https://x.com/tmjlarge/status/1824243567037972768>`_ with my collaborator Tim Large. We used a particular `cursed quintic iteration <#a-cursed-quintic-iteration>`_ in the Muon optimizer, which was used to set speed records for training NanoGPT:
 
-Concretely, we wish to compute the map that sends a matrix :math:`M\in\mathbb{R}^{m\times n}` with reduced SVD :math:`M = U \Sigma V^\top` to the matrix :math:`U V^\top`. This map can be thought of as "snapping the singular values of :math:`M` to one"---with the exception that the iterations we consider will actually fix zero singular values at zero. We will refer to the orthogonalized version of :math:`M` as :math:`M^\sharp`---pronounced "M sharp"---so that:
+   | 📕 `Muon: An optimizer for hidden layers in neural networks <https://kellerjordan.github.io/posts/muon/>`_
+   |     Keller Jordan, Yuchen Jin, Vlado Boza, Jiacheng You, Franz Cesista, Laker Newhouse & Jeremy Bernstein
+   |     blog post 2024
+
+Since then, the iteration has been applied in new optimizers such as `Scion <https://arxiv.org/abs/2502.07529>`_, `improved SOAP <https://nikhilvyas.github.io/SOAP_Muon.pdf>`_ and `Mango <https://github.com/ZQZCalin/trainit/blob/master/optimizers/muon/mango_report.pdf>`_. At the bottom of this page, we provide further `historical connections <#id1>`_ on the techniques.
+
+Problem statement
+-----------------
+
+We wish to approximate the map that sends a matrix :math:`M\in\mathbb{R}^{m\times n}` with reduced SVD :math:`M = U \Sigma V^\top` to the matrix :math:`U V^\top`. This map can be thought of as "snapping the singular values of :math:`M` to one"---with the exception that the iterations we consider will actually fix zero singular values at zero. But ignoring this detail, the map is given by:
 
 .. math::
-   M = U \Sigma V^\top \mapsto M^\sharp = U V^\top.
+   M = U \Sigma V^\top \mapsto U V^\top.
 
-This "sharp operation" is sometimes referred to as `"symmetric orthogonalization" <https://en.wikipedia.org/wiki/Orthogonalization>`_ because no row or column of the matrix :math:`M` is treated as special in the procedure. This is in contrast to `Gram-Schmidt orthogonalization <https://en.wikipedia.org/wiki/Gram%E2%80%93Schmidt_process>`_, which involves first picking out a certain row or column vector as special and then orthogonalizing the remaining vectors against this vector. At the bottom of this page, we provide further `historical connections <#id1>`_ on both symmetric orthogonalization and Newton-Schulz.
+This operation is sometimes referred to as `"symmetric orthogonalization" <https://en.wikipedia.org/wiki/Orthogonalization>`_ because no row or column of the matrix :math:`M` is treated as special in the procedure. This is in contrast to `Gram-Schmidt orthogonalization <https://en.wikipedia.org/wiki/Gram%E2%80%93Schmidt_process>`_, which involves first picking out a certain row or column vector as special and then orthogonalizing the remaining vectors against this vector.
 
 
 .. Why care about symmetric orthogonalization?
@@ -27,15 +38,15 @@ This "sharp operation" is sometimes referred to as `"symmetric orthogonalization
 
 .. where :math:`\langle \cdot, \cdot \rangle` denotes the Frobenius inner product and :math:`\|\cdot\|_*` denotes the spectral norm. In words, the sharp operator tells us the direction :math:`T` in matrix space that squeezes out the most linearized change in loss :math:`\langle G, T \rangle` while keeping the spectral norm under control. Keeping the spectral norm of the weight update under control is important as it allows us to guarantee that the features of the model change by a controlled amount.
 
-Polynomial iterations
----------------------
+Odd polynomial iterations
+-------------------------
 
-The core idea behind the family of iterations is to construct an odd matrix polynomial of the form:
+We will consider iterations based on odd matrix polynomials of the form:
 
 .. math::
    p(X) = a X + b X X^\top X + c (X X^\top)^2 X + ...
 
-which acts on a matrix :math:`X \in \mathbb{R}^{m \times n}`. The important property of a matrix polynomial of this form is that it *commutes* with the singular value decomposition, in the sense that:
+which acts on a matrix :math:`X \in \mathbb{R}^{m \times n}`. The important property of an odd matrix polynomial of this form is that it *commutes* with the singular value decomposition, in the sense that:
 
 .. math::
    p(U \Sigma V^\top) = U p(\Sigma) V^\top.
@@ -84,14 +95,7 @@ As can be seen, after 5 iterations the quintic iteration has achieved a substant
 A cursed quintic iteration
 ---------------------------
 
-We used a Newton-Schulz iteration in the `NanoGPT speedrun <https://github.com/KellerJordan/modded-nanogpt>`_ as part of our Muon optimizer:
-
-   | 📗 `Muon: An optimizer for hidden layers in neural networks <https://kellerjordan.github.io/posts/muon/>`_
-   |     Keller Jordan, Yuchen Jin, Vlado Boza, Jiacheng You,
-   |     Franz Cesista, Laker Newhouse & Jeremy Bernstein
-   |     blog post 2024
-
-Keller experimented with tuning the coefficients in the iteration and found that the most important thing for fast convergence of the optimizer was to inflate the small singular values as fast as possible. To keep the wall-clock time low, we need to do this in the smallest number of iterations that we can. This is achieved by making the first coefficient in the polynomial as large as possible, thereby maximizing the slope of the polynomial at :math:`x=0`. Keller settled on the following iteration:
+We applied a Newton-Schulz iteration in the `Muon optimizer <https://kellerjordan.github.io/posts/muon/>`_ used in the `NanoGPT speedrun <https://github.com/KellerJordan/modded-nanogpt>`_. Keller experimented with tuning the coefficients in the iteration and found that the most important thing for fast convergence of the optimizer was to inflate the small singular values as fast as possible. And to keep the wall-clock time low, he needed to do this in the smallest number of iterations possible. This is achieved by making the first coefficient in the polynomial as large as possible, thereby maximizing the slope of the polynomial at :math:`x=0`. Keller settled on the following iteration:
 
 .. math::
     f(x) = 3.4445x - 4.7750x^3 + 2.0315x^5.
@@ -103,7 +107,7 @@ Plotting the polynomial after one and five iterations, we see some peculiar beha
    <iframe src="https://www.desmos.com/calculator/4xsjfwa5vh?embed" width="47%" height="300px" frameborder="0" style="margin-right: 4%"></iframe>
    <iframe src="https://www.desmos.com/calculator/9yjpijk1fv?embed" width="47%" height="300px" frameborder="0"></iframe>
 
-This iteration is *non-convergent*! To see why, observe that a convergent iteration must at the very least satisfy :math:`f(1) = 1` so that :math:`x=1` is a fixed point. In turn, this implies that the sum of the coefficients should equal 1. But for Keller's polynomial, the coefficients sum to 
+This iteration *oscillates* and in fact *does not converge*! To see why, observe that a convergent iteration must at the very least satisfy :math:`f(1) = 1` so that :math:`x=1` is a fixed point. In turn, this implies that the sum of the coefficients should equal 1. But for Keller's polynomial, the coefficients sum to 
 
 .. math::
    3.4445 - 4.7750 + 2.0315 = 0.701 \neq 1.
@@ -137,4 +141,4 @@ The procedure of symmetric orthogonalization appears in a number of different co
 - it was proposed for deep learning optimization in the paper `"preconditioned spectral descent for deep learning" <https://papers.nips.cc/paper_files/paper/2015/hash/f50a6c02a3fc5a3a5d4d9391f05f3efc-Abstract.html>`_---albeit computed via matrix sketching rather than Newton-Schulz iterations.
 - A Newton-Schulz iteration was used to orthogonalize the weight matrices (but not the updates!) in deep learning in the paper `"sorting out Lipschitz function approximation" <https://arxiv.org/abs/1811.05381>`_.
 
-The earliest references on the Newton-Schulz iteration itself seem to be `"some iterative methods for improving orthonormality" <https://epubs.siam.org/doi/10.1137/0707031>`_ (Kovarik, 1970) and `"an iterative algorithm for computing the best estimate of an orthogonal matrix" <https://www.jstor.org/stable/2949484>`_ (Björck & Bowie, 1971). To justify using the name "Newton-Schulz" for these iterations, we note that Higham used it in `these slides <https://convexoptimization.com/TOOLS/procrust94.pdf>`_. The idea of graphically tuning the coefficients of the iteration to obtain the desired performance characteristics is our own original idea.
+The earliest references on the Newton-Schulz iteration itself seem to be `"some iterative methods for improving orthonormality" <https://epubs.siam.org/doi/10.1137/0707031>`_ (Kovarik, 1970) and `"an iterative algorithm for computing the best estimate of an orthogonal matrix" <https://www.jstor.org/stable/2949484>`_ (Björck & Bowie, 1971). To justify using the name "Newton-Schulz" for these iterations, we note that Higham used it in `these slides <https://convexoptimization.com/TOOLS/procrust94.pdf>`_. The idea of graphically tuning the coefficients of the iteration to obtain certain performance characteristics is, to the best of my knowledge, our own original idea.
