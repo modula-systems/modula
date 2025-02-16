@@ -1,10 +1,36 @@
 Welcome to the Modula docs!
 ============================
 
-Modula is a deep learning framework and a deep learning theory built hand-in-hand. The central idea of Modula is to metrize the neural architecture and construct the corresponding duality theory. This is leading to training algorithms that are faster and more intrinsically scalable. But I anticipate other benefits too.
+Modula is a deep learning library and a deep learning theory built hand-in-hand. Modula disentangles complex neural networks and turns them into structured mathematical objects called *modules*. This makes training easier and also provides tools for understanding the properties of the trained network.
 
-Purpose of the docs
-^^^^^^^^^^^^^^^^^^^^
+.. image:: figure/platonize.png
+   :align: center
+   :width: 80%
+   :class: no-scaled-link
+
+Modula instantiates a set of theoretical ideas that I refer to as *metrized deep learning*. The central idea behind metrized deep learning is to equip all spaces inside a neural network with meaningful distance measures: this includes the activation spaces, the individual tensor spaces as well as the overall weight space. There are a few advantages to building neural networks in Modula:
+
+.. grid:: 2
+   :gutter: 3
+
+   .. grid-item-card:: Fast 🏎️
+      
+      Modula automatically builds duality-based training algorithms: think Muon optimizer for any architecture.
+
+   .. grid-item-card::  Scalable 📈
+
+      Scaling is built directly into the fabric of the library, giving you learning rate transfer across various architectural dimensions.
+
+   .. grid-item-card::  Lipschitz (work-in-progress) ⛰️
+      
+      Modula lets you train networks with automatically constructed Lipschitz certificates---in both inputs and weights.
+
+   .. grid-item-card::  Numerically sound 🧮
+      
+      Modula helps you understand and control the basic numerical properties of your activations, weights and updates.
+
+About these docs
+^^^^^^^^^^^^^^^^^
 
 I'm currently in the process of overhauling these docs. But the idea is to create a central place to learn about the theory, algorithms and code behind Modula. I hope that this will help inspire further research into metrized deep learning.
 

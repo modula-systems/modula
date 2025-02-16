@@ -7,10 +7,10 @@
 <meta property="og:type" content="website" />
 <meta property="og:url" content="https://modula.systems" />
 <meta property="og:site_name" content="Modula" />
-<meta property="og:description" content="Modula is a deep learning framework and a deep learning theory built hand-in-hand. The central idea of Modula is to metrize the neural architecture and construct the corresponding duality theory. T..." />
+<meta property="og:description" content="Modula is a deep learning library and a deep learning theory built hand-in-hand. Modula disentangles complex neural networks and turns them into structured mathematical objects called modules. This..." />
 <meta property="og:image" content="https://docs.modula.systems/_static/logo-square.jpeg" />
 <meta property="og:image:alt" content="Modula" />
-<meta name="description" content="Modula is a deep learning framework and a deep learning theory built hand-in-hand. The central idea of Modula is to metrize the neural architecture and construct the corresponding duality theory. T..." />
+<meta name="description" content="Modula is a deep learning library and a deep learning theory built hand-in-hand. Modula disentangles complex neural networks and turns them into structured mathematical objects called modules. This..." />
 <link rel="index" title="Index" href="genindex/" /><link rel="search" title="Search" href="search/" /><link rel="next" title="Reading list" href="intro/reading-list/" />
 
     <link rel="shortcut icon" href="_static/favicon.ico"/><!-- Generated with Sphinx 7.0.0 and Furo 2024.08.06 -->
@@ -284,9 +284,51 @@
         <article role="main" id="furo-main-content">
           <section id="welcome-to-the-modula-docs">
 <h1>Welcome to the Modula docs!<a class="headerlink" href="#welcome-to-the-modula-docs" title="Permalink to this heading">¶</a></h1>
-<p>Modula is a deep learning framework and a deep learning theory built hand-in-hand. The central idea of Modula is to metrize the neural architecture and construct the corresponding duality theory. This is leading to training algorithms that are faster and more intrinsically scalable. But I anticipate other benefits too.</p>
-<section id="purpose-of-the-docs">
-<h2>Purpose of the docs<a class="headerlink" href="#purpose-of-the-docs" title="Permalink to this heading">¶</a></h2>
+<p>Modula is a deep learning library and a deep learning theory built hand-in-hand. Modula disentangles complex neural networks and turns them into structured mathematical objects called <em>modules</em>. This makes training easier and also provides tools for understanding the properties of the trained network.</p>
+<img alt="_images/platonize.png" class="no-scaled-link align-center" src="_images/platonize.png" style="width: 80%;" />
+<p>Modula instantiates a set of theoretical ideas that I refer to as <em>metrized deep learning</em>. The central idea behind metrized deep learning is to equip all spaces inside a neural network with meaningful distance measures: this includes the activation spaces, the individual tensor spaces as well as the overall weight space. There are a few advantages to building neural networks in Modula:</p>
+<div class="sd-container-fluid sd-sphinx-override sd-mb-4 docutils">
+<div class="sd-row sd-row-cols-2 sd-row-cols-xs-2 sd-row-cols-sm-2 sd-row-cols-md-2 sd-row-cols-lg-2 sd-g-3 sd-g-xs-3 sd-g-sm-3 sd-g-md-3 sd-g-lg-3 docutils">
+<div class="sd-col sd-d-flex-row docutils">
+<div class="sd-card sd-sphinx-override sd-w-100 sd-shadow-sm docutils">
+<div class="sd-card-body docutils">
+<div class="sd-card-title sd-font-weight-bold docutils">
+Fast 🏎️</div>
+<p class="sd-card-text">Modula automatically builds duality-based training algorithms: think Muon optimizer for any architecture.</p>
+</div>
+</div>
+</div>
+<div class="sd-col sd-d-flex-row docutils">
+<div class="sd-card sd-sphinx-override sd-w-100 sd-shadow-sm docutils">
+<div class="sd-card-body docutils">
+<div class="sd-card-title sd-font-weight-bold docutils">
+Scalable 📈</div>
+<p class="sd-card-text">Scaling is built directly into the fabric of the library, giving you learning rate transfer across various architectural dimensions.</p>
+</div>
+</div>
+</div>
+<div class="sd-col sd-d-flex-row docutils">
+<div class="sd-card sd-sphinx-override sd-w-100 sd-shadow-sm docutils">
+<div class="sd-card-body docutils">
+<div class="sd-card-title sd-font-weight-bold docutils">
+Lipschitz (work-in-progress) ⛰️</div>
+<p class="sd-card-text">Modula lets you train networks with automatically constructed Lipschitz certificates—in both inputs and weights.</p>
+</div>
+</div>
+</div>
+<div class="sd-col sd-d-flex-row docutils">
+<div class="sd-card sd-sphinx-override sd-w-100 sd-shadow-sm docutils">
+<div class="sd-card-body docutils">
+<div class="sd-card-title sd-font-weight-bold docutils">
+Numerically sound 🧮</div>
+<p class="sd-card-text">Modula helps you understand and control the basic numerical properties of your activations, weights and updates.</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<section id="about-these-docs">
+<h2>About these docs<a class="headerlink" href="#about-these-docs" title="Permalink to this heading">¶</a></h2>
 <p>I’m currently in the process of overhauling these docs. But the idea is to create a central place to learn about the theory, algorithms and code behind Modula. I hope that this will help inspire further research into metrized deep learning.</p>
 <p>If something is unclear, first check <a class="reference external" href="faq">the FAQ</a>, but then consider starting a <a class="reference external" href="https://github.com/jxbz/modula/issues">GitHub issue</a>, making a <a class="reference external" href="https://github.com/jxbz/modula/pulls">pull request</a> or reaching out by email. Then we can improve the docs for everyone.</p>
 </section>
@@ -369,7 +411,7 @@
           <div class="toc-tree">
             <ul>
 <li><a class="reference internal" href="#">Welcome to the Modula docs!</a><ul>
-<li><a class="reference internal" href="#purpose-of-the-docs">Purpose of the docs</a></li>
+<li><a class="reference internal" href="#about-these-docs">About these docs</a></li>
 <li><a class="reference internal" href="#navigating-the-docs">Navigating the docs</a></li>
 <li><a class="reference internal" href="#citing-the-docs">Citing the docs</a><ul>
 </ul>
