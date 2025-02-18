@@ -60,6 +60,8 @@ The docs currently contain some original research contributions not published an
    :maxdepth: 2
    :caption: Introduction:
 
+   intro/quickstart
+   intro/metrized-deep-learning
    intro/reading-list
 
 .. .. toctree::

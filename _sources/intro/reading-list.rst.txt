@@ -1,26 +1,11 @@
 Reading list
 =============
 
-There are two main academic papers for understanding Modula. The first is called *"Scalable optimization in the modular norm"*. In this paper, we construct a recursive procedure for assigning a norm to the weight space of general neural architectures. Neural networks are automatically Lipschitz and (when possible) Lipschitz smooth in this norm with respect to their weights. The construction also provides means to track input-output Lipschitz properties. The paper is available here:
+Core papers
+------------
 
-   | 📘 `Scalable optimization in the modular norm <https://arxiv.org/abs/2405.14813>`_
-   |     Tim Large, Yang Liu, Minyoung Huh, Hyojin Bahng, Phillip Isola & Jeremy Bernstein
-   |     NeurIPS 2024
-
-The second paper builds on the first and is called *"Modular duality in deep learning"*. In this paper, we take the modular norm and use it to derive optimizers via a procedure called "modular dualization". Modular dualization chooses a weight update :math:`\Delta w` to minimize the linearization of the loss :math:`\mathcal{L}(w)` subject to a constraint on the modular norm :math:`\|\Delta w\|_{M}` of the weight update. In symbols, we solve:
-
-.. math::
-
-   \Delta w = \operatorname{arg min}_{\Delta w : \|\Delta w\|_{M} \leq \eta} \;\langle \Delta w, \nabla \mathcal{L}(w) \rangle,
-
-where :math:`\eta` sets the learning rate. Due to the structure of the modular norm, this duality procedure can be solved recursively leveraging the modular structure of the neural architecture. This procedure leads to modular optimization algorithms, where different layer types can have different optimization rules depending on which norm is assigned to that layer. The paper is available here:
-
-   | 📗 `Modular duality in deep learning <https://arxiv.org/abs/2410.21265>`_
-   |     Jeremy Bernstein & Laker Newhouse
-   |     arXiv 2024
-
-
-There are many other papers by myself and other authors that I feel contain important ideas on this topic. Here are some of them:
+- `Scalable optimization in the modular norm <https://arxiv.org/abs/2405.14813>`_
+- `Modular duality in deep learning <https://arxiv.org/abs/2410.21265>`_
 
 Optimization
 -------------
