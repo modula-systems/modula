@@ -7,10 +7,10 @@
 <meta property="og:type" content="website" />
 <meta property="og:url" content="https://modula.systems/intro/quickstart/" />
 <meta property="og:site_name" content="Modula" />
-<meta property="og:description" content="Modula is a neural networks library built on top of JAX. Installation: Modula can be installed using pip: Functionality: Modula provides a set of architecture-specific helper functions that get aut..." />
+<meta property="og:description" content="Modula is a neural networks library built on top of JAX. Installation: Modula can be installed using pip: Functionality: Modula provides a set of architecture-specific helper functions that are aut..." />
 <meta property="og:image" content="https://docs.modula.systems/_static/logo-square.jpeg" />
 <meta property="og:image:alt" content="Modula" />
-<meta name="description" content="Modula is a neural networks library built on top of JAX. Installation: Modula can be installed using pip: Functionality: Modula provides a set of architecture-specific helper functions that get aut..." />
+<meta name="description" content="Modula is a neural networks library built on top of JAX. Installation: Modula can be installed using pip: Functionality: Modula provides a set of architecture-specific helper functions that are aut..." />
 <link rel="index" title="Index" href="../../genindex/" /><link rel="search" title="Search" href="../../search/" /><link rel="next" title="What’s in a norm?" href="../whats-in-a-norm/" /><link rel="prev" title="Welcome to the Modula docs!" href="../../" />
 
     <link rel="shortcut icon" href="../../_static/favicon.ico"/><!-- Generated with Sphinx 7.0.0 and Furo 2024.08.06 -->
@@ -296,7 +296,7 @@
 </section>
 <section id="functionality">
 <h2>Functionality<a class="headerlink" href="#functionality" title="Permalink to this heading">¶</a></h2>
-<p>Modula provides a set of architecture-specific helper functions that get automatically constructed along with the network architecture itself. As an example, let’s build a multi-layer perceptron:</p>
+<p>Modula provides a set of architecture-specific helper functions that are automatically constructed along with the network architecture itself. As an example, let’s build a multi-layer perceptron:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">modula.atom</span> <span class="kn">import</span> <span class="n">Linear</span>
 <span class="kn">from</span> <span class="nn">modula.bond</span> <span class="kn">import</span> <span class="n">ReLU</span>
 
@@ -306,7 +306,7 @@
 <span class="n">mlp</span> <span class="o">@=</span> <span class="n">ReLU</span><span class="p">()</span>
 <span class="n">mlp</span> <span class="o">@=</span> <span class="n">Linear</span><span class="p">(</span><span class="mi">256</span><span class="p">,</span> <span class="mi">784</span><span class="p">)</span>
 
-<span class="n">mlp</span><span class="o">.</span><span class="n">jit</span><span class="p">()</span> <span class="c1"># JIT compiles all the internal methods of the network</span>
+<span class="n">mlp</span><span class="o">.</span><span class="n">jit</span><span class="p">()</span> <span class="c1"># makes everything run faster</span>
 </pre></div>
 </div>
 <p>Behind the scenes, Modula builds a function to randomly initialize the weights of the network:</p>

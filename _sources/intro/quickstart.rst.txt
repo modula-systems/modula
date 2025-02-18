@@ -15,7 +15,7 @@ Modula can be installed using pip:
 Functionality
 --------------
 
-Modula provides a set of architecture-specific helper functions that get automatically constructed along with the network architecture itself. As an example, let's build a multi-layer perceptron:
+Modula provides a set of architecture-specific helper functions that are automatically constructed along with the network architecture itself. As an example, let's build a multi-layer perceptron:
 
 .. code-block:: python
 
@@ -28,7 +28,7 @@ Modula provides a set of architecture-specific helper functions that get automat
     mlp @= ReLU()
     mlp @= Linear(256, 784)
 
-    mlp.jit() # JIT compiles all the internal methods of the network
+    mlp.jit() # makes everything run faster
 
 Behind the scenes, Modula builds a function to randomly initialize the weights of the network:
 
