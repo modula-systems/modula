@@ -1,5 +1,5 @@
-Metrized deep learning
-=======================
+What's in a norm?
+==================
 
 .. warning::
    This section is under construction.

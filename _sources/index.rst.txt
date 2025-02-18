@@ -61,7 +61,7 @@ The docs currently contain some original research contributions not published an
    :caption: Introduction:
 
    intro/quickstart
-   intro/metrized-deep-learning
+   intro/whats-in-a-norm
    intro/reading-list
 
 .. .. toctree::
