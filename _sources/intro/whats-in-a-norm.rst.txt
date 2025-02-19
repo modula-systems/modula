@@ -61,7 +61,7 @@ Perhaps the most exciting application of the modular norm is the idea of "modula
 
 .. math::
 
-   \Delta w = \eta \times \operatorname{arg min}_{\Delta w : \|\Delta w\|_{\mathcal{W}} \leq 1} \;\langle \Delta w, \nabla \mathcal{L}(w) \rangle,
+   \Delta w = \eta \times \operatorname{arg min}_{t \in \mathcal{W} : \|t\|_{\mathcal{W}} \leq 1} \;\langle t, \nabla \mathcal{L}(w) \rangle,
 
 where :math:`\eta` is the learning rate. Due to the structure of the modular norm, this duality procedure can be solved recursively leveraging the modular structure of the neural architecture. This procedure leads to modular optimization algorithms, where different layer types can have different optimization rules depending on which norm is assigned to that layer. The Modula package implements this procedure.
 

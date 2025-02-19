@@ -340,7 +340,7 @@
 <p>Perhaps the most exciting application of the modular norm is the idea of “modular dualization”, which is a procedure for automatically constructing architecture-specific optimization algorithms. Modular dualization chooses a weight update <span class="math notranslate nohighlight">\(\Delta w \in \mathcal{W}\)</span> to minimize the linearization of a loss function <span class="math notranslate nohighlight">\(\mathcal{L} : \mathcal{W} \to \mathbb{R}\)</span> subject to a constraint on the modular norm <span class="math notranslate nohighlight">\(\|\Delta w\|_{\mathcal{W}}\)</span> of the weight update. In symbols:</p>
 <div class="math-wrapper docutils container">
 <div class="math notranslate nohighlight">
-\[\Delta w = \eta \times \operatorname{arg min}_{\Delta w : \|\Delta w\|_{\mathcal{W}} \leq 1} \;\langle \Delta w, \nabla \mathcal{L}(w) \rangle,\]</div>
+\[\Delta w = \eta \times \operatorname{arg min}_{t \in \mathcal{W} : \|t\|_{\mathcal{W}} \leq 1} \;\langle t, \nabla \mathcal{L}(w) \rangle,\]</div>
 </div>
 <p>where <span class="math notranslate nohighlight">\(\eta\)</span> is the learning rate. Due to the structure of the modular norm, this duality procedure can be solved recursively leveraging the modular structure of the neural architecture. This procedure leads to modular optimization algorithms, where different layer types can have different optimization rules depending on which norm is assigned to that layer. The Modula package implements this procedure.</p>
 <p>For more information on modular dualization, please see our paper:</p>
