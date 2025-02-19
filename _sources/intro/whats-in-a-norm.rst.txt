@@ -1,107 +1,72 @@
 What's in a norm?
 ==================
 
-.. warning::
-   This section is under construction.
+At the coarsest level, a neural network is just a function that maps an input and a weight vector to an output. Something that we would really like to understand is how the network behaves under perturbation. We would really like to be able to predict things like:
 
-There are two main academic papers for understanding Modula. The first is called *"Scalable optimization in the modular norm"*. In this paper, we construct a recursive procedure for assigning a norm to the weight space of general neural architectures. Neural networks are automatically Lipschitz and (when possible) Lipschitz smooth in this norm with respect to their weights. The construction also provides means to track input-output Lipschitz properties. The paper is available here:
+- If I change the input to my network, how much will the output change?
+- If I change the weights of my network, how much will the output change?
+
+In fact, we would really like to understand how a neural network behaves if we perturb both the inputs and the weights at the same time! To see why this is important, consider splitting a neural network :math:`f` into two pieces :math:`f = f_\mathrm{head} \circ f_\mathrm{tail}`. During training, if we perturb the weights of both :math:`f_\mathrm{head}` and :math:`f_\mathrm{tail}` simultaneously, then from the perspective of :math:`f_\mathrm{head}` both the inputs and the weights are changing!
+
+Let's start to be a bit more formal. We will think of a neural network as a function :math:`f : \mathcal{X} \times \mathcal{W} \to \mathcal{Y}` that takes an input :math:`x \in \mathcal{X}` and a weight vector :math:`w \in \mathcal{W}` and produces an output :math:`y \in \mathcal{Y}`. If we Taylor expand the network in both the weights and inputs simultaneously, we get:
+
+.. math::
+
+   f(x + \Delta x; w + \Delta w) = f(x; w) + \nabla_w f(x; w)^\top \Delta w + \nabla_x f(x; w)^\top \Delta x +  \cdots.
+
+So the first order change in the output of the network is described by the two terms :math:`\nabla_w f(x; w)^\top \Delta w` and :math:`\nabla_x f(x; w)^\top \Delta x`. We would like to be able to predict the size of these terms, ideally for any weight perturbation :math:`\Delta w` and any input perturbation :math:`\Delta x`. To make progress, we now introduce the key ideas of "metrized deep learning".
+
+Metrized deep learning
+-----------------------
+
+Given a neural network :math:`f : \mathcal{X} \times \mathcal{W} \to \mathcal{Y}`, what if we could supply three helpful tools:
+
+- a norm :math:`\|\cdot\|_{\mathcal{X}}` on the input space :math:`\mathcal{X}`,
+- a norm :math:`\|\cdot\|_{\mathcal{W}}` on the weight space :math:`\mathcal{W}`,
+- a norm :math:`\|\cdot\|_{\mathcal{Y}}` on the output space :math:`\mathcal{Y}`.
+
+These norms would allow us to talk meaningfully about the size of the inputs, the size of the weights and the size of the outputs of the network. Could we find norms that help us achieve our goal, of predicting---or at least bounding---the size of the first order change in the output of the network? Like:
+
+.. math::
+
+   \|\nabla_w f(x; w)^\top \Delta w\|_{\mathcal{Y}} & \leq \mu \cdot \|\Delta w\|_{\mathcal{W}}; \\
+   \|\nabla_x f(x; w)^\top \Delta x\|_{\mathcal{Y}} & \leq \nu \cdot \|\Delta x\|_{\mathcal{X}}.
+
+If these bounds hold, then in applied math we would say that the network is *Lipschitz-continuous* with respect to the given norms. If these Lipschitz bounds are to be really useful in helping us design training algorithms and to scale training, we would really like two extra properties to hold:
+
+1. the bounds hold quite tightly for the kinds of perturbations :math:`\Delta w` and :math:`\Delta x` that arise during training;
+2. the coefficients :math:`\mu` and :math:`\nu` are *non-dimensional*, meaning they do not depend on width or depth.
+
+If these extra properties hold, then we can really start to think of the weight space norm :math:`\|\cdot\|_{\mathcal{W}}` as a kind of "measuring stick" for designing training algorithms that work well regardless of scale. But it might seem challenging to find norms that satisfy these properties. Afterall, neural networks have a complicated internal structure. And there are a plethora of different architectures to consider. This brings us to the idea of the *modular norm*, which is an architecture-specific norm constructed in tandem with the network architecture.
+
+The modular norm
+-----------------
+
+We proposed a procedure for assigning a useful norm to the weight space of general neural architectures. We call this norm the *modular norm*, and neural networks are automatically Lipschitz and (when possible) Lipschitz smooth in the modular norm with respect to their weights. The construction also provides means to track input-output Lipschitz properties.
+
+The idea of the modular norm is to break up the construction of the neural network into a sequence of "compositions" and "concatenations" of sub-networks that we call "modules", working all the way down to the "atomic modules" which are the individual network layers. If we can specify Lipschitz statements for atomic modules, and show how these statements pass through compositions and concatenations, then we can use the modular norm to produce Lipschitz statements for any network.
+
+This naturally motivates the idea of building a software library that automatically constructs the modular norm in lockstep with the construction of the network architecture. Enter Modula! 
+
+For the precise construction of the modular norm, please check out our paper:
 
    | 📘 `Scalable optimization in the modular norm <https://arxiv.org/abs/2405.14813>`_
    |     Tim Large, Yang Liu, Minyoung Huh, Hyojin Bahng, Phillip Isola & Jeremy Bernstein
    |     NeurIPS 2024
 
-The second paper builds on the first and is called *"Modular duality in deep learning"*. In this paper, we take the modular norm and use it to derive optimizers via a procedure called "modular dualization". Modular dualization chooses a weight update :math:`\Delta w` to minimize the linearization of the loss :math:`\mathcal{L}(w)` subject to a constraint on the modular norm :math:`\|\Delta w\|_{M}` of the weight update. In symbols, we solve:
+Modular dualization
+--------------------
+
+Perhaps the most exciting application of the modular norm is the idea of "modular dualization", which is a procedure for automatically constructing architecture-specific optimization algorithms. Modular dualization chooses a weight update :math:`\Delta w \in \mathcal{W}` to minimize the linearization of a loss function :math:`\mathcal{L} : \mathcal{W} \to \mathbb{R}` subject to a constraint on the modular norm :math:`\|\Delta w\|_{\mathcal{W}}` of the weight update. In symbols:
 
 .. math::
 
-   \Delta w = \operatorname{arg min}_{\Delta w : \|\Delta w\|_{M} \leq \eta} \;\langle \Delta w, \nabla \mathcal{L}(w) \rangle,
+   \Delta w = \eta \times \operatorname{arg min}_{\Delta w : \|\Delta w\|_{\mathcal{W}} \leq 1} \;\langle \Delta w, \nabla \mathcal{L}(w) \rangle,
 
-where :math:`\eta` sets the learning rate. Due to the structure of the modular norm, this duality procedure can be solved recursively leveraging the modular structure of the neural architecture. This procedure leads to modular optimization algorithms, where different layer types can have different optimization rules depending on which norm is assigned to that layer. The paper is available here:
+where :math:`\eta` is the learning rate. Due to the structure of the modular norm, this duality procedure can be solved recursively leveraging the modular structure of the neural architecture. This procedure leads to modular optimization algorithms, where different layer types can have different optimization rules depending on which norm is assigned to that layer. The Modula package implements this procedure.
+
+For more information on modular dualization, please see our paper:
 
    | 📗 `Modular duality in deep learning <https://arxiv.org/abs/2410.21265>`_
    |     Jeremy Bernstein & Laker Newhouse
    |     arXiv 2024
-
-.. We write neural networks by combining together basic building blocks, usually called layers. Each layer takes an input and a weight vector and produces an output.
-
-..  For example, a linear layer takes an input :math:`x` and produces an output :math:`Wx`, where :math:`W` is a weight matrix. A ReLU nonlinearity takes an input :math:`x` and produces an output :math:`\max(0, x)`.
-
-.. The core idea behind metrized deep learning is to assign norms to the different spaces inside a neural network in a principled way. These norms will enable us to predict the sensitivity of the network's internals under perturbations to both the inputs and the weights. 
-
-.. When we talk about the "different spaces" inside the network, we are referring to:
-
-.. :math:`\mathsf{M}(x; w)`
-
-.. - the input space of each layer
-.. - the output space of each layer
-.. - the weight space of each layer
-.. - the full weight space formed by concatenating the weights of all the layers
-
-.. Here's a simple example of how modular dualization works in practice. Let's create a linear layer and dualize its gradient:
-
-.. .. code-block:: python
-
-..    import modula
-..    import torch
-
-..    # Create a linear layer module
-..    linear = modula.Linear(784, 10)
-   
-..    # Create a random gradient
-..    grad = torch.randn_like(linear.weight)
-   
-..    # Dualize the gradient with learning rate 0.1
-..    update = linear.dualize(grad, eta=0.1)
-   
-..    # Apply the update
-..    linear.weight.data.add_(update)
-
-.. The ``dualize`` method automatically computes the optimal update direction and step size based on the modular norm of the layer. For a linear layer, this ends up being similar to natural gradient descent, but with automatic step size selection.
-
-
-
-.. Suppose you have a neural network :math:`f(x; w)` that takes an input :math:`x` and a vector of parameters :math:`w`. You can think of this network as a function :math:`f : \mathcal{X} \times \mathcal{W} \to \mathcal{Y}` where :math:`\mathcal{X}` is the space of inputs, :math:`\mathcal{W}` is the space of parameters, and :math:`\mathcal{Y}` is the space of outputs.
-
-.. Let's Taylor expand the network in its weights around some point :math:`(x, w)`:
-
-.. .. math::
-
-..    f(x; w + \Delta w) = f(x; w) + \underbrace{\nabla_w f(x; w)^\top \Delta w}_{\text{first-order change}} + \frac{1}{2} \underbrace{\Delta w^\top \nabla^2_w f(x; w) \Delta w}_{\text{second-order change}} + \cdots
-
-
-.. What if we could bound the linear part and the quadratic part in some norm?
-
-.. .. math::
-
-..    \|\nabla_w f(x; w)^\top \Delta w\|_{\mathcal{Y}} & \leq \mu \cdot \|\Delta w\|_{\mathcal{W}} \\
-..    \|\Delta w^\top \nabla^2_w f(x; w) \Delta w\|_{\mathcal{Y}} & \leq \alpha \cdot \|\Delta w\|_{\mathcal{W}}^2
-
-.. Modules
-.. --------
-
-.. The modular norm
-.. -----------------
-
-.. There are two main academic papers for understanding Modula. The first is called *"Scalable optimization in the modular norm"*. In this paper, we construct a recursive procedure for assigning a norm to the weight space of general neural architectures. Neural networks are automatically Lipschitz and (when possible) Lipschitz smooth in this norm with respect to their weights. The construction also provides means to track input-output Lipschitz properties. The paper is available here:
-
-..    | 📘 `Scalable optimization in the modular norm <https://arxiv.org/abs/2405.14813>`_
-..    |     Tim Large, Yang Liu, Minyoung Huh, Hyojin Bahng, Phillip Isola & Jeremy Bernstein
-..    |     NeurIPS 2024
-
-.. Modular duality
-.. ----------------
-
-.. The second paper builds on the first and is called *"Modular duality in deep learning"*. In this paper, we take the modular norm and use it to derive optimizers via a procedure called "modular dualization". Modular dualization chooses a weight update :math:`\Delta w` to minimize the linearization of the loss :math:`\mathcal{L}(w)` subject to a constraint on the modular norm :math:`\|\Delta w\|_{M}` of the weight update. In symbols, we solve:
-
-.. .. math::
-
-..    \Delta w = \operatorname{arg min}_{\Delta w : \|\Delta w\|_{M} \leq \eta} \;\langle \Delta w, \nabla \mathcal{L}(w) \rangle,
-
-.. where :math:`\eta` sets the learning rate. Due to the structure of the modular norm, this duality procedure can be solved recursively leveraging the modular structure of the neural architecture. This procedure leads to modular optimization algorithms, where different layer types can have different optimization rules depending on which norm is assigned to that layer. The paper is available here:
-
-..    | 📗 `Modular duality in deep learning <https://arxiv.org/abs/2410.21265>`_
-..    |     Jeremy Bernstein & Laker Newhouse
-..    |     arXiv 2024
-
-
-.. There are many other papers by myself and other authors that I feel contain important ideas on this topic. Here are some of them:
