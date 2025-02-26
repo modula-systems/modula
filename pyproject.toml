@@ -17,7 +17,7 @@ classifiers = [
     "Operating System :: OS Independent",
 ]
 dependencies = [
-    "jax>=0.5.0",
+    "jax>=0.5.0"
 ]
 
 [tool.setuptools]

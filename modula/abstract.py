@@ -1,4 +1,5 @@
 import jax
+import copy
 
 class Module:
     def __init__(self):
@@ -55,8 +56,16 @@ class Module:
     def __add__(self, other):
         return Add() @ TupleModule((self, other))
 
+    def __mul__(self, other):
+        assert other != 0, "cannot multiply a module by zero"
+        return self @ Mul(other)
+
     def __rmul__(self, scalar):
         return Mul(scalar) @ self
+
+    def __pow__(self, n):
+        assert n >= 0 and n % 1 == 0, "nonnegative integer powers only"
+        return copy.deepcopy(self) @ (self ** (n-1)) if n > 0 else Identity()
 
     def __call__(self, x, w):
         return self.forward(x, w)
