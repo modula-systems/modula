@@ -297,7 +297,7 @@
 <div class="math notranslate nohighlight">
 \[f(x + \Delta x; w + \Delta w) = f(x; w) + \nabla_w f(x; w)^\top \Delta w + \nabla_x f(x; w)^\top \Delta x +  \cdots.\]</div>
 </div>
-<p>So the first order change in the output of the network is described by the two terms <span class="math notranslate nohighlight">\(\nabla_w f(x; w)^\top \Delta w\)</span> and <span class="math notranslate nohighlight">\(\nabla_x f(x; w)^\top \Delta x\)</span>. We would like to be able to predict the size of these terms, ideally for any weight perturbation <span class="math notranslate nohighlight">\(\Delta w\)</span> and any input perturbation <span class="math notranslate nohighlight">\(\Delta x\)</span>. To make progress, we now introduce the key ideas of “metrized deep learning”.</p>
+<p>So the first-order change in the output of the network is described by the two terms <span class="math notranslate nohighlight">\(\nabla_w f(x; w)^\top \Delta w\)</span> and <span class="math notranslate nohighlight">\(\nabla_x f(x; w)^\top \Delta x\)</span>. We would like to be able to predict the size of these terms, ideally for any weight perturbation <span class="math notranslate nohighlight">\(\Delta w\)</span> and any input perturbation <span class="math notranslate nohighlight">\(\Delta x\)</span>. If we could, we would like to predict the size of the second order terms too. To make progress, we now introduce “metrized deep learning”.</p>
 <section id="metrized-deep-learning">
 <h2>Metrized deep learning<a class="headerlink" href="#metrized-deep-learning" title="Permalink to this heading">¶</a></h2>
 <p>Given a neural network <span class="math notranslate nohighlight">\(f : \mathcal{X} \times \mathcal{W} \to \mathcal{Y}\)</span>, what if we could supply three helpful tools:</p>
@@ -317,14 +317,11 @@
 <li><p>the bounds hold quite tightly for the kinds of perturbations <span class="math notranslate nohighlight">\(\Delta w\)</span> and <span class="math notranslate nohighlight">\(\Delta x\)</span> that arise during training;</p></li>
 <li><p>the coefficients <span class="math notranslate nohighlight">\(\mu\)</span> and <span class="math notranslate nohighlight">\(\nu\)</span> are <em>non-dimensional</em>, meaning they do not depend on width or depth.</p></li>
 </ol>
-<p>If these extra properties hold, then we can really start to think of the weight space norm <span class="math notranslate nohighlight">\(\|\cdot\|_{\mathcal{W}}\)</span> as a kind of “measuring stick” for designing training algorithms that work well regardless of scale. But it might seem challenging to find norms that satisfy these properties. Afterall, neural networks have a complicated internal structure. And there are a plethora of different architectures to consider. This brings us to the idea of the <em>modular norm</em>, which is an architecture-specific norm constructed in tandem with the network architecture.</p>
+<p>If these extra properties hold, then we can really start to think of the weight space norm <span class="math notranslate nohighlight">\(\|\cdot\|_{\mathcal{W}}\)</span> as a kind of “measuring stick” for designing training algorithms that work well regardless of scale. But it might seem challenging to find norms that satisfy these properties. Afterall, neural networks have a complicated internal structure. And there are a plethora of different architectures to consider. Well, what if we construct a norm as a function of the architecture? This brings us to the <em>modular norm</em>!</p>
 </section>
 <section id="the-modular-norm">
 <h2>The modular norm<a class="headerlink" href="#the-modular-norm" title="Permalink to this heading">¶</a></h2>
-<p>We proposed a procedure for assigning a useful norm to the weight space of general neural architectures. We call this norm the <em>modular norm</em>, and neural networks are automatically Lipschitz and (when possible) Lipschitz smooth in the modular norm with respect to their weights. The construction also provides means to track input-output Lipschitz properties.</p>
-<p>The idea of the modular norm is to break up the construction of the neural network into a sequence of “compositions” and “concatenations” of sub-networks that we call “modules”, working all the way down to the “atomic modules” which are the individual network layers. If we can specify Lipschitz statements for atomic modules, and show how these statements pass through compositions and concatenations, then we can use the modular norm to produce Lipschitz statements for any network.</p>
-<p>This naturally motivates the idea of building a software library that automatically constructs the modular norm in lockstep with the construction of the network architecture. Enter Modula!</p>
-<p>For the precise construction of the modular norm, please check out our paper:</p>
+<p>We proposed a procedure for assigning a useful norm to the weight space of general neural architectures. We call this norm the <em>modular norm</em>, and neural networks are automatically Lipschitz and (when possible) Lipschitz smooth in the modular norm with respect to their weights. The construction also provides means to track input-output Lipschitz properties. The paper is here:</p>
 <blockquote>
 <div><div class="line-block">
 <div class="line">📘 <a class="reference external" href="https://arxiv.org/abs/2405.14813">Scalable optimization in the modular norm</a></div>
@@ -334,16 +331,11 @@
 </div>
 </div>
 </div></blockquote>
+<p>The idea of the modular norm is to break up the construction of the neural network into a sequence of “compositions” and “concatenations” of sub-networks that we call “modules”, working all the way down to the “atomic modules” which are the individual network layers. If we can specify Lipschitz statements for atomic modules, and show how these statements pass through compositions and concatenations, then we can use the modular norm to produce Lipschitz statements for any network.</p>
 </section>
 <section id="modular-dualization">
 <h2>Modular dualization<a class="headerlink" href="#modular-dualization" title="Permalink to this heading">¶</a></h2>
-<p>Perhaps the most exciting application of the modular norm is the idea of “modular dualization”, which is a procedure for automatically constructing architecture-specific optimization algorithms. Modular dualization chooses a weight update <span class="math notranslate nohighlight">\(\Delta w \in \mathcal{W}\)</span> to minimize the linearization of a loss function <span class="math notranslate nohighlight">\(\mathcal{L} : \mathcal{W} \to \mathbb{R}\)</span> subject to a constraint on the modular norm <span class="math notranslate nohighlight">\(\|\Delta w\|_{\mathcal{W}}\)</span> of the weight update. In symbols:</p>
-<div class="math-wrapper docutils container">
-<div class="math notranslate nohighlight">
-\[\Delta w = \eta \times \operatorname{arg min}_{t \in \mathcal{W} : \|t\|_{\mathcal{W}} \leq 1} \;\langle t, \nabla \mathcal{L}(w) \rangle,\]</div>
-</div>
-<p>where <span class="math notranslate nohighlight">\(\eta\)</span> is the learning rate. Due to the structure of the modular norm, this duality procedure can be solved recursively leveraging the modular structure of the neural architecture. This procedure leads to modular optimization algorithms, where different layer types can have different optimization rules depending on which norm is assigned to that layer. The Modula package implements this procedure.</p>
-<p>For more information on modular dualization, please see our paper:</p>
+<p>Perhaps the most exciting application of the modular norm is the idea of “modular dualization”, which is a procedure for automatically constructing architecture-specific optimization algorithms. We describe this procedure in our paper:</p>
 <blockquote>
 <div><div class="line-block">
 <div class="line">📗 <a class="reference external" href="https://arxiv.org/abs/2410.21265">Modular duality in deep learning</a></div>
@@ -353,6 +345,12 @@
 </div>
 </div>
 </div></blockquote>
+<p>Modular dualization chooses a weight update <span class="math notranslate nohighlight">\(\Delta w \in \mathcal{W}\)</span> to minimize the linearization of the loss function <span class="math notranslate nohighlight">\(\mathcal{L} : \mathcal{W} \to \mathbb{R}\)</span> subject to a constraint on the modular norm <span class="math notranslate nohighlight">\(\|\Delta w\|_{\mathcal{W}}\)</span> of the weight update. Constraining the modular norm of the weight update ensures none of the internal activations of the network change in an unstable way because of the update. In symbols, we choose an update by:</p>
+<div class="math-wrapper docutils container">
+<div class="math notranslate nohighlight">
+\[\Delta w = \eta \times \operatorname{arg min}_{t \in \mathcal{W} : \|t\|_{\mathcal{W}} \leq 1} \;\langle t, \nabla \mathcal{L}(w) \rangle,\]</div>
+</div>
+<p>where <span class="math notranslate nohighlight">\(\eta\)</span> is the learning rate. Due to the structure of the modular norm, this duality procedure can be solved recursively leveraging the modular structure of the neural architecture. This procedure leads to modular optimization algorithms, where different layer types can have different optimization rules depending on which norm is assigned to that layer. The Modula package implements this procedure.</p>
 </section>
 </section>
 
