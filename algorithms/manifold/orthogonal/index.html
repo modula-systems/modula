@@ -7,10 +7,10 @@
 <meta property="og:type" content="website" />
 <meta property="og:url" content="https://modula.systems/algorithms/manifold/orthogonal/" />
 <meta property="og:site_name" content="Modula" />
-<meta property="og:description" content="On this page, we will work out an algorithm for performing gradient descent on the manifold of orthogonal matrices while taking steps that are steepest under the spectral norm. The algorithm will s..." />
+<meta property="og:description" content="📚 This page contains original research. To cite the Modula docs, here’s some BibTeX: On this page, we will work out an algorithm for performing gradient descent on the manifold of orthogonal matric..." />
 <meta property="og:image" content="https://docs.modula.systems/_static/logo-square.jpeg" />
 <meta property="og:image:alt" content="Modula" />
-<meta name="description" content="On this page, we will work out an algorithm for performing gradient descent on the manifold of orthogonal matrices while taking steps that are steepest under the spectral norm. The algorithm will s..." />
+<meta name="description" content="📚 This page contains original research. To cite the Modula docs, here’s some BibTeX: On this page, we will work out an algorithm for performing gradient descent on the manifold of orthogonal matric..." />
 <link rel="index" title="Index" href="../../../genindex/" /><link rel="search" title="Search" href="../../../search/" /><link rel="next" title="Hello, World!" href="../../../examples/hello-world/" /><link rel="prev" title="Hypersphere" href="../hypersphere/" />
 
     <link rel="shortcut icon" href="../../../_static/favicon.ico"/><!-- Generated with Sphinx 7.0.0 and Furo 2024.08.06 -->
@@ -286,6 +286,15 @@
         <article role="main" id="furo-main-content">
           <section id="orthogonal-manifold">
 <h1>Orthogonal manifold<a class="headerlink" href="#orthogonal-manifold" title="Permalink to this heading">¶</a></h1>
+<p>📚 <em>This page contains original research. To cite the Modula docs, here’s some BibTeX:</em></p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="nd">@misc</span><span class="p">{</span><span class="n">modula</span><span class="o">-</span><span class="n">docs</span><span class="p">,</span>
+   <span class="n">author</span>  <span class="o">=</span> <span class="p">{</span><span class="n">Jeremy</span> <span class="n">Bernstein</span><span class="p">},</span>
+   <span class="n">title</span>   <span class="o">=</span> <span class="p">{</span><span class="n">The</span> <span class="n">Modula</span> <span class="n">Docs</span><span class="p">},</span>
+   <span class="n">url</span>     <span class="o">=</span> <span class="p">{</span><span class="n">https</span><span class="p">:</span><span class="o">//</span><span class="n">docs</span><span class="o">.</span><span class="n">modula</span><span class="o">.</span><span class="n">systems</span><span class="o">/</span><span class="p">},</span>
+   <span class="n">year</span>    <span class="o">=</span> <span class="mi">2025</span>
+<span class="p">}</span>
+</pre></div>
+</div>
 <p>On this page, we will work out an algorithm for performing gradient descent on the manifold of orthogonal matrices while taking steps that are steepest under the spectral norm. The algorithm will solve for the matrix of unit spectral norm that maximizes the linearized improvement in loss while lying tangent to the manifold. The “retraction map”—which sends the update from the tangent space back to the manifold—can oftentimes be performed by a simple scalar multiplication.</p>
 <section id="steepest-descent-on-the-orthogonal-manifold">
 <h2>Steepest descent on the orthogonal manifold<a class="headerlink" href="#steepest-descent-on-the-orthogonal-manifold" title="Permalink to this heading">¶</a></h2>

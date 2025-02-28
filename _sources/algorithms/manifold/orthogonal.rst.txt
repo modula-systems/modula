@@ -1,6 +1,17 @@
 Orthogonal manifold
 ====================
 
+📚 *This page contains original research. To cite the Modula docs, here's some BibTeX:*
+
+.. code::
+   
+   @misc{modula-docs,
+      author  = {Jeremy Bernstein},
+      title   = {The Modula Docs},
+      url     = {https://docs.modula.systems/},
+      year    = 2025
+   }
+
 On this page, we will work out an algorithm for performing gradient descent on the manifold of orthogonal matrices while taking steps that are steepest under the spectral norm. The algorithm will solve for the matrix of unit spectral norm that maximizes the linearized improvement in loss while lying tangent to the manifold. The "retraction map"---which sends the update from the tangent space back to the manifold---can oftentimes be performed by a simple scalar multiplication.
 
 Steepest descent on the orthogonal manifold

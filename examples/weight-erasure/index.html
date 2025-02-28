@@ -7,10 +7,10 @@
 <meta property="og:type" content="website" />
 <meta property="og:url" content="https://modula.systems/examples/weight-erasure/" />
 <meta property="og:site_name" content="Modula" />
-<meta property="og:description" content="You might have heard the claim that “during training, the weights of a wide enough neural network move a vanishing distance from their initial values”. For instance, Lee et al. (2019) suggest that ..." />
+<meta property="og:description" content="📚 This notebook contains original research. To cite the Modula docs, here’s some BibTeX: You might have heard the claim that “during training, the weights of a wide enough neural network move a van..." />
 <meta property="og:image" content="https://docs.modula.systems/_static/logo-square.jpeg" />
 <meta property="og:image:alt" content="Modula" />
-<meta name="description" content="You might have heard the claim that “during training, the weights of a wide enough neural network move a vanishing distance from their initial values”. For instance, Lee et al. (2019) suggest that ..." />
+<meta name="description" content="📚 This notebook contains original research. To cite the Modula docs, here’s some BibTeX: You might have heard the claim that “during training, the weights of a wide enough neural network move a van..." />
 <link rel="index" title="Index" href="../../genindex/" /><link rel="search" title="Search" href="../../search/" /><link rel="next" title="Frequently asked questions" href="../../faq/" /><link rel="prev" title="Hello, MNIST!" href="../hello-mnist/" />
 
     <link rel="shortcut icon" href="../../_static/favicon.ico"/><!-- Generated with Sphinx 7.0.0 and Furo 2024.08.06 -->
@@ -287,6 +287,15 @@
         <article role="main" id="furo-main-content">
           <section id="Weight-erasure">
 <h1>Weight erasure<a class="headerlink" href="#Weight-erasure" title="Permalink to this heading">¶</a></h1>
+<p>📚 <em>This notebook contains original research. To cite the Modula docs, here’s some BibTeX:</em></p>
+<div class="highlight-bibtex notranslate"><div class="highlight"><pre><span></span><span class="nc">@misc</span><span class="p">{</span><span class="nl">modula-docs</span><span class="p">,</span>
+<span class="w">    </span><span class="na">author</span><span class="w">  </span><span class="p">=</span><span class="w"> </span><span class="s">{Jeremy Bernstein}</span><span class="p">,</span>
+<span class="w">    </span><span class="na">title</span><span class="w">   </span><span class="p">=</span><span class="w"> </span><span class="s">{The Modula Docs}</span><span class="p">,</span>
+<span class="w">    </span><span class="na">url</span><span class="w">     </span><span class="p">=</span><span class="w"> </span><span class="s">{https://docs.modula.systems/}</span><span class="p">,</span>
+<span class="w">    </span><span class="na">year</span><span class="w">    </span><span class="p">=</span><span class="w"> </span><span class="m">2025</span>
+<span class="p">}</span>
+</pre></div>
+</div>
 <p>You might have heard the claim that <em>“during training, the weights of a wide enough neural network move a vanishing distance from their initial values”</em>. For instance, <a class="reference external" href="https://arxiv.org/abs/1902.06720">Lee et al. (2019)</a> suggest that wide enough neural networks never leave the linearization around their initial weights. And <a class="reference external" href="https://arxiv.org/abs/2012.02550">Jesus et al. (2020)</a> conduct an intriguing experiment seemingly in support of this narrative. At initialization, they “watermark”
 one of the weight matrices with an image of the letter “a”. They find that the “a” is still visible at the end of training (left) so long as the training does not diverge (right).</p>
 <img alt="Jesus et al. (2020)" src="../../_images/erasure.png" />
@@ -349,7 +358,7 @@ these results can be understood simply in terms of the “stable rank” of the 
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="../../_images/examples_weight-erasure_5_0.png" src="../../_images/examples_weight-erasure_5_0.png" />
+<img alt="../../_images/examples_weight-erasure_6_0.png" src="../../_images/examples_weight-erasure_6_0.png" />
 </div>
 </div>
 </section>
@@ -431,7 +440,7 @@ these results can be understood simply in terms of the “stable rank” of the 
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="../../_images/examples_weight-erasure_11_0.png" src="../../_images/examples_weight-erasure_11_0.png" />
+<img alt="../../_images/examples_weight-erasure_12_0.png" src="../../_images/examples_weight-erasure_12_0.png" />
 </div>
 </div>
 </section>
@@ -596,7 +605,7 @@ Running experiments with dualize = False
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="../../_images/examples_weight-erasure_17_0.png" src="../../_images/examples_weight-erasure_17_0.png" />
+<img alt="../../_images/examples_weight-erasure_18_0.png" src="../../_images/examples_weight-erasure_18_0.png" />
 </div>
 </div>
 <p>We make three main observations from this plot:</p>
@@ -681,7 +690,7 @@ Running experiments with dualize = False
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="../../_images/examples_weight-erasure_22_0.png" src="../../_images/examples_weight-erasure_22_0.png" />
+<img alt="../../_images/examples_weight-erasure_23_0.png" src="../../_images/examples_weight-erasure_23_0.png" />
 </div>
 </div>
 <p>As we can see, the stable rank of the gradients is very small at all widths. Meanwhile, the stable rank of the dualized gradients increases with width until the width reaches the batch size, at which point it plateaus. This is expected because the rank of the gradients is capped by the batch size, and dualization cannot inflate the stable rank beyond the rank itself.</p>
