@@ -44,7 +44,7 @@ You can use the :kbd:`←` and :kbd:`→` arrow keys to jump around the docs. Yo
 Citing the docs
 ^^^^^^^^^^^^^^^^
 
-The docs currently contain some original research contributions not published anywhere else---in particular, the section on manifold duality maps. If you want to cite the docs, here's some BibTeX:
+The docs currently contain some original research contributions not published anywhere else---in particular, the section on manifold duality maps and the experiment on weight erasure. If you want to cite the docs, here's some BibTeX:
 
 .. code::
     
