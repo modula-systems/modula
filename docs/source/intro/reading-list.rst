@@ -34,3 +34,4 @@ New developments
 - `On the concurrence of layer-wise preconditioning methods and provable feature learning <https://arxiv.org/abs/2502.01763>`_
 - `A note on the convergence of Muon and further <https://arxiv.org/abs/2502.02900>`_
 - `Training deep learning models with norm-constrained LMOs <https://arxiv.org/abs/2502.07529>`_
+- `Muon is scalable for LLM training <https://arxiv.org/abs/2502.16982>`_
