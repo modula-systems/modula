@@ -12,6 +12,14 @@ Modula can be installed using pip:
 
    pip install git+https://github.com/modula-systems/modula.git
 
+Or you can clone the repository and install locally:
+
+.. code-block:: bash
+
+   git clone https://github.com/modula-systems/modula.git
+   cd modula
+   pip install -e .
+
 Functionality
 --------------
 
