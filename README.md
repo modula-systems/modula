@@ -14,6 +14,14 @@ Modula can be installed using pip:
 pip install git+https://github.com/modula-systems/modula.git
 ```
 
+Or you can clone the repository and install locally:
+
+```bash
+git clone https://github.com/modula-systems/modula.git
+cd modula
+pip install -e .
+```
+
 # Functionality
 
 Modula provides a set of architecture-specific helper functions that are automatically constructed along with the network architecture itself. As an example, let’s build a multi-layer perceptron:
