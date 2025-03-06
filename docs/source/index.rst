@@ -90,6 +90,7 @@ The docs currently contain some original research contributions not published an
 
    examples/hello-world
    examples/hello-mnist
+   examples/hello-gpt
    examples/weight-erasure
 
 .. toctree::
