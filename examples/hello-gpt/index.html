@@ -1,0 +1,970 @@
+<!doctype html>
+<html class="no-js" lang="en" data-content_root="">
+  <head><meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width,initial-scale=1"/>
+    <meta name="color-scheme" content="light dark"><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
+<meta property="og:title" content="Hello, GPT!" />
+<meta property="og:type" content="website" />
+<meta property="og:url" content="https://modula.systems/examples/hello-gpt/" />
+<meta property="og:site_name" content="Modula" />
+<meta property="og:description" content="In this notebook, we’re going to build a transformer. In particular, we’ll see how to define attention and residual blocks in Modula. Getting the data: First, let’s download the Shakespeare dataset..." />
+<meta property="og:image" content="https://docs.modula.systems/_static/logo-square.jpeg" />
+<meta property="og:image:alt" content="Modula" />
+<meta name="description" content="In this notebook, we’re going to build a transformer. In particular, we’ll see how to define attention and residual blocks in Modula. Getting the data: First, let’s download the Shakespeare dataset..." />
+<link rel="index" title="Index" href="../../genindex/" /><link rel="search" title="Search" href="../../search/" /><link rel="next" title="Weight erasure" href="../weight-erasure/" /><link rel="prev" title="Hello, MNIST!" href="../hello-mnist/" />
+
+    <link rel="shortcut icon" href="../../_static/favicon.ico"/><!-- Generated with Sphinx 7.0.0 and Furo 2024.08.06 -->
+        <title>Hello, GPT! - docs.modula.systems</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/styles/furo.css?digest=04c057b233f3c8d71940eee6080f658a04e2027d" />
+    <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/tabs.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/plot_directive.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sphinx-design.4cbf315f70debaebd550c87a6162cf0f.min.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/nbsphinx-code-cells.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/styles/furo-extensions.css?digest=cf727022eb7470bc603c08d2e55c3247faec75c9" />
+    <link rel="stylesheet" type="text/css" href="../../_static/custom.css" />
+    
+    
+
+
+<style>
+  body {
+    --color-code-background: #f8f8f8;
+  --color-code-foreground: black;
+  
+  }
+  @media not print {
+    body[data-theme="dark"] {
+      --color-code-background: #202020;
+  --color-code-foreground: #d0d0d0;
+  
+    }
+    @media (prefers-color-scheme: dark) {
+      body:not([data-theme="light"]) {
+        --color-code-background: #202020;
+  --color-code-foreground: #d0d0d0;
+  
+      }
+    }
+  }
+</style></head>
+  <body>
+    
+    <script>
+      document.body.dataset.theme = localStorage.getItem("theme") || "auto";
+    </script>
+    
+
+<svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
+  <symbol id="svg-toc" viewBox="0 0 24 24">
+    <title>Contents</title>
+    <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 1024 1024">
+      <path d="M408 442h480c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8H408c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8zm-8 204c0 4.4 3.6 8 8 8h480c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8H408c-4.4 0-8 3.6-8 8v56zm504-486H120c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8zm0 632H120c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8zM115.4 518.9L271.7 642c5.8 4.6 14.4.5 14.4-6.9V388.9c0-7.4-8.5-11.5-14.4-6.9L115.4 505.1a8.74 8.74 0 0 0 0 13.8z"/>
+    </svg>
+  </symbol>
+  <symbol id="svg-menu" viewBox="0 0 24 24">
+    <title>Menu</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather-menu">
+      <line x1="3" y1="12" x2="21" y2="12"></line>
+      <line x1="3" y1="6" x2="21" y2="6"></line>
+      <line x1="3" y1="18" x2="21" y2="18"></line>
+    </svg>
+  </symbol>
+  <symbol id="svg-arrow-right" viewBox="0 0 24 24">
+    <title>Expand</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather-chevron-right">
+      <polyline points="9 18 15 12 9 6"></polyline>
+    </svg>
+  </symbol>
+  <symbol id="svg-sun" viewBox="0 0 24 24">
+    <title>Light mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="feather-sun">
+      <circle cx="12" cy="12" r="5"></circle>
+      <line x1="12" y1="1" x2="12" y2="3"></line>
+      <line x1="12" y1="21" x2="12" y2="23"></line>
+      <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+      <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+      <line x1="1" y1="12" x2="3" y2="12"></line>
+      <line x1="21" y1="12" x2="23" y2="12"></line>
+      <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+      <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+    </svg>
+  </symbol>
+  <symbol id="svg-moon" viewBox="0 0 24 24">
+    <title>Dark mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-moon">
+      <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+      <path d="M12 3c.132 0 .263 0 .393 0a7.5 7.5 0 0 0 7.92 12.446a9 9 0 1 1 -8.313 -12.454z" />
+    </svg>
+  </symbol>
+  <symbol id="svg-sun-with-moon" viewBox="0 0 24 24">
+    <title>Auto light/dark, in light mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round"
+      class="icon-custom-derived-from-feather-sun-and-tabler-moon">
+      <path style="opacity: 50%" d="M 5.411 14.504 C 5.471 14.504 5.532 14.504 5.591 14.504 C 3.639 16.319 4.383 19.569 6.931 20.352 C 7.693 20.586 8.512 20.551 9.25 20.252 C 8.023 23.207 4.056 23.725 2.11 21.184 C 0.166 18.642 1.702 14.949 4.874 14.536 C 5.051 14.512 5.231 14.5 5.411 14.5 L 5.411 14.504 Z"/>
+      <line x1="14.5" y1="3.25" x2="14.5" y2="1.25"/>
+      <line x1="14.5" y1="15.85" x2="14.5" y2="17.85"/>
+      <line x1="10.044" y1="5.094" x2="8.63" y2="3.68"/>
+      <line x1="19" y1="14.05" x2="20.414" y2="15.464"/>
+      <line x1="8.2" y1="9.55" x2="6.2" y2="9.55"/>
+      <line x1="20.8" y1="9.55" x2="22.8" y2="9.55"/>
+      <line x1="10.044" y1="14.006" x2="8.63" y2="15.42"/>
+      <line x1="19" y1="5.05" x2="20.414" y2="3.636"/>
+      <circle cx="14.5" cy="9.55" r="3.6"/>
+    </svg>
+  </symbol>
+  <symbol id="svg-moon-with-sun" viewBox="0 0 24 24">
+    <title>Auto light/dark, in dark mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round"
+      class="icon-custom-derived-from-feather-sun-and-tabler-moon">
+      <path d="M 8.282 7.007 C 8.385 7.007 8.494 7.007 8.595 7.007 C 5.18 10.184 6.481 15.869 10.942 17.24 C 12.275 17.648 13.706 17.589 15 17.066 C 12.851 22.236 5.91 23.143 2.505 18.696 C -0.897 14.249 1.791 7.786 7.342 7.063 C 7.652 7.021 7.965 7 8.282 7 L 8.282 7.007 Z"/>
+      <line style="opacity: 50%" x1="18" y1="3.705" x2="18" y2="2.5"/>
+      <line style="opacity: 50%" x1="18" y1="11.295" x2="18" y2="12.5"/>
+      <line style="opacity: 50%" x1="15.316" y1="4.816" x2="14.464" y2="3.964"/>
+      <line style="opacity: 50%" x1="20.711" y1="10.212" x2="21.563" y2="11.063"/>
+      <line style="opacity: 50%" x1="14.205" y1="7.5" x2="13.001" y2="7.5"/>
+      <line style="opacity: 50%" x1="21.795" y1="7.5" x2="23" y2="7.5"/>
+      <line style="opacity: 50%" x1="15.316" y1="10.184" x2="14.464" y2="11.036"/>
+      <line style="opacity: 50%" x1="20.711" y1="4.789" x2="21.563" y2="3.937"/>
+      <circle style="opacity: 50%" cx="18" cy="7.5" r="2.169"/>
+    </svg>
+  </symbol>
+  <symbol id="svg-pencil" viewBox="0 0 24 24">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-pencil-code">
+      <path d="M4 20h4l10.5 -10.5a2.828 2.828 0 1 0 -4 -4l-10.5 10.5v4" />
+      <path d="M13.5 6.5l4 4" />
+      <path d="M20 21l2 -2l-2 -2" />
+      <path d="M17 17l-2 2l2 2" />
+    </svg>
+  </symbol>
+  <symbol id="svg-eye" viewBox="0 0 24 24">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-eye-code">
+      <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+      <path d="M10 12a2 2 0 1 0 4 0a2 2 0 0 0 -4 0" />
+      <path
+        d="M11.11 17.958c-3.209 -.307 -5.91 -2.293 -8.11 -5.958c2.4 -4 5.4 -6 9 -6c3.6 0 6.6 2 9 6c-.21 .352 -.427 .688 -.647 1.008" />
+      <path d="M20 21l2 -2l-2 -2" />
+      <path d="M17 17l-2 2l2 2" />
+    </svg>
+  </symbol>
+</svg>
+
+<input type="checkbox" class="sidebar-toggle" name="__navigation" id="__navigation">
+<input type="checkbox" class="sidebar-toggle" name="__toc" id="__toc">
+<label class="overlay sidebar-overlay" for="__navigation">
+  <div class="visually-hidden">Hide navigation sidebar</div>
+</label>
+<label class="overlay toc-overlay" for="__toc">
+  <div class="visually-hidden">Hide table of contents sidebar</div>
+</label>
+
+<a class="skip-to-content muted-link" href="#furo-main-content">Skip to content</a>
+
+
+
+<div class="page">
+  <header class="mobile-header">
+    <div class="header-left">
+      <label class="nav-overlay-icon" for="__navigation">
+        <div class="visually-hidden">Toggle site navigation sidebar</div>
+        <i class="icon"><svg><use href="#svg-menu"></use></svg></i>
+      </label>
+    </div>
+    <div class="header-center">
+      <a href="../../"><div class="brand">docs.modula.systems</div></a>
+    </div>
+    <div class="header-right">
+      <div class="theme-toggle-container theme-toggle-header">
+        <button class="theme-toggle">
+          <div class="visually-hidden">Toggle Light / Dark / Auto color theme</div>
+          <svg class="theme-icon-when-auto-light"><use href="#svg-sun-with-moon"></use></svg>
+          <svg class="theme-icon-when-auto-dark"><use href="#svg-moon-with-sun"></use></svg>
+          <svg class="theme-icon-when-dark"><use href="#svg-moon"></use></svg>
+          <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
+        </button>
+      </div>
+      <label class="toc-overlay-icon toc-header-icon" for="__toc">
+        <div class="visually-hidden">Toggle table of contents sidebar</div>
+        <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
+      </label>
+    </div>
+  </header>
+  <aside class="sidebar-drawer">
+    <div class="sidebar-container">
+      
+      <div class="sidebar-sticky"><a class="sidebar-brand" href="../../">
+  
+  <div class="sidebar-logo-container">
+    <img class="sidebar-logo only-light" src="../../_static/logo-light.svg" alt="Light Logo"/>
+    <img class="sidebar-logo only-dark" src="../../_static/logo-dark.svg" alt="Dark Logo"/>
+  </div>
+  
+  
+</a><form class="sidebar-search-container" method="get" action="../../search/" role="search">
+  <input class="sidebar-search" placeholder="Search" name="q" aria-label="Search">
+  <input type="hidden" name="check_keywords" value="yes">
+  <input type="hidden" name="area" value="default">
+</form>
+<div id="searchbox"></div><div class="sidebar-scroll"><div class="sidebar-tree">
+  <p class="caption" role="heading"><span class="caption-text">Introduction:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../intro/quickstart/">Quickstart</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../intro/whats-in-a-norm/">What’s in a norm?</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../intro/reading-list/">Reading list</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Algorithms:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../algorithms/newton-schulz/">Newton-Schulz</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../algorithms/manifold/">Manifold duality maps</a><input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" role="switch" type="checkbox"/><label for="toctree-checkbox-1"><div class="visually-hidden">Toggle navigation of Manifold duality maps</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../algorithms/manifold/hypersphere/">Hypersphere</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../algorithms/manifold/orthogonal/">Orthogonal manifold</a></li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Examples:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../hello-world/">Hello, World!</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../hello-mnist/">Hello, MNIST!</a></li>
+<li class="toctree-l1 current current-page"><a class="current reference internal" href="#">Hello, GPT!</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../weight-erasure/">Weight erasure</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">More on Modula:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../faq/">Modula FAQ</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://github.com/modula-systems/modula">Modula codebase</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://modula.systems/">Modula homepage</a></li>
+</ul>
+
+</div>
+</div>
+
+      </div>
+      
+    </div>
+  </aside>
+  <div class="main">
+    <div class="content">
+      <div class="article-container">
+        <a href="#" class="back-to-top muted-link">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+            <path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8v12z"></path>
+          </svg>
+          <span>Back to top</span>
+        </a>
+        <div class="content-icon-container">
+          <div class="view-this-page">
+  <a class="muted-link" href="https://github.com/modula-systems/modula/blob/main/docs/source/examples/hello-gpt.nblink?plain=true" title="View this page">
+    <svg><use href="#svg-eye"></use></svg>
+    <span class="visually-hidden">View this page</span>
+  </a>
+</div><div class="edit-this-page">
+  <a class="muted-link" href="https://github.com/modula-systems/modula/edit/main/docs/source/examples/hello-gpt.nblink" title="Edit this page">
+    <svg><use href="#svg-pencil"></use></svg>
+    <span class="visually-hidden">Edit this page</span>
+  </a>
+</div><div class="theme-toggle-container theme-toggle-content">
+            <button class="theme-toggle">
+              <div class="visually-hidden">Toggle Light / Dark / Auto color theme</div>
+              <svg class="theme-icon-when-auto-light"><use href="#svg-sun-with-moon"></use></svg>
+              <svg class="theme-icon-when-auto-dark"><use href="#svg-moon-with-sun"></use></svg>
+              <svg class="theme-icon-when-dark"><use href="#svg-moon"></use></svg>
+              <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
+            </button>
+          </div>
+          <label class="toc-overlay-icon toc-content-icon" for="__toc">
+            <div class="visually-hidden">Toggle table of contents sidebar</div>
+            <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
+          </label>
+        </div>
+        <article role="main" id="furo-main-content">
+          <section id="Hello,-GPT!">
+<h1>Hello, GPT!<a class="headerlink" href="#Hello,-GPT!" title="Permalink to this heading">¶</a></h1>
+<p>In this notebook, we’re going to build a transformer. In particular, we’ll see how to define attention and residual blocks in Modula.</p>
+<section id="Getting-the-data">
+<h2>Getting the data<a class="headerlink" href="#Getting-the-data" title="Permalink to this heading">¶</a></h2>
+<p>First, let’s download the Shakespeare dataset. The task will be to predict the next character.</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[1]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">context</span> <span class="o">=</span> <span class="mi">64</span>
+<span class="n">batch_size</span> <span class="o">=</span> <span class="mi">12</span>
+
+<span class="kn">from</span> <span class="nn">data.shakespeare</span> <span class="kn">import</span> <span class="n">load_shakespeare</span>
+
+<span class="n">data</span> <span class="o">=</span> <span class="n">load_shakespeare</span><span class="p">(</span><span class="n">context</span><span class="p">,</span> <span class="n">batch_size</span><span class="p">)</span>
+
+<span class="n">train_loader</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="s2">&quot;train_loader&quot;</span><span class="p">]</span>
+<span class="n">val_loader</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="s2">&quot;val_loader&quot;</span><span class="p">]</span>
+<span class="n">encode</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="s2">&quot;encode&quot;</span><span class="p">]</span>
+<span class="n">decode</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="s2">&quot;decode&quot;</span><span class="p">]</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+Downloading Shakespeare dataset...
+Processing Shakespeare dataset...
+Length of dataset in characters: 1,115,394
+Vocabulary size: 65
+Train has 1,003,854 tokens
+Val has 111,540 tokens
+Shakespeare dataset processing complete.
+</pre></div></div>
+</div>
+<p>Let’s peek at an example to verify the data loaded correctly!</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[2]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">for</span> <span class="n">inputs</span><span class="p">,</span> <span class="n">targets</span> <span class="ow">in</span> <span class="n">train_loader</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Input shape:&quot;</span><span class="p">,</span> <span class="n">inputs</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Target shape:&quot;</span><span class="p">,</span> <span class="n">targets</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;First input sequence:&quot;</span><span class="p">,</span> <span class="n">inputs</span><span class="p">[</span><span class="mi">0</span><span class="p">][:</span><span class="mi">10</span><span class="p">],</span> <span class="s2">&quot;...&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;First target sequence:&quot;</span><span class="p">,</span> <span class="n">targets</span><span class="p">[</span><span class="mi">0</span><span class="p">][:</span><span class="mi">10</span><span class="p">],</span> <span class="s2">&quot;...&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Decoded input:&quot;</span><span class="p">,</span> <span class="n">decode</span><span class="p">(</span><span class="n">inputs</span><span class="p">[</span><span class="mi">0</span><span class="p">]))</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Decoded target:&quot;</span><span class="p">,</span> <span class="n">decode</span><span class="p">(</span><span class="n">targets</span><span class="p">[</span><span class="mi">0</span><span class="p">]))</span>
+    <span class="k">break</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+Input shape: (12, 64)
+Target shape: (12, 64)
+First input sequence: [41 53 50 42  1 40 50 53 53 42] ...
+First target sequence: [53 50 42  1 40 50 53 53 42  1] ...
+
+Decoded input: cold blood no spark of honour bides.
+
+NORTHUMBERLAND:
+Be thou a
+
+Decoded target: old blood no spark of honour bides.
+
+NORTHUMBERLAND:
+Be thou a p
+</pre></div></div>
+</div>
+</section>
+<section id="Defining-the-architecture">
+<h2>Defining the architecture<a class="headerlink" href="#Defining-the-architecture" title="Permalink to this heading">¶</a></h2>
+<p>Let’s use a very small setting for our transformer so it is fast to train.</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[3]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># transformer hyperparameters</span>
+
+<span class="n">vocab_size</span> <span class="o">=</span> <span class="mi">65</span>
+<span class="n">num_heads</span> <span class="o">=</span> <span class="mi">4</span>
+<span class="n">d_embed</span> <span class="o">=</span> <span class="mi">128</span>
+<span class="n">d_query</span> <span class="o">=</span> <span class="mi">32</span>
+<span class="n">d_value</span> <span class="o">=</span> <span class="mi">32</span>
+<span class="n">num_blocks</span> <span class="o">=</span> <span class="mi">4</span>
+<span class="n">attention_scale</span> <span class="o">=</span> <span class="mi">1</span>
+<span class="n">final_scale</span> <span class="o">=</span> <span class="mi">1</span>
+
+<span class="c1"># training hyperparameters</span>
+
+<span class="n">lr</span> <span class="o">=</span> <span class="mf">0.1</span>
+<span class="n">beta</span> <span class="o">=</span> <span class="mf">0.95</span>
+<span class="n">steps</span> <span class="o">=</span> <span class="mi">2001</span>
+<span class="n">log_interval</span> <span class="o">=</span> <span class="mi">10</span>
+<span class="n">val_interval</span> <span class="o">=</span> <span class="mi">100</span>
+<span class="n">val_iters</span> <span class="o">=</span> <span class="mi">20</span>
+</pre></div>
+</div>
+</div>
+<p>Next up, we’ll define the <em>attention</em> module and <em>residual blocks</em>.</p>
+</section>
+<section id="Attention-in-Modula">
+<h2>Attention in Modula<a class="headerlink" href="#Attention-in-Modula" title="Permalink to this heading">¶</a></h2>
+<p>In Modula, we’ll define attention by stringing together several bond modules to do the parameterless computations. The roadmap is:</p>
+<ul class="simple">
+<li><p>Map <code class="docutils literal notranslate"><span class="pre">(batch,</span> <span class="pre">token,</span> <span class="pre">d_embed)</span></code> into <code class="docutils literal notranslate"><span class="pre">(batch,</span> <span class="pre">head,</span> <span class="pre">token,</span> <span class="pre">d_query)</span></code> (and same for key and value) via <code class="docutils literal notranslate"><span class="pre">Linear</span></code> and <code class="docutils literal notranslate"><span class="pre">SplitIntoHeads</span></code></p></li>
+<li><p>Use Rotary Positional Embeddings (RoPE) on the query and the key via <code class="docutils literal notranslate"><span class="pre">Rope</span></code></p></li>
+<li><p>Map <code class="docutils literal notranslate"><span class="pre">query</span></code> and <code class="docutils literal notranslate"><span class="pre">key</span></code> into attention similarities of shape <code class="docutils literal notranslate"><span class="pre">(batch,</span> <span class="pre">head,</span> <span class="pre">token,</span> <span class="pre">token)</span></code> via <code class="docutils literal notranslate"><span class="pre">AttentionQK</span></code></p></li>
+<li><p>Use a causal mask and then softmax to create attention scores via <code class="docutils literal notranslate"><span class="pre">CausalMask</span></code> and <code class="docutils literal notranslate"><span class="pre">Softmax</span></code></p></li>
+<li><p>Use the attention scores to create output vectors via <code class="docutils literal notranslate"><span class="pre">ApplyAttentionScores</span></code>, then <code class="docutils literal notranslate"><span class="pre">MergeHeads</span></code> and <code class="docutils literal notranslate"><span class="pre">Linear</span></code></p></li>
+</ul>
+<p>The main difference to a standard transformer is that <code class="docutils literal notranslate"><span class="pre">AttentionQK</span></code> uses <span class="math notranslate nohighlight">\(1/d_\text{head}\)</span> scaling instead of the standard <span class="math notranslate nohighlight">\(1/\sqrt{d_\text{head}}\)</span>. The reason for this is to provide Lipschitz guarantees for attention that are independent of <span class="math notranslate nohighlight">\(d_\text{head}\)</span>. For more information on this, see Appendix B.6 of <a class="reference external" href="https://arxiv.org/pdf/2405.14813">Scalable Optimization in the Modular Norm</a>.</p>
+<p>And here’s the implementation:</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[4]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">modula.atom</span> <span class="kn">import</span> <span class="n">Linear</span>
+<span class="kn">from</span> <span class="nn">modula.bond</span> <span class="kn">import</span> <span class="n">SplitIntoHeads</span><span class="p">,</span> <span class="n">MergeHeads</span><span class="p">,</span> <span class="n">Rope</span><span class="p">,</span> <span class="n">AttentionQK</span><span class="p">,</span> <span class="n">CausalMask</span><span class="p">,</span> <span class="n">Softmax</span><span class="p">,</span> <span class="n">ApplyAttentionScores</span><span class="p">,</span> <span class="n">GeLU</span>
+
+<span class="k">def</span> <span class="nf">Attention</span><span class="p">(</span><span class="n">num_heads</span><span class="p">,</span> <span class="n">d_embed</span><span class="p">,</span> <span class="n">d_query</span><span class="p">,</span> <span class="n">d_value</span><span class="p">,</span> <span class="n">attention_scale</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Multi-head attention&quot;&quot;&quot;</span>
+
+    <span class="c1"># For keys, queries, and values we add a heads dimension. For the out projection, we remove heads.</span>
+    <span class="c1"># Remember modules compose right-to-left, and the order is Linear(d_out, d_in)! And @ means compose.</span>
+    <span class="n">Q</span> <span class="o">=</span> <span class="n">SplitIntoHeads</span><span class="p">(</span><span class="n">num_heads</span><span class="p">)</span> <span class="o">@</span> <span class="n">Linear</span><span class="p">(</span><span class="n">num_heads</span> <span class="o">*</span> <span class="n">d_query</span><span class="p">,</span> <span class="n">d_embed</span><span class="p">)</span>
+    <span class="n">K</span> <span class="o">=</span> <span class="n">SplitIntoHeads</span><span class="p">(</span><span class="n">num_heads</span><span class="p">)</span> <span class="o">@</span> <span class="n">Linear</span><span class="p">(</span><span class="n">num_heads</span> <span class="o">*</span> <span class="n">d_query</span><span class="p">,</span> <span class="n">d_embed</span><span class="p">)</span>
+    <span class="n">V</span> <span class="o">=</span> <span class="n">SplitIntoHeads</span><span class="p">(</span><span class="n">num_heads</span><span class="p">)</span> <span class="o">@</span> <span class="n">Linear</span><span class="p">(</span><span class="n">num_heads</span> <span class="o">*</span> <span class="n">d_value</span><span class="p">,</span> <span class="n">d_embed</span><span class="p">)</span>
+    <span class="n">W</span> <span class="o">=</span> <span class="n">Linear</span><span class="p">(</span><span class="n">d_embed</span><span class="p">,</span> <span class="n">num_heads</span> <span class="o">*</span> <span class="n">d_value</span><span class="p">)</span> <span class="o">@</span> <span class="n">MergeHeads</span><span class="p">()</span>
+
+    <span class="c1"># Read right-to-left: rotate (Q, K) with RoPE, apply Q @ K.T, mask, softmax (with a scale we can choose).</span>
+    <span class="n">AttentionScores</span> <span class="o">=</span> <span class="n">Softmax</span><span class="p">(</span><span class="n">attention_scale</span><span class="p">)</span> <span class="o">@</span> <span class="n">CausalMask</span><span class="p">()</span> <span class="o">@</span> <span class="n">AttentionQK</span><span class="p">()</span> <span class="o">@</span> <span class="n">Rope</span><span class="p">(</span><span class="n">d_query</span><span class="p">)</span> <span class="o">@</span> <span class="p">(</span><span class="n">Q</span><span class="p">,</span> <span class="n">K</span><span class="p">)</span>
+
+    <span class="c1"># Read right-to-left: apply attention scores, multiply by 1/3 to fix the sensitivity to 1, project back to d_embed.</span>
+    <span class="k">return</span> <span class="n">W</span> <span class="o">@</span> <span class="p">(</span><span class="mi">1</span><span class="o">/</span><span class="mi">3</span> <span class="o">*</span> <span class="n">ApplyAttentionScores</span><span class="p">())</span> <span class="o">@</span> <span class="p">(</span><span class="n">V</span><span class="p">,</span> <span class="n">AttentionScores</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<p>Let’s check that the sensitivity is 1 at initialization.</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[5]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="n">Attention</span><span class="p">(</span><span class="n">num_heads</span><span class="p">,</span> <span class="n">d_embed</span><span class="p">,</span> <span class="n">d_query</span><span class="p">,</span> <span class="n">d_value</span><span class="p">,</span> <span class="n">attention_scale</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+CompositeModule
+...consists of 4 atoms and 10 bonds
+...smooth
+...input sensitivity is 1.0
+...contributes proportion 4 to feature learning of any supermodule
+</pre></div></div>
+</div>
+</section>
+<section id="Residual-blocks-in-Modula">
+<h2>Residual blocks in Modula<a class="headerlink" href="#Residual-blocks-in-Modula" title="Permalink to this heading">¶</a></h2>
+<p>To implement the rest of our transformer, the roadmap is:</p>
+<ul class="simple">
+<li><p>Embed the input tokens</p></li>
+<li><p>Apply residual blocks for attention and the MLP</p></li>
+<li><p>Project out</p></li>
+</ul>
+<p>All that’s left is to set up the residual blocks. In Modula, we define residual connections using a convex combination. If <span class="math notranslate nohighlight">\(L\)</span> is the number of residual blocks, then we use a convex combination of the identity and the block to get <span class="math notranslate nohighlight">\(x \mapsto \frac{L-1}{L} \cdot x + \frac{1}{L} \cdot \textsf{block}(x)\)</span>. The purpose is to create a Lipschitz guarantee that is independent of the number of blocks. For more information, see Proposition 4 of <a class="reference external" href="https://arxiv.org/pdf/2405.14813">Scalable Optimization in the Modular
+Norm</a>.</p>
+<p>In short, these changes enable Lipschitz guarantees on our transformer even as we scale the width and the depth!</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[6]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">modula.abstract</span> <span class="kn">import</span> <span class="n">Identity</span>
+<span class="kn">from</span> <span class="nn">modula.atom</span> <span class="kn">import</span> <span class="n">Embed</span>
+
+<span class="k">def</span> <span class="nf">GPT</span><span class="p">(</span><span class="n">vocab_size</span><span class="p">,</span> <span class="n">num_heads</span><span class="p">,</span> <span class="n">d_embed</span><span class="p">,</span> <span class="n">d_query</span><span class="p">,</span> <span class="n">d_value</span><span class="p">,</span> <span class="n">num_blocks</span><span class="p">,</span> <span class="n">blocks_mass</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">attention_scale</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span> <span class="n">final_scale</span><span class="o">=</span><span class="mf">1.0</span><span class="p">):</span>
+    <span class="c1"># Set embed to have mass 1. This controls the proportion of feature learning that it contributes to the whole network.</span>
+    <span class="n">embed</span> <span class="o">=</span> <span class="n">Embed</span><span class="p">(</span><span class="n">d_embed</span><span class="p">,</span> <span class="n">vocab_size</span><span class="p">)</span>
+    <span class="n">embed</span><span class="o">.</span><span class="n">tare</span><span class="p">()</span>
+
+    <span class="c1"># Let&#39;s create attention and MLP layers.</span>
+    <span class="n">att</span> <span class="o">=</span> <span class="n">Attention</span><span class="p">(</span><span class="n">num_heads</span><span class="p">,</span> <span class="n">d_embed</span><span class="p">,</span> <span class="n">d_query</span><span class="p">,</span> <span class="n">d_value</span><span class="p">,</span> <span class="n">attention_scale</span><span class="p">)</span>
+    <span class="n">mlp</span> <span class="o">=</span> <span class="n">Linear</span><span class="p">(</span><span class="n">d_embed</span><span class="p">,</span> <span class="mi">4</span><span class="o">*</span><span class="n">d_embed</span><span class="p">)</span> <span class="o">@</span> <span class="n">GeLU</span><span class="p">()</span> <span class="o">@</span> <span class="n">Linear</span><span class="p">(</span><span class="mi">4</span><span class="o">*</span><span class="n">d_embed</span><span class="p">,</span> <span class="n">d_embed</span><span class="p">)</span>
+
+    <span class="c1"># For our residual connections, L = 2*num_blocks because each block has two residual connections.</span>
+    <span class="n">att_block</span> <span class="o">=</span> <span class="p">(</span><span class="mi">1</span><span class="o">-</span><span class="mi">1</span><span class="o">/</span><span class="p">(</span><span class="mi">2</span><span class="o">*</span><span class="n">num_blocks</span><span class="p">))</span> <span class="o">*</span> <span class="n">Identity</span><span class="p">()</span> <span class="o">+</span> <span class="mi">1</span><span class="o">/</span><span class="p">(</span><span class="mi">2</span><span class="o">*</span><span class="n">num_blocks</span><span class="p">)</span> <span class="o">*</span> <span class="n">att</span>
+    <span class="n">mlp_block</span> <span class="o">=</span> <span class="p">(</span><span class="mi">1</span><span class="o">-</span><span class="mi">1</span><span class="o">/</span><span class="p">(</span><span class="mi">2</span><span class="o">*</span><span class="n">num_blocks</span><span class="p">))</span> <span class="o">*</span> <span class="n">Identity</span><span class="p">()</span> <span class="o">+</span> <span class="mi">1</span><span class="o">/</span><span class="p">(</span><span class="mi">2</span><span class="o">*</span><span class="n">num_blocks</span><span class="p">)</span> <span class="o">*</span> <span class="n">mlp</span>
+
+    <span class="c1"># We can use powers of a module to compose it with itself many times!</span>
+    <span class="n">blocks</span> <span class="o">=</span> <span class="p">(</span><span class="n">mlp_block</span> <span class="o">@</span> <span class="n">att_block</span><span class="p">)</span> <span class="o">**</span> <span class="n">num_blocks</span>
+
+    <span class="c1"># Set all transformer blocks to have mass 5 (by default).</span>
+    <span class="c1"># So 5/7 of the change in the network output is due to the blocks,</span>
+    <span class="c1"># and 2/7 of the change in output is due to the embedding and out projection.</span>
+    <span class="n">blocks</span><span class="o">.</span><span class="n">tare</span><span class="p">(</span><span class="n">absolute</span><span class="o">=</span><span class="n">blocks_mass</span><span class="p">)</span>
+
+    <span class="n">out</span> <span class="o">=</span> <span class="n">final_scale</span> <span class="o">*</span> <span class="n">Linear</span><span class="p">(</span><span class="n">vocab_size</span><span class="p">,</span> <span class="n">d_embed</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">out</span> <span class="o">@</span> <span class="n">blocks</span> <span class="o">@</span> <span class="n">embed</span>
+</pre></div>
+</div>
+</div>
+<p>And finally we are ready to construct our GPT!</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[7]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">model</span> <span class="o">=</span> <span class="n">GPT</span><span class="p">(</span>
+    <span class="n">vocab_size</span><span class="o">=</span><span class="n">vocab_size</span><span class="p">,</span>
+    <span class="n">num_heads</span><span class="o">=</span><span class="n">num_heads</span><span class="p">,</span>
+    <span class="n">d_embed</span><span class="o">=</span><span class="n">d_embed</span><span class="p">,</span>
+    <span class="n">d_query</span><span class="o">=</span><span class="n">d_query</span><span class="p">,</span>
+    <span class="n">d_value</span><span class="o">=</span><span class="n">d_value</span><span class="p">,</span>
+    <span class="n">num_blocks</span><span class="o">=</span><span class="n">num_blocks</span><span class="p">,</span>
+    <span class="n">attention_scale</span><span class="o">=</span><span class="n">attention_scale</span><span class="p">,</span>
+    <span class="n">final_scale</span><span class="o">=</span><span class="n">final_scale</span><span class="p">,</span>
+<span class="p">)</span>
+
+<span class="n">model</span><span class="o">.</span><span class="n">jit</span><span class="p">()</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="n">model</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+CompositeModule
+...consists of 26 atoms and 78 bonds
+...non-smooth
+...input sensitivity is 1.0
+...contributes proportion 7.0 to feature learning of any supermodule
+</pre></div></div>
+</div>
+</section>
+<section id="Loss-function-and-training">
+<h2>Loss function and training<a class="headerlink" href="#Loss-function-and-training" title="Permalink to this heading">¶</a></h2>
+<p>To train our transformer we’ll use cross entropy loss, which we can compute by decomposing the softmax:</p>
+<div class="math-wrapper docutils container">
+<div class="math notranslate nohighlight">
+\[-\log(\text{target probability}) = -\log(\text{softmax}(\text{logits})_\text{target}) = -\text{logit}_\text{target} + \text{log\,sum\,exp}(\text{logits})\]</div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[8]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">jax</span>
+<span class="kn">import</span> <span class="nn">jax.numpy</span> <span class="k">as</span> <span class="nn">jnp</span>
+
+<span class="k">def</span> <span class="nf">cross_entropy_loss</span><span class="p">(</span><span class="n">w</span><span class="p">,</span> <span class="n">inputs</span><span class="p">,</span> <span class="n">targets</span><span class="p">):</span>
+    <span class="c1"># We use the logsumexp trick for stable cross entropy</span>
+    <span class="n">logits</span> <span class="o">=</span> <span class="n">model</span><span class="p">(</span><span class="n">inputs</span><span class="p">,</span> <span class="n">w</span><span class="p">)</span>  <span class="c1"># shape is [batch, seq_len, vocab_size]</span>
+    <span class="n">batch_indices</span> <span class="o">=</span> <span class="n">jnp</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">logits</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">])[:,</span> <span class="kc">None</span><span class="p">]</span>  <span class="c1"># shape is [batch, 1]</span>
+    <span class="n">seq_indices</span> <span class="o">=</span> <span class="n">jnp</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">logits</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">])[</span><span class="kc">None</span><span class="p">,</span> <span class="p">:]</span>    <span class="c1"># shape is [1, seq_len]</span>
+    <span class="c1"># This indexing selects out logits[b, s, targets[b, s]], which is the target logit</span>
+    <span class="n">losses</span> <span class="o">=</span> <span class="o">-</span><span class="n">logits</span><span class="p">[</span><span class="n">batch_indices</span><span class="p">,</span> <span class="n">seq_indices</span><span class="p">,</span> <span class="n">targets</span><span class="p">]</span> <span class="o">+</span> <span class="n">jax</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">logsumexp</span><span class="p">(</span><span class="n">logits</span><span class="p">,</span> <span class="n">axis</span><span class="o">=-</span><span class="mi">1</span><span class="p">)</span>  <span class="c1"># shape is [batch, seq_len]</span>
+    <span class="k">return</span> <span class="n">losses</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span>
+
+<span class="n">loss_and_grad</span> <span class="o">=</span> <span class="n">jax</span><span class="o">.</span><span class="n">jit</span><span class="p">(</span><span class="n">jax</span><span class="o">.</span><span class="n">value_and_grad</span><span class="p">(</span><span class="n">cross_entropy_loss</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+<p>And we’re ready to train!</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[9]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">key</span> <span class="o">=</span> <span class="n">jax</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">PRNGKey</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+<span class="n">w</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">initialize</span><span class="p">(</span><span class="n">key</span><span class="p">)</span>
+
+<span class="n">step</span> <span class="o">=</span> <span class="mi">0</span>
+<span class="n">momentum</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span> <span class="o">*</span> <span class="n">weight</span> <span class="k">for</span> <span class="n">weight</span> <span class="ow">in</span> <span class="n">w</span><span class="p">]</span>
+<span class="n">lr_schedule</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">step</span><span class="p">:</span> <span class="n">lr</span> <span class="o">*</span> <span class="p">(</span><span class="n">steps</span> <span class="o">-</span> <span class="n">step</span><span class="p">)</span> <span class="o">/</span> <span class="n">steps</span>
+<span class="k">for</span> <span class="n">inputs</span><span class="p">,</span> <span class="n">targets</span> <span class="ow">in</span> <span class="n">train_loader</span><span class="p">:</span>
+    <span class="n">loss</span><span class="p">,</span> <span class="n">grad_w</span> <span class="o">=</span> <span class="n">loss_and_grad</span><span class="p">(</span><span class="n">w</span><span class="p">,</span> <span class="n">inputs</span><span class="p">,</span> <span class="n">targets</span><span class="p">)</span>
+    <span class="n">momentum</span> <span class="o">=</span> <span class="p">[</span><span class="n">beta</span> <span class="o">*</span> <span class="n">m</span> <span class="o">+</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">beta</span><span class="p">)</span> <span class="o">*</span> <span class="n">g_w</span> <span class="k">for</span> <span class="n">m</span><span class="p">,</span> <span class="n">g_w</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">momentum</span><span class="p">,</span> <span class="n">grad_w</span><span class="p">)]</span>
+    <span class="n">d_w</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">dualize</span><span class="p">(</span><span class="n">momentum</span><span class="p">)</span>
+    <span class="n">w</span> <span class="o">=</span> <span class="p">[</span><span class="n">weight</span> <span class="o">-</span> <span class="n">lr_schedule</span><span class="p">(</span><span class="n">step</span><span class="p">)</span> <span class="o">*</span> <span class="n">d_weight</span> <span class="k">for</span> <span class="n">weight</span><span class="p">,</span> <span class="n">d_weight</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">w</span><span class="p">,</span> <span class="n">d_w</span><span class="p">)]</span>
+
+    <span class="k">if</span> <span class="n">step</span> <span class="o">%</span> <span class="n">log_interval</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Step </span><span class="si">{</span><span class="n">step</span><span class="si">}</span><span class="s2">: loss </span><span class="si">{</span><span class="n">loss</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">step</span> <span class="o">%</span> <span class="n">val_interval</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="n">val_losses</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">val_inputs</span><span class="p">,</span> <span class="n">val_targets</span> <span class="ow">in</span> <span class="n">val_loader</span><span class="p">:</span>
+            <span class="n">loss</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">loss_and_grad</span><span class="p">(</span><span class="n">w</span><span class="p">,</span> <span class="n">val_inputs</span><span class="p">,</span> <span class="n">val_targets</span><span class="p">)</span>
+            <span class="n">val_losses</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">loss</span><span class="p">)</span>
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">val_losses</span><span class="p">)</span> <span class="o">&gt;=</span> <span class="n">val_iters</span><span class="p">:</span>
+                <span class="k">break</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;--&gt; val loss </span><span class="si">{</span><span class="nb">sum</span><span class="p">(</span><span class="n">val_losses</span><span class="p">)</span><span class="o">/</span><span class="nb">len</span><span class="p">(</span><span class="n">val_losses</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+    <span class="n">step</span> <span class="o">+=</span> <span class="mi">1</span>
+
+    <span class="k">if</span> <span class="n">step</span> <span class="o">&gt;=</span> <span class="n">steps</span><span class="p">:</span>
+        <span class="k">break</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+Step 0: loss 4.226325988769531
+--&gt; val loss 4.179544448852539
+Step 10: loss 3.8738746643066406
+Step 20: loss 3.3448646068573
+Step 30: loss 2.805002212524414
+Step 40: loss 2.68573260307312
+Step 50: loss 2.6098480224609375
+Step 60: loss 2.407468557357788
+Step 70: loss 2.418379783630371
+Step 80: loss 2.359757423400879
+Step 90: loss 2.2685279846191406
+Step 100: loss 2.314124584197998
+--&gt; val loss 2.541980743408203
+Step 110: loss 2.283424139022827
+Step 120: loss 2.2063167095184326
+Step 130: loss 2.1598031520843506
+Step 140: loss 2.252727508544922
+Step 150: loss 2.124152660369873
+Step 160: loss 2.23785662651062
+Step 170: loss 2.2059123516082764
+Step 180: loss 2.102996587753296
+Step 190: loss 2.132392168045044
+Step 200: loss 2.130244255065918
+--&gt; val loss 2.359212636947632
+Step 210: loss 2.0895276069641113
+Step 220: loss 2.1278815269470215
+Step 230: loss 1.9647449254989624
+Step 240: loss 2.1118733882904053
+Step 250: loss 1.9459623098373413
+Step 260: loss 2.118051290512085
+Step 270: loss 2.0605385303497314
+Step 280: loss 2.0378551483154297
+Step 290: loss 2.0237479209899902
+Step 300: loss 1.982785940170288
+--&gt; val loss 2.2887392044067383
+Step 310: loss 2.073058605194092
+Step 320: loss 2.082066535949707
+Step 330: loss 2.130162239074707
+Step 340: loss 2.092909336090088
+Step 350: loss 1.9229984283447266
+Step 360: loss 1.9037134647369385
+Step 370: loss 2.0083131790161133
+Step 380: loss 2.0236263275146484
+Step 390: loss 2.0116419792175293
+Step 400: loss 2.091407299041748
+--&gt; val loss 2.2199790477752686
+Step 410: loss 2.0855846405029297
+Step 420: loss 1.8506882190704346
+Step 430: loss 1.9745848178863525
+Step 440: loss 1.9135173559188843
+Step 450: loss 2.0486648082733154
+Step 460: loss 1.983982801437378
+Step 470: loss 1.9958977699279785
+Step 480: loss 1.9868993759155273
+Step 490: loss 2.009216785430908
+Step 500: loss 2.073169231414795
+--&gt; val loss 2.141632556915283
+Step 510: loss 2.0603322982788086
+Step 520: loss 2.0025858879089355
+Step 530: loss 1.9482192993164062
+Step 540: loss 1.9092429876327515
+Step 550: loss 2.109374761581421
+Step 560: loss 1.9060167074203491
+Step 570: loss 1.9423940181732178
+Step 580: loss 1.9405231475830078
+Step 590: loss 1.9132475852966309
+Step 600: loss 2.0125274658203125
+--&gt; val loss 2.2273831367492676
+Step 610: loss 2.0854687690734863
+Step 620: loss 1.9796791076660156
+Step 630: loss 1.982351303100586
+Step 640: loss 2.044363021850586
+Step 650: loss 2.030698299407959
+Step 660: loss 2.0731544494628906
+Step 670: loss 1.9660027027130127
+Step 680: loss 1.933128833770752
+Step 690: loss 1.8852118253707886
+Step 700: loss 1.8401598930358887
+--&gt; val loss 2.0958476066589355
+Step 710: loss 1.9790323972702026
+Step 720: loss 2.0329394340515137
+Step 730: loss 1.929424524307251
+Step 740: loss 1.950282335281372
+Step 750: loss 1.938680648803711
+Step 760: loss 1.9717748165130615
+Step 770: loss 1.8411779403686523
+Step 780: loss 2.085500717163086
+Step 790: loss 1.8778104782104492
+Step 800: loss 1.9712986946105957
+--&gt; val loss 2.1469686031341553
+Step 810: loss 1.949462652206421
+Step 820: loss 1.9898126125335693
+Step 830: loss 1.9045312404632568
+Step 840: loss 1.9053363800048828
+Step 850: loss 1.8944416046142578
+Step 860: loss 1.8389015197753906
+Step 870: loss 1.9189136028289795
+Step 880: loss 2.0141639709472656
+Step 890: loss 1.9987534284591675
+Step 900: loss 1.947631597518921
+--&gt; val loss 2.1903281211853027
+Step 910: loss 2.031083106994629
+Step 920: loss 1.988853931427002
+Step 930: loss 2.0356318950653076
+Step 940: loss 1.8823192119598389
+Step 950: loss 2.0429515838623047
+Step 960: loss 2.021817684173584
+Step 970: loss 2.003168821334839
+Step 980: loss 2.0105528831481934
+Step 990: loss 2.014195680618286
+Step 1000: loss 1.9518741369247437
+--&gt; val loss 2.0813283920288086
+Step 1010: loss 2.016996383666992
+Step 1020: loss 2.04374098777771
+Step 1030: loss 1.8839387893676758
+Step 1040: loss 1.96620512008667
+Step 1050: loss 2.0463950634002686
+Step 1060: loss 1.9169645309448242
+Step 1070: loss 2.038651943206787
+Step 1080: loss 2.0474071502685547
+Step 1090: loss 1.9452462196350098
+Step 1100: loss 1.8884999752044678
+--&gt; val loss 2.1541106700897217
+Step 1110: loss 1.9775495529174805
+Step 1120: loss 1.96068274974823
+Step 1130: loss 1.8553755283355713
+Step 1140: loss 1.9422013759613037
+Step 1150: loss 2.0833449363708496
+Step 1160: loss 1.840619444847107
+Step 1170: loss 2.032219409942627
+Step 1180: loss 1.9345749616622925
+Step 1190: loss 1.934565544128418
+Step 1200: loss 1.9528722763061523
+--&gt; val loss 2.1688506603240967
+Step 1210: loss 1.8676490783691406
+Step 1220: loss 1.9311145544052124
+Step 1230: loss 1.9905321598052979
+Step 1240: loss 1.8773740530014038
+Step 1250: loss 1.9832658767700195
+Step 1260: loss 1.8256521224975586
+Step 1270: loss 2.037313461303711
+Step 1280: loss 1.9440114498138428
+Step 1290: loss 1.9472723007202148
+Step 1300: loss 1.862718105316162
+--&gt; val loss 2.0632894039154053
+Step 1310: loss 1.944453239440918
+Step 1320: loss 1.869157075881958
+Step 1330: loss 1.9843480587005615
+Step 1340: loss 1.9083728790283203
+Step 1350: loss 1.920233130455017
+Step 1360: loss 1.7926225662231445
+Step 1370: loss 1.8765363693237305
+Step 1380: loss 1.9374698400497437
+Step 1390: loss 1.9032771587371826
+Step 1400: loss 1.8976068496704102
+--&gt; val loss 2.0361690521240234
+Step 1410: loss 1.8799960613250732
+Step 1420: loss 1.9112414121627808
+Step 1430: loss 1.8797309398651123
+Step 1440: loss 1.9040837287902832
+Step 1450: loss 1.8828296661376953
+Step 1460: loss 1.83419930934906
+Step 1470: loss 1.8327134847640991
+Step 1480: loss 1.857541799545288
+Step 1490: loss 1.8209788799285889
+Step 1500: loss 1.780470371246338
+--&gt; val loss 2.0466208457946777
+Step 1510: loss 1.8544996976852417
+Step 1520: loss 1.8710064888000488
+Step 1530: loss 1.8195044994354248
+Step 1540: loss 1.874974250793457
+Step 1550: loss 1.7101812362670898
+Step 1560: loss 1.8439801931381226
+Step 1570: loss 1.967679500579834
+Step 1580: loss 1.888682246208191
+Step 1590: loss 1.6926288604736328
+Step 1600: loss 1.875901222229004
+--&gt; val loss 2.044935941696167
+Step 1610: loss 1.8210939168930054
+Step 1620: loss 1.7439773082733154
+Step 1630: loss 1.7956527471542358
+Step 1640: loss 1.792572021484375
+Step 1650: loss 1.7985519170761108
+Step 1660: loss 1.8520288467407227
+Step 1670: loss 1.680544137954712
+Step 1680: loss 1.7917392253875732
+Step 1690: loss 1.8400462865829468
+Step 1700: loss 1.6793416738510132
+--&gt; val loss 1.995697021484375
+Step 1710: loss 1.7414367198944092
+Step 1720: loss 1.8606326580047607
+Step 1730: loss 1.7578084468841553
+Step 1740: loss 1.6292760372161865
+Step 1750: loss 1.7017428874969482
+Step 1760: loss 1.8407533168792725
+Step 1770: loss 1.7789411544799805
+Step 1780: loss 1.802499532699585
+Step 1790: loss 1.7586851119995117
+Step 1800: loss 1.7281568050384521
+--&gt; val loss 1.9875770807266235
+Step 1810: loss 1.7767337560653687
+Step 1820: loss 1.7158925533294678
+Step 1830: loss 1.7596324682235718
+Step 1840: loss 1.7826766967773438
+Step 1850: loss 1.7769875526428223
+Step 1860: loss 1.6953961849212646
+Step 1870: loss 1.7714271545410156
+Step 1880: loss 1.6994340419769287
+Step 1890: loss 1.7252253293991089
+Step 1900: loss 1.566367506980896
+--&gt; val loss 1.9310436248779297
+Step 1910: loss 1.7057380676269531
+Step 1920: loss 1.7441104650497437
+Step 1930: loss 1.7951183319091797
+Step 1940: loss 1.8611491918563843
+Step 1950: loss 1.787139654159546
+Step 1960: loss 1.788725733757019
+Step 1970: loss 1.7919573783874512
+Step 1980: loss 1.706597089767456
+Step 1990: loss 1.771501898765564
+Step 2000: loss 1.7121562957763672
+--&gt; val loss 1.8968441486358643
+</pre></div></div>
+</div>
+</section>
+<section id="Though-this-be-madness,-yet-there-is-method-in't">
+<h2>Though this be madness, yet there is method in’t<a class="headerlink" href="#Though-this-be-madness,-yet-there-is-method-in't" title="Permalink to this heading">¶</a></h2>
+<p>And indeed, let us look at how our wee model stacks up to the master.</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[10]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">generate_text</span><span class="p">(</span><span class="n">prompt</span><span class="p">,</span> <span class="n">max_tokens</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">temperature</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">seed</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
+    <span class="n">key</span> <span class="o">=</span> <span class="n">jax</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">PRNGKey</span><span class="p">(</span><span class="n">seed</span><span class="p">)</span>
+    <span class="n">tokens</span> <span class="o">=</span> <span class="n">jnp</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">encode</span><span class="p">(</span><span class="n">prompt</span><span class="p">))</span>
+    <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">max_tokens</span><span class="p">):</span>
+        <span class="n">logits</span> <span class="o">=</span> <span class="n">model</span><span class="p">(</span><span class="n">jnp</span><span class="o">.</span><span class="n">expand_dims</span><span class="p">(</span><span class="n">tokens</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="n">w</span><span class="p">)</span>
+        <span class="n">next_token_logits</span> <span class="o">=</span> <span class="n">logits</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">/</span> <span class="n">temperature</span>
+
+        <span class="c1"># Sample from our model&#39;s token distribution</span>
+        <span class="n">key</span><span class="p">,</span> <span class="n">subkey</span> <span class="o">=</span> <span class="n">jax</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="n">key</span><span class="p">)</span>
+        <span class="n">next_token</span> <span class="o">=</span> <span class="n">jax</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">categorical</span><span class="p">(</span><span class="n">subkey</span><span class="p">,</span> <span class="n">next_token_logits</span><span class="p">)</span>
+        <span class="n">tokens</span> <span class="o">=</span> <span class="n">jnp</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">tokens</span><span class="p">,</span> <span class="n">next_token</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">decode</span><span class="p">(</span><span class="n">tokens</span><span class="p">)</span>
+
+<span class="k">for</span> <span class="n">seed</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">3</span><span class="p">):</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Sample </span><span class="si">{</span><span class="n">seed</span><span class="si">}</span><span class="s2">:</span><span class="se">\n\n</span><span class="si">{</span><span class="n">generate_text</span><span class="p">(</span><span class="s1">&#39;If&#39;</span><span class="p">,</span><span class="w"> </span><span class="n">max_tokens</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span><span class="w"> </span><span class="n">seed</span><span class="o">=</span><span class="n">seed</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;-&quot;</span> <span class="o">*</span> <span class="mi">80</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+Sample 0:
+
+If where his elperiend and is here in think the comfore be pray virtue deather I the grouth a pears my
+--------------------------------------------------------------------------------
+Sample 1:
+
+If as the conture the weet to the man&#39;s death the greeen he with thought rame the prosates he palousen
+--------------------------------------------------------------------------------
+Sample 2:
+
+If him the be not me were and let for the earth the forth,
+That the his a wort of you the fearshould a
+--------------------------------------------------------------------------------
+</pre></div></div>
+</div>
+</section>
+</section>
+
+        </article>
+      </div>
+      <footer>
+        
+        <div class="related-pages">
+          <a class="next-page" href="../weight-erasure/">
+              <div class="page-info">
+                <div class="context">
+                  <span>Next</span>
+                </div>
+                <div class="title">Weight erasure</div>
+              </div>
+              <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
+            </a>
+          <a class="prev-page" href="../hello-mnist/">
+              <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
+              <div class="page-info">
+                <div class="context">
+                  <span>Previous</span>
+                </div>
+                
+                <div class="title">Hello, MNIST!</div>
+                
+              </div>
+            </a>
+        </div>
+        <div class="bottom-of-page">
+          <div class="left-details">
+            <div class="copyright">
+                Copyright &#169; 2024, Jeremy Bernstein
+            </div>
+            Made with <a href="https://www.sphinx-doc.org/">Sphinx</a> and <a class="muted-link" href="https://pradyunsg.me">@pradyunsg</a>'s
+            
+            <a href="https://github.com/pradyunsg/furo">Furo</a>
+            
+          </div>
+          <div class="right-details">
+            <div class="icons">
+              <a class="muted-link " href="https://github.com/modula-systems/modula" aria-label="GitHub">
+                <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 16 16">
+                    <path fill-rule="evenodd" d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0 0 16 8c0-4.42-3.58-8-8-8z"></path>
+                </svg>
+            </a>
+              
+            </div>
+          </div>
+        </div>
+        
+      </footer>
+    </div>
+    <aside class="toc-drawer">
+      
+      
+      <div class="toc-sticky toc-scroll">
+        <div class="toc-title-container">
+          <span class="toc-title">
+            On this page
+          </span>
+        </div>
+        <div class="toc-tree-container">
+          <div class="toc-tree">
+            <ul>
+<li><a class="reference internal" href="#">Hello, GPT!</a><ul>
+<li><a class="reference internal" href="#Getting-the-data">Getting the data</a></li>
+<li><a class="reference internal" href="#Defining-the-architecture">Defining the architecture</a></li>
+<li><a class="reference internal" href="#Attention-in-Modula">Attention in Modula</a></li>
+<li><a class="reference internal" href="#Residual-blocks-in-Modula">Residual blocks in Modula</a></li>
+<li><a class="reference internal" href="#Loss-function-and-training">Loss function and training</a></li>
+<li><a class="reference internal" href="#Though-this-be-madness,-yet-there-is-method-in't">Though this be madness, yet there is method in’t</a></li>
+</ul>
+</li>
+</ul>
+
+          </div>
+        </div>
+      </div>
+      
+      
+    </aside>
+  </div>
+</div><script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+    <script src="../../_static/doctools.js"></script>
+    <script src="../../_static/sphinx_highlight.js"></script>
+    <script src="../../_static/scripts/furo.js"></script>
+    <script src="../../_static/clipboard.min.js"></script>
+    <script src="../../_static/copybutton.js"></script>
+    <script src="../../_static/tabs.js"></script>
+    <script src="../../_static/design-tabs.js"></script>
+    <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <script>window.MathJax = {"tex": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "processEscapes": true}, "options": {"ignoreHtmlClass": "tex2jax_ignore|mathjax_ignore|document", "processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    </body>
+</html>
