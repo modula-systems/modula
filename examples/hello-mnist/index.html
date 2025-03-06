@@ -346,7 +346,7 @@ Test labels shape: (10000,)
 </div>
 <p>Now we flatten the inputs into vectors, encode the targets as one-hot vectors, and write a mini-batch sampler.</p>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[3]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[17]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">jax</span>
@@ -357,26 +357,26 @@ Test labels shape: (10000,)
     <span class="k">return</span> <span class="n">jnp</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">x</span><span class="p">[:,</span> <span class="kc">None</span><span class="p">]</span> <span class="o">==</span> <span class="n">jnp</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">k</span><span class="p">),</span> <span class="n">dtype</span><span class="p">)</span>
 
 <span class="c1"># Reshape images and convert labels</span>
-<span class="n">X_train</span> <span class="o">=</span> <span class="n">train_images</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">train_images</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">T</span>
-<span class="n">y_train</span> <span class="o">=</span> <span class="n">one_hot</span><span class="p">(</span><span class="n">train_labels</span><span class="p">,</span> <span class="mi">10</span><span class="p">)</span><span class="o">.</span><span class="n">T</span>
+<span class="n">X_train</span> <span class="o">=</span> <span class="n">train_images</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">train_images</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">y_train</span> <span class="o">=</span> <span class="n">one_hot</span><span class="p">(</span><span class="n">train_labels</span><span class="p">,</span> <span class="mi">10</span><span class="p">)</span>
 
 <span class="c1"># Get a batch</span>
 <span class="k">def</span> <span class="nf">get_batch</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">batch_size</span><span class="p">):</span>
     <span class="n">idx</span> <span class="o">=</span> <span class="n">jax</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">X_train</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">shape</span><span class="o">=</span><span class="p">(</span><span class="n">batch_size</span><span class="p">,))</span>
-    <span class="k">return</span> <span class="n">X_train</span><span class="p">[:,</span> <span class="n">idx</span><span class="p">],</span> <span class="n">y_train</span><span class="p">[:,</span> <span class="n">idx</span><span class="p">]</span>
+    <span class="k">return</span> <span class="n">X_train</span><span class="p">[</span><span class="n">idx</span><span class="p">,</span> <span class="p">:],</span> <span class="n">y_train</span><span class="p">[</span><span class="n">idx</span><span class="p">,</span> <span class="p">:]</span>
 </pre></div>
 </div>
 </div>
 <p>Now we’re ready to build our MLP.</p>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[4]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[18]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">modula.atom</span> <span class="kn">import</span> <span class="n">Linear</span>
 <span class="kn">from</span> <span class="nn">modula.bond</span> <span class="kn">import</span> <span class="n">ReLU</span>
 
-<span class="n">input_dim</span> <span class="o">=</span> <span class="n">X_train</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
-<span class="n">output_dim</span> <span class="o">=</span> <span class="n">y_train</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+<span class="n">input_dim</span> <span class="o">=</span> <span class="n">X_train</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+<span class="n">output_dim</span> <span class="o">=</span> <span class="n">y_train</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
 <span class="n">width</span> <span class="o">=</span> <span class="mi">256</span>
 
 <span class="n">mlp</span> <span class="o">=</span> <span class="n">Linear</span><span class="p">(</span><span class="n">output_dim</span><span class="p">,</span> <span class="n">width</span><span class="p">)</span>
@@ -403,7 +403,7 @@ CompositeModule
 </div>
 <p>Let’s train the MLP for 1000 steps.</p>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[5]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[19]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">tqdm.notebook</span> <span class="kn">import</span> <span class="n">tqdm</span>
@@ -438,17 +438,17 @@ CompositeModule
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<script type="application/vnd.jupyter.widget-view+json">{"model_id": "dc844ddf90ea4854a4f95212eeba44af", "version_major": 2, "version_minor": 0}</script></div>
+<script type="application/vnd.jupyter.widget-view+json">{"model_id": "b71f8a04aa254476b5b883d8121bbf3d", "version_major": 2, "version_minor": 0}</script></div>
 </div>
 <p>And finally let’s plot some test predictions.</p>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[6]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[23]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Get predictions for test images</span>
-<span class="n">X_test</span> <span class="o">=</span> <span class="n">test_images</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">test_images</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">T</span>
+<span class="n">X_test</span> <span class="o">=</span> <span class="n">test_images</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">test_images</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span>
 <span class="n">test_outputs</span> <span class="o">=</span> <span class="n">mlp</span><span class="p">(</span><span class="n">X_test</span><span class="p">,</span> <span class="n">w</span><span class="p">)</span>
-<span class="n">predicted_labels</span> <span class="o">=</span> <span class="n">jnp</span><span class="o">.</span><span class="n">argmax</span><span class="p">(</span><span class="n">test_outputs</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+<span class="n">predicted_labels</span> <span class="o">=</span> <span class="n">jnp</span><span class="o">.</span><span class="n">argmax</span><span class="p">(</span><span class="n">test_outputs</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
 
 <span class="c1"># Create a figure with subplots for multiple test images</span>
 <span class="n">n_samples</span> <span class="o">=</span> <span class="mi">5</span>  <span class="c1"># Number of test images to display</span>
@@ -487,7 +487,7 @@ CompositeModule
 <div class="output_area docutils container">
 <div class="highlight"><pre>
 Accuracy on shown samples: 5/5
-Overall test accuracy: 97.57%
+Overall test accuracy: 90.58%
 </pre></div></div>
 </div>
 </section>

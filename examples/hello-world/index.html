@@ -289,7 +289,7 @@
 <h1>Hello, World!<a class="headerlink" href="#Hello,-World!" title="Permalink to this heading">¶</a></h1>
 <p>On this page, we will build a simple training loop to fit an MLP to some randomly generated data. We start by sampling some data. Modula uses JAX to handle array computations, so we use JAX to sample the data. JAX requires us to explicitly pass in the state of the random number generator.</p>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[1]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[8]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">jax</span>
@@ -300,14 +300,14 @@
 <span class="n">batch_size</span> <span class="o">=</span> <span class="mi">128</span>
 
 <span class="n">key</span> <span class="o">=</span> <span class="n">jax</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">PRNGKey</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
-<span class="n">inputs</span> <span class="o">=</span> <span class="n">jax</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">normal</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="p">(</span><span class="n">input_dim</span><span class="p">,</span> <span class="n">batch_size</span><span class="p">))</span>
-<span class="n">targets</span> <span class="o">=</span> <span class="n">jax</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">normal</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="p">(</span><span class="n">output_dim</span><span class="p">,</span> <span class="n">batch_size</span><span class="p">))</span>
+<span class="n">inputs</span> <span class="o">=</span> <span class="n">jax</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">normal</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="p">(</span><span class="n">batch_size</span><span class="p">,</span> <span class="n">input_dim</span><span class="p">))</span>
+<span class="n">targets</span> <span class="o">=</span> <span class="n">jax</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">normal</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="p">(</span><span class="n">batch_size</span><span class="p">,</span> <span class="n">output_dim</span><span class="p">))</span>
 </pre></div>
 </div>
 </div>
 <p>Next, we will build our neural network. We import the basic Linear and ReLU modules. And we compose them by using the <code class="docutils literal notranslate"><span class="pre">&#64;</span></code> operator. Calling <code class="docutils literal notranslate"><span class="pre">mlp.jit()</span></code> tries to make all the internal module methods more efficient using <a class="reference external" href="https://jax.readthedocs.io/en/latest/jit-compilation.html">just-in-time compilation</a> from JAX.</p>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[2]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[9]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">modula.atom</span> <span class="kn">import</span> <span class="n">Linear</span>
@@ -341,7 +341,7 @@ CompositeModule
 </div>
 <p>Next, we set up a loss function and create a jitted function for both evaluating the loss and also returning its gradient.</p>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[3]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[10]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">mse</span><span class="p">(</span><span class="n">w</span><span class="p">,</span> <span class="n">inputs</span><span class="p">,</span> <span class="n">targets</span><span class="p">):</span>
@@ -355,7 +355,7 @@ CompositeModule
 </div>
 <p>Finally we are ready to train our model. We will apply the method <code class="docutils literal notranslate"><span class="pre">mlp.dualize</span></code> to the gradient of the loss to solve for the vector of unit modular norm that maximizes the linearized improvement in loss.</p>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[4]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[12]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">steps</span> <span class="o">=</span> <span class="mi">1000</span>
@@ -388,16 +388,16 @@ CompositeModule
 </div>
 <div class="output_area docutils container">
 <div class="highlight"><pre>
-Step   0         Loss 0.976154
-Step 100         Loss 0.001773
-Step 200         Loss 0.001371
-Step 300         Loss 0.001002
-Step 400         Loss 0.000696
-Step 500         Loss 0.000453
-Step 600         Loss 0.000282
-Step 700         Loss 0.000152
-Step 800         Loss 0.000061
-Step 900         Loss 0.000011
+Step   0         Loss 0.979311
+Step 100         Loss 0.001822
+Step 200         Loss 0.001423
+Step 300         Loss 0.001066
+Step 400         Loss 0.000766
+Step 500         Loss 0.000519
+Step 600         Loss 0.000340
+Step 700         Loss 0.000196
+Step 800         Loss 0.000090
+Step 900         Loss 0.000025
 </pre></div></div>
 </div>
 </section>

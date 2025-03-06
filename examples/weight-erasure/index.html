@@ -366,7 +366,7 @@ these results can be understood simply in terms of the “stable rank” of the 
 <h2>Watermarking the initial weights<a class="headerlink" href="#Watermarking-the-initial-weights" title="Permalink to this heading">¶</a></h2>
 <p>For our main experiment, we will train an MLP with watermarked weights on the CIFAR-10 dataset. Let’s first download the data and define a function to get a batch of data.</p>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[3]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[14]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">jax</span>
@@ -375,18 +375,18 @@ these results can be understood simply in terms of the “stable rank” of the 
 <span class="n">train_images</span><span class="p">,</span> <span class="n">train_labels</span><span class="p">,</span> <span class="n">test_images</span><span class="p">,</span> <span class="n">test_labels</span> <span class="o">=</span> <span class="n">load_cifar10</span><span class="p">()</span>
 
 <span class="n">one_hot</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">,</span> <span class="n">k</span><span class="p">:</span> <span class="n">jnp</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">x</span><span class="p">[:,</span> <span class="kc">None</span><span class="p">]</span> <span class="o">==</span> <span class="n">jnp</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">k</span><span class="p">))</span>
-<span class="n">X_train</span> <span class="o">=</span> <span class="n">train_images</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">train_images</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">T</span>
-<span class="n">y_train</span> <span class="o">=</span> <span class="n">one_hot</span><span class="p">(</span><span class="n">train_labels</span><span class="p">,</span> <span class="mi">10</span><span class="p">)</span><span class="o">.</span><span class="n">T</span>
+<span class="n">X_train</span> <span class="o">=</span> <span class="n">train_images</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">train_images</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">y_train</span> <span class="o">=</span> <span class="n">one_hot</span><span class="p">(</span><span class="n">train_labels</span><span class="p">,</span> <span class="mi">10</span><span class="p">)</span>
 
 <span class="k">def</span> <span class="nf">get_batch</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">batch_size</span><span class="p">):</span>
     <span class="n">idx</span> <span class="o">=</span> <span class="n">jax</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">X_train</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">shape</span><span class="o">=</span><span class="p">(</span><span class="n">batch_size</span><span class="p">,))</span>
-    <span class="k">return</span> <span class="n">X_train</span><span class="p">[:,</span> <span class="n">idx</span><span class="p">],</span> <span class="n">y_train</span><span class="p">[:,</span> <span class="n">idx</span><span class="p">]</span>
+    <span class="k">return</span> <span class="n">X_train</span><span class="p">[</span><span class="n">idx</span><span class="p">,</span> <span class="p">:],</span> <span class="n">y_train</span><span class="p">[</span><span class="n">idx</span><span class="p">,</span> <span class="p">:]</span>
 </pre></div>
 </div>
 </div>
 <p>Next, let’s define a function to create an MLP of a given shape.</p>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[4]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[15]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">modula</span>
@@ -406,11 +406,11 @@ these results can be understood simply in terms of the “stable rank” of the 
 </div>
 <p>And finally, let’s watermark the initial weights of an MLP of width 1024.</p>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[5]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[16]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">width</span> <span class="o">=</span> <span class="mi">1024</span>
-<span class="n">mlp</span> <span class="o">=</span> <span class="n">MLP</span><span class="p">(</span><span class="n">X_train</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">y_train</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">width</span><span class="p">)</span>
+<span class="n">mlp</span> <span class="o">=</span> <span class="n">MLP</span><span class="p">(</span><span class="n">X_train</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">y_train</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">width</span><span class="p">)</span>
 
 <span class="n">key</span> <span class="o">=</span> <span class="n">jax</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">PRNGKey</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
 <span class="n">initial_w</span> <span class="o">=</span> <span class="n">mlp</span><span class="o">.</span><span class="n">initialize</span><span class="p">(</span><span class="n">key</span><span class="p">)</span>
@@ -449,7 +449,7 @@ these results can be understood simply in terms of the “stable rank” of the 
 <p>First, we set up the training loop. We train for a given number of steps and record the loss and accuracy at each step, as well as the final weights. For non-dualized training, we spectrally normalize the gradient updates. This means that for a given learning rate, the weight updates have the same spectral norm in both dualized and non-dualized training. This makes the results easier to interpret, but you can check that disabling the spectral normalization does not change the qualitative
 findings.</p>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[6]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[17]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">spec_norm</span><span class="p">(</span><span class="n">M</span><span class="p">,</span> <span class="n">num_steps</span><span class="o">=</span><span class="mi">20</span><span class="p">):</span>
@@ -502,7 +502,7 @@ findings.</p>
 </div>
 <p>We now run this loop for a range of learning rates with dualization both enabled and disabled.</p>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[7]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">tqdm.notebook</span> <span class="kn">import</span> <span class="n">tqdm</span>
@@ -530,25 +530,11 @@ findings.</p>
 Running experiments with dualize = True
 </pre></div></div>
 </div>
-<div class="nboutput docutils container">
-<div class="prompt empty docutils container">
-</div>
-<div class="output_area docutils container">
-<script type="application/vnd.jupyter.widget-view+json">{"model_id": "94ecd33ecb014e14b825f2301bf11c26", "version_major": 2, "version_minor": 0}</script></div>
-</div>
-<div class="nboutput docutils container">
-<div class="prompt empty docutils container">
-</div>
-<div class="output_area docutils container">
-<div class="highlight"><pre>
-Running experiments with dualize = False
-</pre></div></div>
-</div>
 <div class="nboutput nblast docutils container">
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<script type="application/vnd.jupyter.widget-view+json">{"model_id": "2f16c437bd4146b6b2d063b2e5d7c5d5", "version_major": 2, "version_minor": 0}</script></div>
+<script type="application/vnd.jupyter.widget-view+json">{"model_id": "dc868d3543a148cfbd26382d148385b7", "version_major": 2, "version_minor": 0}</script></div>
 </div>
 <p>And finally, we plot the results. For each learning rate, we plot the final training accuracy (averaged over the last 50 steps). And we overlay the image of the final weight matrix for each point on the plot.</p>
 <div class="nbinput docutils container">
@@ -652,7 +638,7 @@ Running experiments with dualize = False
 <span class="n">batch_size</span> <span class="o">=</span> <span class="mi">512</span>
 
 <span class="k">for</span> <span class="n">width</span> <span class="ow">in</span> <span class="n">widths</span><span class="p">:</span>
-    <span class="n">mlp</span> <span class="o">=</span> <span class="n">MLP</span><span class="p">(</span><span class="n">X_train</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">y_train</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">width</span><span class="p">)</span>
+    <span class="n">mlp</span> <span class="o">=</span> <span class="n">MLP</span><span class="p">(</span><span class="n">X_train</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">y_train</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">width</span><span class="p">)</span>
     <span class="n">key</span> <span class="o">=</span> <span class="n">jax</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">PRNGKey</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
     <span class="n">w</span> <span class="o">=</span> <span class="n">mlp</span><span class="o">.</span><span class="n">initialize</span><span class="p">(</span><span class="n">key</span><span class="p">)</span>
 
