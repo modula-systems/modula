@@ -16,6 +16,7 @@ Optimization
 - `Automatic gradient descent: Deep learning without hyperparameters <https://arxiv.org/abs/2304.05187>`_
 - `A spectral condition for feature learning <https://arxiv.org/abs/2310.17813>`_ 
 - `Universal majorization-minimization algorithms <https://arxiv.org/abs/2308.00190>`_
+- `An isometric stochastic optimizer <https://arxiv.org/abs/2307.12979>`_
 - `Old optimizer, new norm: An anthology <https://arxiv.org/abs/2409.20325>`_
 - `Muon: An optimizer for hidden layers in neural networks <https://kellerjordan.github.io/posts/muon/>`_
 
