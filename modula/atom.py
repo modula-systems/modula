@@ -4,12 +4,25 @@ import jax.numpy as jnp
 from modula.abstract import Atom
 
 def orthogonalize(M):
-    a, b, c = 3.0, -3.2, 1.2
+    # six step Newton-Schulz by @YouJiacheng
+    # coefficients from: https://twitter.com/YouJiacheng/status/1893704552689303901
+    # found by optimization: https://gist.github.com/YouJiacheng/393c90cbdc23b09d5688815ba382288b/5bff1f7781cf7d062a155eecd2f13075756482ae
+    # the idea of stability loss was from @leloykun
+
+    abc_list = [
+        (3955/1024, -8306/1024, 5008/1024),
+        (3735/1024, -6681/1024, 3463/1024),
+        (3799/1024, -6499/1024, 3211/1024),
+        (4019/1024, -6385/1024, 2906/1024),
+        (2677/1024, -3029/1024, 1162/1024),
+        (2172/1024, -1833/1024,  682/1024)
+    ]
+    
     transpose = M.shape[1] > M.shape[0]
     if transpose:
         M = M.T
     M = M / jnp.linalg.norm(M)
-    for _ in range(10):
+    for a, b, c in abc_list:
         A = M.T @ M
         I = jnp.eye(A.shape[0])
         M = M @ (a * I + b * A + c * A @ A)
@@ -91,6 +104,9 @@ if __name__ == "__main__":
     # print singular values
     print(f"min singular value of O: {jnp.min(s)}")
     print(f"max singular value of O: {jnp.max(s)}")
+
+    print(f"min singular value of M: {jnp.min(S)}")
+    print(f"max singular value of M: {jnp.max(S)}")
 
     # check that M is close to its SVD
     error_M = jnp.linalg.norm(M - U @ jnp.diag(S) @ Vh) / jnp.linalg.norm(M)
