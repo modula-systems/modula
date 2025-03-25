@@ -367,7 +367,7 @@ these results can be understood simply in terms of the “stable rank” of the 
 <h2>Watermarking the initial weights<a class="headerlink" href="#Watermarking-the-initial-weights" title="Permalink to this heading">¶</a></h2>
 <p>For our main experiment, we will train an MLP with watermarked weights on the CIFAR-10 dataset. Let’s first download the data and define a function to get a batch of data.</p>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[14]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[3]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">jax</span>
@@ -387,7 +387,7 @@ these results can be understood simply in terms of the “stable rank” of the 
 </div>
 <p>Next, let’s define a function to create an MLP of a given shape.</p>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[15]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[4]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">modula</span>
@@ -407,7 +407,7 @@ these results can be understood simply in terms of the “stable rank” of the 
 </div>
 <p>And finally, let’s watermark the initial weights of an MLP of width 1024.</p>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[16]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[5]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">width</span> <span class="o">=</span> <span class="mi">1024</span>
@@ -450,10 +450,11 @@ these results can be understood simply in terms of the “stable rank” of the 
 <p>First, we set up the training loop. We train for a given number of steps and record the loss and accuracy at each step, as well as the final weights. For non-dualized training, we spectrally normalize the gradient updates. This means that for a given learning rate, the weight updates have the same spectral norm in both dualized and non-dualized training. This makes the results easier to interpret, but you can check that disabling the spectral normalization does not change the qualitative
 findings.</p>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[17]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[6]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">spec_norm</span><span class="p">(</span><span class="n">M</span><span class="p">,</span> <span class="n">num_steps</span><span class="o">=</span><span class="mi">20</span><span class="p">):</span>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="nd">@jax</span><span class="o">.</span><span class="n">jit</span>
+<span class="k">def</span> <span class="nf">spec_norm</span><span class="p">(</span><span class="n">M</span><span class="p">,</span> <span class="n">num_steps</span><span class="o">=</span><span class="mi">20</span><span class="p">):</span>
     <span class="n">v</span> <span class="o">=</span> <span class="n">jax</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">normal</span><span class="p">(</span><span class="n">jax</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">PRNGKey</span><span class="p">(</span><span class="mi">0</span><span class="p">),</span> <span class="p">(</span><span class="n">M</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">],))</span>
 
     <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">num_steps</span><span class="p">):</span>
@@ -472,7 +473,7 @@ findings.</p>
     <span class="k">def</span> <span class="nf">eval</span><span class="p">(</span><span class="n">w</span><span class="p">,</span> <span class="n">inputs</span><span class="p">,</span> <span class="n">targets</span><span class="p">):</span>
         <span class="n">outputs</span> <span class="o">=</span> <span class="n">module</span><span class="p">(</span><span class="n">inputs</span><span class="p">,</span> <span class="n">w</span><span class="p">)</span>
         <span class="n">loss</span> <span class="o">=</span> <span class="p">((</span><span class="n">outputs</span><span class="o">-</span><span class="n">targets</span><span class="p">)</span> <span class="o">**</span> <span class="mi">2</span><span class="p">)</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span>
-        <span class="n">acc</span> <span class="o">=</span> <span class="n">jnp</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">jnp</span><span class="o">.</span><span class="n">argmax</span><span class="p">(</span><span class="n">outputs</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span> <span class="o">==</span> <span class="n">jnp</span><span class="o">.</span><span class="n">argmax</span><span class="p">(</span><span class="n">targets</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">))</span>
+        <span class="n">acc</span> <span class="o">=</span> <span class="n">jnp</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">jnp</span><span class="o">.</span><span class="n">argmax</span><span class="p">(</span><span class="n">outputs</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span> <span class="o">==</span> <span class="n">jnp</span><span class="o">.</span><span class="n">argmax</span><span class="p">(</span><span class="n">targets</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">))</span>
         <span class="k">return</span> <span class="n">loss</span><span class="p">,</span> <span class="n">acc</span>
 
     <span class="n">eval_and_grad</span> <span class="o">=</span> <span class="n">jax</span><span class="o">.</span><span class="n">jit</span><span class="p">(</span><span class="n">jax</span><span class="o">.</span><span class="n">value_and_grad</span><span class="p">(</span><span class="nb">eval</span><span class="p">,</span> <span class="n">has_aux</span><span class="o">=</span><span class="kc">True</span><span class="p">))</span>
@@ -503,7 +504,7 @@ findings.</p>
 </div>
 <p>We now run this loop for a range of learning rates with dualization both enabled and disabled.</p>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[7]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">tqdm.notebook</span> <span class="kn">import</span> <span class="n">tqdm</span>
@@ -531,11 +532,25 @@ findings.</p>
 Running experiments with dualize = True
 </pre></div></div>
 </div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<script type="application/vnd.jupyter.widget-view+json">{"model_id": "841ca0609f1d4546a1a5226a33225060", "version_major": 2, "version_minor": 0}</script></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+Running experiments with dualize = False
+</pre></div></div>
+</div>
 <div class="nboutput nblast docutils container">
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<script type="application/vnd.jupyter.widget-view+json">{"model_id": "dc868d3543a148cfbd26382d148385b7", "version_major": 2, "version_minor": 0}</script></div>
+<script type="application/vnd.jupyter.widget-view+json">{"model_id": "7d19d67042bc434ab91e860a50298095", "version_major": 2, "version_minor": 0}</script></div>
 </div>
 <p>And finally, we plot the results. For each learning rate, we plot the final training accuracy (averaged over the last 50 steps). And we overlay the image of the final weight matrix for each point on the plot.</p>
 <div class="nbinput docutils container">
@@ -680,7 +695,7 @@ Running experiments with dualize = True
 <img alt="../../_images/examples_weight-erasure_23_0.png" src="../../_images/examples_weight-erasure_23_0.png" />
 </div>
 </div>
-<p>As we can see, the stable rank of the gradients is very small at all widths. Meanwhile, the stable rank of the dualized gradients increases with width until the width reaches the batch size, at which point it plateaus. This is expected because the rank of the gradients is capped by the batch size, and dualization cannot inflate the stable rank beyond the rank itself.</p>
+<p>As we can see, the stable rank of the gradients is very small at all widths. Meanwhile, the stable rank of the dualized gradients increases with width and eventually plateaus. This plateauing is expected because the rank of the gradients is capped by the batch size, and dualization cannot inflate the stable rank beyond the rank itself.</p>
 </section>
 <section id="Conclusion">
 <h2>Conclusion<a class="headerlink" href="#Conclusion" title="Permalink to this heading">¶</a></h2>
