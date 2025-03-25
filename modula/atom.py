@@ -17,7 +17,7 @@ def orthogonalize(M):
         (2677/1024, -3029/1024, 1162/1024),
         (2172/1024, -1833/1024,  682/1024)
     ]
-    
+
     transpose = M.shape[1] > M.shape[0]
     if transpose:
         M = M.T
@@ -43,11 +43,12 @@ class Linear(Atom):
     def forward(self, x, w):
         # x shape is [..., fanin]
         weights = w[0]  # shape is [fanout, fanin]
-        return x @ weights.transpose()  # shape is [..., fanout]
+        return jnp.einsum("...ij,...j->...i", weights, x)
 
     def initialize(self, key):
         weight = jax.random.normal(key, shape=(self.fanout, self.fanin))
-        return self.project([weight])
+        weight = orthogonalize(weight) * jnp.sqrt(self.fanout / self.fanin)
+        return [weight]
 
     def project(self, w):
         weight = w[0]
@@ -55,7 +56,8 @@ class Linear(Atom):
         return [weight]
 
     def dualize(self, grad_w, target_norm=1.0):
-        d_weight = self.project(grad_w)[0] * target_norm
+        grad = grad_w[0]
+        d_weight = orthogonalize(grad) * jnp.sqrt(self.fanout / self.fanin) * target_norm
         return [d_weight]
 
 
@@ -69,21 +71,22 @@ class Embed(Atom):
         self.sensitivity = 1
 
     def forward(self, x, w):
-        weights = w[0]  # shape [d_embed, num_embed]
-        embed = weights[:, x]  # shape [d_embed, x_shape]
-        return jnp.moveaxis(embed, 0, -1) # shape [x_shape, d_embed]
+        weights = w[0]  # shape [num_embed, d_embed]
+        return weights[x]
 
     def initialize(self, key):
-        weight = jax.random.normal(key, shape=(self.d_embed, self.num_embed))
-        return self.project([weight])
+        weight = jax.random.normal(key, shape=(self.num_embed, self.d_embed))
+        weight = weight / jnp.linalg.norm(weight, axis=1, keepdims=True) * jnp.sqrt(self.d_embed)
+        return [weight]
 
     def project(self, w):
         weight = w[0]
-        weight = weight / jnp.linalg.norm(weight, axis=0, keepdims=True) * jnp.sqrt(self.d_embed)
+        weight = weight / jnp.linalg.norm(weight, axis=1, keepdims=True) * jnp.sqrt(self.d_embed)
         return [weight]
 
     def dualize(self, grad_w, target_norm=1.0):
-        d_weight = self.project(grad_w)[0] * target_norm
+        grad = grad_w[0]
+        d_weight = grad / jnp.linalg.norm(grad, axis=1, keepdims=True) * jnp.sqrt(self.d_embed) * target_norm
         d_weight = jnp.nan_to_num(d_weight)
         return [d_weight]
 
