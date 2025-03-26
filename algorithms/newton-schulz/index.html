@@ -309,7 +309,7 @@
 </div>
 </div>
 </div></blockquote>
-<p>Since then, the iteration has been applied in new optimizers such as <a class="reference external" href="https://arxiv.org/abs/2502.07529">Scion</a>, <a class="reference external" href="https://nikhilvyas.github.io/SOAP_Muon.pdf">improved SOAP</a> and <a class="reference external" href="https://github.com/ZQZCalin/trainit/blob/master/optimizers/muon/mango_report.pdf">Mango</a>. At the bottom of this page, we provide further <a class="reference internal" href="#id1"><span class="std std-ref">historical connections</span></a> on the techniques.</p>
+<p>Since then, the iteration has been applied in new optimizers such as <a class="reference external" href="https://arxiv.org/abs/2502.07529">Scion</a>, <a class="reference external" href="https://nikhilvyas.github.io/SOAP_Muon.pdf">improved-SOAP</a> and <a class="reference external" href="https://github.com/ZQZCalin/trainit/blob/master/optimizers/muon/mango_report.pdf">Mango</a>. At the bottom of this page, we provide further <a class="reference internal" href="#id1"><span class="std std-ref">historical connections</span></a> on the techniques.</p>
 <section id="problem-statement">
 <h2>Problem statement<a class="headerlink" href="#problem-statement" title="Permalink to this heading">¶</a></h2>
 <p>We wish to approximate the map that sends a matrix <span class="math notranslate nohighlight">\(M\in\mathbb{R}^{m\times n}\)</span> with reduced SVD <span class="math notranslate nohighlight">\(M = U \Sigma V^\top\)</span> to the matrix <span class="math notranslate nohighlight">\(U V^\top\)</span>. This map can be thought of as “snapping the singular values of <span class="math notranslate nohighlight">\(M\)</span> to one”—with the exception that the iterations we consider will actually fix zero singular values at zero. But ignoring this detail, the map is given by:</p>
@@ -337,6 +337,7 @@
 \[f(x) = a x + bx^3 + cx^5 + ...\]</div>
 </div>
 <p>to the diagonal entries of <span class="math notranslate nohighlight">\(\Sigma\)</span>. In what follows we will simply specify formulae for scalar polynomials <span class="math notranslate nohighlight">\(f\)</span> with the understanding that they will be extended to matrix polynomials <span class="math notranslate nohighlight">\(p\)</span> as specified above. Then our task is just to produce odd scalar polynomials <span class="math notranslate nohighlight">\(f(x)\)</span> that when iterated like <span class="math notranslate nohighlight">\(f \circ f \circ f \circ ... \circ f(x)\)</span> converge to the sign function <span class="math notranslate nohighlight">\(\operatorname{sign}(x)\)</span>.</p>
+<p>While the classical way to select these polynomials is by Taylor-approximating the sign function <a class="reference external" href="https://www.jstor.org/stable/2949484">(e.g. Björck &amp; Bowie, 1971)</a>, this only leads to a very restricted set of polynomials. I had the idea of treating the polynomial coefficients as free parameters to be tuned for specific performance characteristics.</p>
 </section>
 <section id="a-cubic-iteration">
 <h2>A cubic iteration<a class="headerlink" href="#a-cubic-iteration" title="Permalink to this heading">¶</a></h2>
@@ -354,15 +355,15 @@
 <p>Using a higher-order polynomial provides more degrees of freedom in our design space, which we can use to obtain faster convergence. In this section, we consider the quintic iteration given by:</p>
 <div class="math-wrapper docutils container">
 <div class="math notranslate nohighlight">
-\[f(x) = 3x - \frac{16}{5}x^3 + \frac{6}{5}x^5,\]</div>
+\[f(x) = 3x - \frac{16}{5}x^3 + \frac{6}{5}x^5.\]</div>
 </div>
-<p>which is actually implemented in the Modula package for dualizing linear layers. Again, we plot one and five iterations of this polyomial:</p>
+<p>Again, we plot one and five iterations of this polyomial:</p>
 <iframe src="https://www.desmos.com/calculator/fjjjpsnl2g?embed" width="47%" height="300px" frameborder="0" style="margin-right: 4%"></iframe>
-<iframe src="https://www.desmos.com/calculator/1aqrfjge22?embed" width="47%" height="300px" frameborder="0"></iframe><p>As can be seen, after 5 iterations the quintic iteration has achieved a substantially closer approximation to the sign function than the cubic iteration, at least on the interval <span class="math notranslate nohighlight">\([-3/2,3/2]\)</span>.</p>
+<iframe src="https://www.desmos.com/calculator/1aqrfjge22?embed" width="47%" height="300px" frameborder="0"></iframe><p>As can be seen, after 5 iterations the quintic iteration has achieved a substantially closer approximation to the sign function than the cubic iteration, at least on the interval <span class="math notranslate nohighlight">\([-3/2,3/2]\)</span>. However, the approximation exhibits some oscillatory behaviour close to the origin.</p>
 </section>
 <section id="a-cursed-quintic-iteration">
 <h2>A cursed quintic iteration<a class="headerlink" href="#a-cursed-quintic-iteration" title="Permalink to this heading">¶</a></h2>
-<p>We applied a Newton-Schulz iteration in the <a class="reference external" href="https://kellerjordan.github.io/posts/muon/">Muon optimizer</a> used in the <a class="reference external" href="https://github.com/KellerJordan/modded-nanogpt">NanoGPT speedrun</a>. Keller experimented with tuning the coefficients in the iteration and found that the most important thing for fast convergence of the optimizer was to inflate the small singular values as fast as possible. And to keep the wall-clock time low, he needed to do this in the smallest number of iterations possible. This is achieved by making the first coefficient in the polynomial as large as possible, thereby maximizing the slope of the polynomial at <span class="math notranslate nohighlight">\(x=0\)</span>. Keller settled on the following iteration:</p>
+<p>We applied a Newton-Schulz iteration in the <a class="reference external" href="https://kellerjordan.github.io/posts/muon/">Muon optimizer</a> used in the <a class="reference external" href="https://github.com/KellerJordan/modded-nanogpt">NanoGPT speedrun</a>. Keller experimented with tuning the coefficients in the iteration and found that the most important thing for fast convergence of the optimizer was to inflate the small singular values as fast as possible. To keep the wall-clock time low, we needed to do this in the smallest number of iterations possible. This is achieved by making the first coefficient in the polynomial as large as possible, thereby maximizing the slope of the polynomial at <span class="math notranslate nohighlight">\(x=0\)</span>. I had the idea for using a non-convergent iteration, and Keller settled on the following:</p>
 <div class="math-wrapper docutils container">
 <div class="math notranslate nohighlight">
 \[f(x) = 3.4445x - 4.7750x^3 + 2.0315x^5.\]</div>
@@ -376,6 +377,43 @@
 </div>
 <p>In short, the cursed quintic iteration sacrifices convergence for speed.</p>
 </section>
+<section id="jiacheng-s-six-step">
+<h2>Jiacheng’s six-step<a class="headerlink" href="#jiacheng-s-six-step" title="Permalink to this heading">¶</a></h2>
+<p>Another idea is that we do not need to use the same polynomial coefficients at each step of the iteration. Using different coefficients at each step provides even more degrees of freedom to achieve desirable behaviour. For example, <a class="reference external" href="https://twitter.com/YouJiacheng">You Jiacheng</a> found the following iteration <a class="reference external" href="https://gist.github.com/YouJiacheng/393c90cbdc23b09d5688815ba382288b/5bff1f7781cf7d062a155eecd2f13075756482ae">by computational search</a>:</p>
+<iframe src="https://www.desmos.com/calculator/a2jxvmompc?embed" width="47%" height="300px" frameborder="0" style="margin-right: 4%"></iframe>
+<iframe src="https://www.desmos.com/calculator/hta59syabv?embed" width="47%" height="300px" frameborder="0"></iframe><p>The six quintic polynomials on the left are executed in sequence. The last quintic (the orange curve) has a very flat slope close to <span class="math notranslate nohighlight">\(x=1\)</span>, which has the effect of flattening out the oscillations present after the first five steps. The result is the very good approximation to the sign function on the right.</p>
+<p>I have integrated this iteration as a basic primitive in <a class="reference external" href="https://github.com/modula-systems/modula/blob/aed70cddf2d3ab74fa218b1377840d1fd795cfcf/modula/atom.py#L6C1-L31C13">Modula</a> using the following JAX implementation:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">jax.numpy</span> <span class="k">as</span> <span class="nn">jnp</span>
+
+<span class="k">def</span> <span class="nf">orthogonalize</span><span class="p">(</span><span class="n">M</span><span class="p">):</span>
+   <span class="c1"># by @YouJiacheng (with stability loss idea from @leloykun)</span>
+   <span class="c1"># https://twitter.com/YouJiacheng/status/1893704552689303901</span>
+   <span class="c1"># https://gist.github.com/YouJiacheng/393c90cbdc23b09d5688815ba382288b/5bff1f7781cf7d062a155eecd2f13075756482ae</span>
+
+   <span class="n">abc_list</span> <span class="o">=</span> <span class="p">[</span>
+      <span class="p">(</span><span class="mi">3955</span><span class="o">/</span><span class="mi">1024</span><span class="p">,</span> <span class="o">-</span><span class="mi">8306</span><span class="o">/</span><span class="mi">1024</span><span class="p">,</span> <span class="mi">5008</span><span class="o">/</span><span class="mi">1024</span><span class="p">),</span>
+      <span class="p">(</span><span class="mi">3735</span><span class="o">/</span><span class="mi">1024</span><span class="p">,</span> <span class="o">-</span><span class="mi">6681</span><span class="o">/</span><span class="mi">1024</span><span class="p">,</span> <span class="mi">3463</span><span class="o">/</span><span class="mi">1024</span><span class="p">),</span>
+      <span class="p">(</span><span class="mi">3799</span><span class="o">/</span><span class="mi">1024</span><span class="p">,</span> <span class="o">-</span><span class="mi">6499</span><span class="o">/</span><span class="mi">1024</span><span class="p">,</span> <span class="mi">3211</span><span class="o">/</span><span class="mi">1024</span><span class="p">),</span>
+      <span class="p">(</span><span class="mi">4019</span><span class="o">/</span><span class="mi">1024</span><span class="p">,</span> <span class="o">-</span><span class="mi">6385</span><span class="o">/</span><span class="mi">1024</span><span class="p">,</span> <span class="mi">2906</span><span class="o">/</span><span class="mi">1024</span><span class="p">),</span>
+      <span class="p">(</span><span class="mi">2677</span><span class="o">/</span><span class="mi">1024</span><span class="p">,</span> <span class="o">-</span><span class="mi">3029</span><span class="o">/</span><span class="mi">1024</span><span class="p">,</span> <span class="mi">1162</span><span class="o">/</span><span class="mi">1024</span><span class="p">),</span>
+      <span class="p">(</span><span class="mi">2172</span><span class="o">/</span><span class="mi">1024</span><span class="p">,</span> <span class="o">-</span><span class="mi">1833</span><span class="o">/</span><span class="mi">1024</span><span class="p">,</span>  <span class="mi">682</span><span class="o">/</span><span class="mi">1024</span><span class="p">)</span>
+   <span class="p">]</span>
+
+   <span class="n">transpose</span> <span class="o">=</span> <span class="n">M</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">&gt;</span> <span class="n">M</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+   <span class="k">if</span> <span class="n">transpose</span><span class="p">:</span>
+      <span class="n">M</span> <span class="o">=</span> <span class="n">M</span><span class="o">.</span><span class="n">T</span>
+   <span class="n">M</span> <span class="o">=</span> <span class="n">M</span> <span class="o">/</span> <span class="n">jnp</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">M</span><span class="p">)</span>
+   <span class="k">for</span> <span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">abc_list</span><span class="p">:</span>
+      <span class="n">A</span> <span class="o">=</span> <span class="n">M</span><span class="o">.</span><span class="n">T</span> <span class="o">@</span> <span class="n">M</span>
+      <span class="n">I</span> <span class="o">=</span> <span class="n">jnp</span><span class="o">.</span><span class="n">eye</span><span class="p">(</span><span class="n">A</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+      <span class="n">M</span> <span class="o">=</span> <span class="n">M</span> <span class="o">@</span> <span class="p">(</span><span class="n">a</span> <span class="o">*</span> <span class="n">I</span> <span class="o">+</span> <span class="n">b</span> <span class="o">*</span> <span class="n">A</span> <span class="o">+</span> <span class="n">c</span> <span class="o">*</span> <span class="n">A</span> <span class="o">@</span> <span class="n">A</span><span class="p">)</span>
+   <span class="k">if</span> <span class="n">transpose</span><span class="p">:</span>
+      <span class="n">M</span> <span class="o">=</span> <span class="n">M</span><span class="o">.</span><span class="n">T</span>
+   <span class="k">return</span> <span class="n">M</span>
+</pre></div>
+</div>
+<p>I also recommend checking out the <a class="reference external" href="https://leloykun.github.io/ponder/muon-opt-coeffs/">writeup</a> of Franz Cesista (&#64;leloykun) on this topic.</p>
+</section>
 <section id="designing-your-own-iteration">
 <h2>Designing your own iteration<a class="headerlink" href="#designing-your-own-iteration" title="Permalink to this heading">¶</a></h2>
 <p>Designing these polynomial iterations can be a surprisingly fun exercise. If you’d like to explore designing your own iteration, you can start with a polynomial of the form:</p>
@@ -383,10 +421,11 @@
 <div class="math notranslate nohighlight">
 \[f(x) = a x + b x^3 + c x^5 + d x^7 + e x^9 + ...\]</div>
 </div>
-<p>And then choose the coefficients <span class="math notranslate nohighlight">\(a,b,c,d,e,...\)</span> to achieve your desired behaviour. Two important things to consider are:</p>
+<p>And then choose the coefficients <span class="math notranslate nohighlight">\(a,b,c,d,e,...\)</span> to achieve your desired behaviour. Three important things to consider are:</p>
 <ul class="simple">
-<li><p>What order do you want to truncate at? A higher-order iteration can converge in fewer steps, but each step is more expensive. There is a trade-off here.</p></li>
+<li><p>What order do you want to truncate your polynomial at? A higher-order iteration can converge in fewer steps, but each step is more expensive. There is a trade-off here.</p></li>
 <li><p>Do you want the iterations to converge? If so, you at least need to enforce that the coefficients sum to 1 so that <span class="math notranslate nohighlight">\(f(1) = 1\)</span>. You could consider enforcing additional derivative conditions, such as that <span class="math notranslate nohighlight">\(\partial f / \partial x = 0\)</span> at <span class="math notranslate nohighlight">\(x=1\)</span>, to further stabilize the convergence.</p></li>
+<li><p>Do you want to use different polynomials on different steps? This adds complexity but provides a larger design space.</p></li>
 </ul>
 <p>After making these decisions, you may have leftover degrees of freedom. A fun way to fix these degrees of freedom is to open up <a class="reference external" href="https://desmos.com">Desmos</a> and play around with the coefficients using sliders.</p>
 </section>
@@ -473,6 +512,7 @@
 <li><a class="reference internal" href="#a-cubic-iteration">A cubic iteration</a></li>
 <li><a class="reference internal" href="#a-quintic-iteration">A quintic iteration</a></li>
 <li><a class="reference internal" href="#a-cursed-quintic-iteration">A cursed quintic iteration</a></li>
+<li><a class="reference internal" href="#jiacheng-s-six-step">Jiacheng’s six-step</a></li>
 <li><a class="reference internal" href="#designing-your-own-iteration">Designing your own iteration</a></li>
 <li><a class="reference internal" href="#id1">Historical connections</a></li>
 </ul>

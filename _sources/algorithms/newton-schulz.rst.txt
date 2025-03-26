@@ -15,7 +15,7 @@ Before that, we included the iteration in an appendix of our `workshop paper <ht
    |     Keller Jordan, Yuchen Jin, Vlado Boza, Jiacheng You, Franz Cesista, Laker Newhouse & Jeremy Bernstein
    |     blog post 2024
 
-Since then, the iteration has been applied in new optimizers such as `Scion <https://arxiv.org/abs/2502.07529>`_, `improved SOAP <https://nikhilvyas.github.io/SOAP_Muon.pdf>`_ and `Mango <https://github.com/ZQZCalin/trainit/blob/master/optimizers/muon/mango_report.pdf>`_. At the bottom of this page, we provide further `historical connections <#id1>`_ on the techniques.
+Since then, the iteration has been applied in new optimizers such as `Scion <https://arxiv.org/abs/2502.07529>`_, `improved-SOAP <https://nikhilvyas.github.io/SOAP_Muon.pdf>`_ and `Mango <https://github.com/ZQZCalin/trainit/blob/master/optimizers/muon/mango_report.pdf>`_. At the bottom of this page, we provide further `historical connections <#id1>`_ on the techniques.
 
 Problem statement
 -----------------
@@ -58,6 +58,8 @@ So, to apply an odd polynomial :math:`p` to the singular values, it is enough to
 
 to the diagonal entries of :math:`\Sigma`. In what follows we will simply specify formulae for scalar polynomials :math:`f` with the understanding that they will be extended to matrix polynomials :math:`p` as specified above. Then our task is just to produce odd scalar polynomials :math:`f(x)` that when iterated like :math:`f \circ f \circ f \circ ... \circ f(x)` converge to the sign function :math:`\operatorname{sign}(x)`.
 
+While the classical way to select these polynomials is by Taylor-approximating the sign function `(e.g. Björck & Bowie, 1971) <https://www.jstor.org/stable/2949484>`_, this only leads to a very restricted set of polynomials. I had the idea of treating the polynomial coefficients as free parameters to be tuned for specific performance characteristics.
+
 A cubic iteration
 ------------------
 
@@ -81,21 +83,21 @@ A quintic iteration
 Using a higher-order polynomial provides more degrees of freedom in our design space, which we can use to obtain faster convergence. In this section, we consider the quintic iteration given by:
 
 .. math::
-    f(x) = 3x - \frac{16}{5}x^3 + \frac{6}{5}x^5,
+    f(x) = 3x - \frac{16}{5}x^3 + \frac{6}{5}x^5.
 
-which is actually implemented in the Modula package for dualizing linear layers. Again, we plot one and five iterations of this polyomial:
+Again, we plot one and five iterations of this polyomial:
 
 .. raw:: html
 
    <iframe src="https://www.desmos.com/calculator/fjjjpsnl2g?embed" width="47%" height="300px" frameborder="0" style="margin-right: 4%"></iframe>
    <iframe src="https://www.desmos.com/calculator/1aqrfjge22?embed" width="47%" height="300px" frameborder="0"></iframe>
 
-As can be seen, after 5 iterations the quintic iteration has achieved a substantially closer approximation to the sign function than the cubic iteration, at least on the interval :math:`[-3/2,3/2]`.
+As can be seen, after 5 iterations the quintic iteration has achieved a substantially closer approximation to the sign function than the cubic iteration, at least on the interval :math:`[-3/2,3/2]`. However, the approximation exhibits some oscillatory behaviour close to the origin.
 
 A cursed quintic iteration
 ---------------------------
 
-We applied a Newton-Schulz iteration in the `Muon optimizer <https://kellerjordan.github.io/posts/muon/>`_ used in the `NanoGPT speedrun <https://github.com/KellerJordan/modded-nanogpt>`_. Keller experimented with tuning the coefficients in the iteration and found that the most important thing for fast convergence of the optimizer was to inflate the small singular values as fast as possible. And to keep the wall-clock time low, he needed to do this in the smallest number of iterations possible. This is achieved by making the first coefficient in the polynomial as large as possible, thereby maximizing the slope of the polynomial at :math:`x=0`. Keller settled on the following iteration:
+We applied a Newton-Schulz iteration in the `Muon optimizer <https://kellerjordan.github.io/posts/muon/>`_ used in the `NanoGPT speedrun <https://github.com/KellerJordan/modded-nanogpt>`_. Keller experimented with tuning the coefficients in the iteration and found that the most important thing for fast convergence of the optimizer was to inflate the small singular values as fast as possible. To keep the wall-clock time low, we needed to do this in the smallest number of iterations possible. This is achieved by making the first coefficient in the polynomial as large as possible, thereby maximizing the slope of the polynomial at :math:`x=0`. I had the idea for using a non-convergent iteration, and Keller settled on the following:
 
 .. math::
     f(x) = 3.4445x - 4.7750x^3 + 2.0315x^5.
@@ -114,6 +116,52 @@ This iteration *oscillates* and in fact *does not converge*! To see why, observe
 
 In short, the cursed quintic iteration sacrifices convergence for speed.
 
+Jiacheng's six-step
+--------------------
+
+Another idea is that we do not need to use the same polynomial coefficients at each step of the iteration. Using different coefficients at each step provides even more degrees of freedom to achieve desirable behaviour. For example, `You Jiacheng <https://twitter.com/YouJiacheng>`_ found the following iteration `by computational search <https://gist.github.com/YouJiacheng/393c90cbdc23b09d5688815ba382288b/5bff1f7781cf7d062a155eecd2f13075756482ae>`_:
+
+.. raw:: html
+
+   <iframe src="https://www.desmos.com/calculator/a2jxvmompc?embed" width="47%" height="300px" frameborder="0" style="margin-right: 4%"></iframe>
+   <iframe src="https://www.desmos.com/calculator/hta59syabv?embed" width="47%" height="300px" frameborder="0"></iframe>
+
+The six quintic polynomials on the left are executed in sequence. The last quintic (the orange curve) has a very flat slope close to :math:`x=1`, which has the effect of flattening out the oscillations present after the first five steps. The result is the very good approximation to the sign function on the right.
+
+I have integrated this iteration as a basic primitive in `Modula <https://github.com/modula-systems/modula/blob/aed70cddf2d3ab74fa218b1377840d1fd795cfcf/modula/atom.py#L6C1-L31C13>`_ using the following JAX implementation:
+
+.. code-block:: python
+
+   import jax.numpy as jnp
+
+   def orthogonalize(M):
+      # by @YouJiacheng (with stability loss idea from @leloykun)
+      # https://twitter.com/YouJiacheng/status/1893704552689303901
+      # https://gist.github.com/YouJiacheng/393c90cbdc23b09d5688815ba382288b/5bff1f7781cf7d062a155eecd2f13075756482ae
+
+      abc_list = [
+         (3955/1024, -8306/1024, 5008/1024),
+         (3735/1024, -6681/1024, 3463/1024),
+         (3799/1024, -6499/1024, 3211/1024),
+         (4019/1024, -6385/1024, 2906/1024),
+         (2677/1024, -3029/1024, 1162/1024),
+         (2172/1024, -1833/1024,  682/1024)
+      ]
+
+      transpose = M.shape[1] > M.shape[0]
+      if transpose:
+         M = M.T
+      M = M / jnp.linalg.norm(M)
+      for a, b, c in abc_list:
+         A = M.T @ M
+         I = jnp.eye(A.shape[0])
+         M = M @ (a * I + b * A + c * A @ A)
+      if transpose:
+         M = M.T
+      return M
+
+I also recommend checking out the `writeup <https://leloykun.github.io/ponder/muon-opt-coeffs/>`_ of Franz Cesista (@leloykun) on this topic.
+
 Designing your own iteration
 -----------------------------
 
@@ -122,10 +170,11 @@ Designing these polynomial iterations can be a surprisingly fun exercise. If you
 .. math::
    f(x) = a x + b x^3 + c x^5 + d x^7 + e x^9 + ...
 
-And then choose the coefficients :math:`a,b,c,d,e,...` to achieve your desired behaviour. Two important things to consider are:
+And then choose the coefficients :math:`a,b,c,d,e,...` to achieve your desired behaviour. Three important things to consider are:
 
-- What order do you want to truncate at? A higher-order iteration can converge in fewer steps, but each step is more expensive. There is a trade-off here.
+- What order do you want to truncate your polynomial at? A higher-order iteration can converge in fewer steps, but each step is more expensive. There is a trade-off here.
 - Do you want the iterations to converge? If so, you at least need to enforce that the coefficients sum to 1 so that :math:`f(1) = 1`. You could consider enforcing additional derivative conditions, such as that :math:`\partial f / \partial x = 0` at :math:`x=1`, to further stabilize the convergence.
+- Do you want to use different polynomials on different steps? This adds complexity but provides a larger design space.
 
 After making these decisions, you may have leftover degrees of freedom. A fun way to fix these degrees of freedom is to open up `Desmos <https://desmos.com>`_ and play around with the coefficients using sliders.
 
