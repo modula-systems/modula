@@ -69,21 +69,21 @@ Modula is based on two papers. The first is on the [modular norm](https://arxiv.
 
 ```bibtex
 @inproceedings{modular-norm,
-  title={Scalable Optimization in the Modular Norm},
-  author={Tim Large and Yang Liu and Minyoung Huh and Hyojin Bahng and Phillip Isola and Jeremy Bernstein},
-  booktitle={Neural Information Processing Systems},
-  year={2024}
+  title     = {Scalable Optimization in the Modular Norm},
+  author    = {Tim Large and Yang Liu and Minyoung Huh and Hyojin Bahng and Phillip Isola and Jeremy Bernstein},
+  booktitle = {Neural Information Processing Systems},
+  year      = {2024}
 }
 ```
 
 And the second is on [modular duality](https://arxiv.org/abs/2410.21265):
 
 ```bibtex
-@article{modular-dualization,
+@article{modular-duality,
   title   = {Modular Duality in Deep Learning},
   author  = {Jeremy Bernstein and Laker Newhouse},
   journal = {arXiv:2410.21265},
-  year    = 2024
+  year    = {2024}
 }
 ```
 
