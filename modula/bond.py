@@ -97,6 +97,28 @@ class ApplyAttentionScores(Bond):
         v, scores = x
         return scores @ v
 
+class Constant(Bond):
+    def __init__(self, val):
+        super().__init__()
+        self.val = val
+        self.smooth = True
+        self.sensitivity = 0
+
+    def forward(self, x, w):
+        return self.val
+
+class LayerNorm(Bond):
+    def __init__(self, eps=1e-6):
+        super().__init__()
+        self.eps = eps
+        self.smooth = True
+        self.sensitivity = 1
+
+    def forward(self, x, w):
+        mean = jnp.mean(x, axis=-1, keepdims=True)
+        var = jnp.var(x, axis=-1, keepdims=True)
+        return (x - mean) / jnp.sqrt(var + self.eps)
+
 class Rope(Bond):
     """Rotates queries and keys by relative context window distance."""
     def __init__(self, d_head, base=10000):
@@ -106,18 +128,14 @@ class Rope(Bond):
 
         self.rope_dim = d_head // 2
         self.inverse_frequencies = 1/base**(jnp.arange(self.rope_dim) / self.rope_dim)
-        self.seq_len_cached = None
-        self.sin_cached = None
-        self.cos_cached = None
     
     def get_cached(self, seq_len):
-        if self.seq_len_cached != seq_len:
-            self.seq_len_cached = seq_len
-            distance = jnp.arange(seq_len)
-            freqs = jnp.outer(distance, self.inverse_frequencies)  # shape [seq_len, rope_dim]
-            self.cos_cached = jnp.expand_dims(jnp.cos(freqs), (0, 1))  # shape [seq_len, rope_dim]
-            self.sin_cached = jnp.expand_dims(jnp.sin(freqs), (0, 1))  # shape [seq_len, rope_dim]
-        return self.sin_cached, self.cos_cached
+        # Actually caching the return value may lead to leaked intermediate value error
+        distance = jnp.arange(seq_len)
+        freqs = jnp.outer(distance, self.inverse_frequencies)  # shape [seq_len, rope_dim]
+        cos = jnp.expand_dims(jnp.cos(freqs), (0, 1))  # shape [seq_len, rope_dim]
+        sin = jnp.expand_dims(jnp.sin(freqs), (0, 1))  # shape [seq_len, rope_dim]
+        return sin, cos
     
     def rotate(self, x):
         batch, n_heads, seq_len, d_head = x.shape
@@ -126,6 +144,7 @@ class Rope(Bond):
         x1 = x[..., self.rope_dim:]  # shape [batch, n_heads, seq_len, rope_dim]
         x2 = x[..., :self.rope_dim]  # shape [batch, n_heads, seq_len, rope_dim]
 
+        # Why is the order reversed!?
         cos, sin = self.get_cached(seq_len)
         y1 =  cos * x1 + sin * x2
         y2 = -sin * x1 + cos * x2
