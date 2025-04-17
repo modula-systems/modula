@@ -99,7 +99,7 @@ class Bias(Atom):
         self.sensitivity = 1
 
     def forward(self, x, w):
-        weights = w[0]  # shape [num_embed, d_embed]
+        weights = w[0]  # shape [d]
         return weights
 
     def initialize(self, key):
@@ -125,7 +125,7 @@ class Scale(Atom):
         self.sensitivity = 1
 
     def forward(self, x, w):
-        weights = w[0]  # shape [num_embed, d_embed]
+        weights = w[0]  # shape [d]
         return weights * x
 
     def initialize(self, key):
