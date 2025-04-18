@@ -54,11 +54,11 @@ def posemb_sincos_2d(h, w, width, temperature=10_000., dtype=jnp.float32):
     pe = jnp.concatenate([jnp.sin(x), jnp.cos(x), jnp.sin(y), jnp.cos(y)], axis=1)
     return jnp.asarray(pe, dtype)[None, :, :]
 
-def ViT(num_classes, image_size=(28, 28), patch_size=(7, 7), num_heads=4, d_embed=32, d_query=8, d_value=8, num_blocks=4, blocks_mass=5, attention_scale=1.0, final_scale=1.0, LN=True, bias=True, scale=True):
+def ViT(num_classes, image_size=(28, 28), patch_size=(7, 7), num_heads=4, d_embed=32, d_query=8, d_value=8, num_blocks=4, blocks_mass=5, attention_scale=1.0, final_scale=1.0, channels=1, LN=True, bias=True, scale=True):
     i1, i2 = image_size
     p1, p2 = patch_size
     h, w = i1 // p1, i2 // p2
-    patchify = Linear(d_embed, p1 * p2) @ Patchify(patch_size)
+    patchify = Linear(d_embed, p1 * p2 * channels) @ Patchify(patch_size)
     if bias:
         patchify = patchify + Bias(d_embed)
     posemb = Constant(posemb_sincos_2d(h, w, d_embed))

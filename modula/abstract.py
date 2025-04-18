@@ -228,4 +228,4 @@ class Patchify(Bond):
 
     def forward(self, x, w):
         p1, p2 = self.size
-        return einops.rearrange(x, 'b (h p1) (w p2) -> b (h w) (p1 p2)', p1=p1, p2=p2)
+        return einops.rearrange(x, 'b (h p1) (w p2) c -> b (h w) (p1 p2 c)', p1=p1, p2=p2)
