@@ -98,14 +98,14 @@ class ApplyAttentionScores(Bond):
         return scores @ v
 
 class Constant(Bond):
-    def __init__(self, val):
+    def __init__(self, f):
         super().__init__()
-        self.val = val
+        self.f = f
         self.smooth = True
         self.sensitivity = 0
 
     def forward(self, x, w):
-        return self.val
+        return self.f()
 
 class LayerNorm(Bond):
     def __init__(self, eps=1e-6):

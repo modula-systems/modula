@@ -61,7 +61,7 @@ def ViT(num_classes, image_size=(28, 28), patch_size=(7, 7), num_heads=4, d_embe
     patchify = Linear(d_embed, p1 * p2 * channels) @ Patchify(patch_size)
     if bias:
         patchify = patchify + Bias(d_embed)
-    posemb = Constant(posemb_sincos_2d(h, w, d_embed))
+    posemb = Constant(lambda: posemb_sincos_2d(h, w, d_embed))
 
     att = Attention(num_heads, d_embed, d_query, d_value, attention_scale, causal=False, posemb="none", bias=bias)
     mlp = (Linear(d_embed, 4*d_embed) + Bias(d_embed) if bias else Linear(d_embed, 4*d_embed)) @ GeLU() @ (Linear(4*d_embed, d_embed) + Bias(4*d_embed) if bias else Linear(4*d_embed, d_embed))
