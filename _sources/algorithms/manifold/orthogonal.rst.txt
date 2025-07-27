@@ -92,13 +92,13 @@ The previous section suggests making the weight update :math:`W \mapsto W - \eta
 
 As a warmup, let's first consider the case that :math:`W^\top G - G^\top W` is full rank. Then :math:`X` is an orthogonal matrix and :math:`[W (I_n - \eta X)]^\top [W (I_n - \eta X)] = (1 + \eta^2) I_n`. Therefore, in this case, we can project back to the manifold simply by dividing the updated weights through by the scalar :math:`\sqrt{1+\eta^2}`. 
 
-In the general case where :math:`W^\top G - G^\top W` and therefore :math:`X = \operatorname{msign}[W^\top G - G^\top W]` may not be full rank, let us search for a matrix :math:`C` such that :math:`W \cdot (I_n - \eta X) \cdot C` is orthogonal. Checking the orthogonality condition yields:
+In the general case where :math:`W^\top G - G^\top W` and therefore :math:`X = \operatorname{msign}[W^\top G - G^\top W]` may not be full rank, let us search for a matrix :math:`C` such that :math:`W \cdot (I_n - \eta X) \cdot C` is orthogonal. Checking the orthogonality condition :math:`(W \cdot (I_n - \eta X) \cdot C)^\top (W \cdot (I_n - \eta X) \cdot C)=I_n` reveals that we need to find a matrix :math:`C` such that:
 
 .. math::
 
-   (W \cdot (I_n - \eta X) \cdot C)^\top (W \cdot (I_n - \eta X) \cdot C) = C^\top (I_n + \eta^2 X^\top X) C.
+   C^\top (I_n + \eta^2 X^\top X) C = I_n.
 
-The trick is to recognize :math:`X^\top X` as the orthogonal projector on to the row space of :math:`X`. The matrix :math:`X` conserves vectors in the null space of :math:`X` but scales up vectors in the row space of :math:`X` by a factor of :math:`1+\eta^2`. It therefore suffices to choose a matrix :math:`C` that inverts this transformation in two steps. Noting that :math:`I_n - X^\top X` projects on to the null space of :math:`X`, the following choice of :math:`C` is what we need:
+The trick is to recognize :math:`X^\top X` as the orthogonal projector on to the row space of :math:`X`. The matrix :math:`I_n + \eta^2 X^\top X` conserves vectors in the null space of :math:`X` but scales up vectors in the row space of :math:`X` by a factor of :math:`1+\eta^2`. It therefore suffices to choose a symmetric matrix :math:`C` that inverts this transformation in two steps. Noting that :math:`I_n - X^\top X` projects on to the null space of :math:`X`, the following choice of :math:`C` is what we need:
 
 .. math::
 
