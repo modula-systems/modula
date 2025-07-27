@@ -12,24 +12,23 @@ Orthogonal manifold
       year    = 2025
    }
 
-On this page, we will work out an algorithm for performing gradient descent on the manifold of orthogonal matrices while taking steps that are steepest under the spectral norm. The algorithm will solve for the matrix of unit spectral norm that maximizes the linearized improvement in loss while lying tangent to the manifold. The "retraction map"---which sends the update from the tangent space back to the manifold---can oftentimes be performed by a simple scalar multiplication.
+On this page, we will work out an algorithm for performing gradient descent on the manifold of orthogonal matrices while taking steps that are steepest under the spectral norm. The algorithm will solve for the matrix of unit spectral norm that maximizes the linearized improvement in loss while lying tangent to the manifold. The "retraction map"---which sends the update from the tangent space back to the manifold---involves a few extra matrix multiplications.
 
 Steepest descent on the orthogonal manifold
 --------------------------------------------
 
-Consider a square weight matrix :math:`W\in\mathbb{R}^{n \times n}` that is orthogonal, meaning that :math:`W^\top W = I_n`. Suppose that the "gradient matrix" :math:`G\in\mathbb{R}^{n\times n}` is the derivative of some loss function evaluated at :math:`W`. Given step size :math:`\eta > 0`, we claim that the following weight update is steepest under the spectral norm while staying on the orthogonal manifold. First, we compute the matrix :math:`X = [W^\top G - G^\top W]^\sharp`, and then we make the update:
+Consider a square weight matrix :math:`W\in\mathbb{R}^{n \times n}` that is orthogonal, meaning that :math:`W^\top W = I_n`. Suppose that the "gradient matrix" :math:`G\in\mathbb{R}^{n\times n}` is the derivative of some loss function evaluated at :math:`W`. Given step size :math:`\eta > 0`, we claim that the following weight update is steepest under the spectral norm while staying on the orthogonal manifold. First, we take the matrix sign of the skew part of :math:`W^\top G`:
 
 .. math::
-   W \mapsto \begin{cases}\frac{W (I_n - \eta X)}{\sqrt{1+\eta^2}} &\text{if $W^\top G - G^\top W$ is full-rank;}\\
-   [W (I_n - \eta X)]^\sharp &\text{otherwise.}\end{cases}
+   X = \operatorname{msign}[W^\top G - G^\top W],
 
-In these expressions, :math:`M^\sharp` denotes the *sharp-operator* applied to matrix :math:`M`, which returns the matrix with the same singular vectors as :math:`M` but all positive singular values are set to one. The sharp-operator can be computed by running a "Newton-Schulz" iteration, such as the following cubic iteration:
+where the matrix sign :math:`\mathrm{msign}` of a matrix :math:`M` returns the matrix with the same singular vectors as :math:`M` but all positive singular values are set to one. And then we make the update:
 
 .. math::
+   W \mapsto W \cdot (I_n - \eta X) \cdot \left(I_n - X^TX + \frac{X^TX}{\sqrt{1+\eta^2}}\right).
 
-   M_0 = \frac{M}{\|M\|_F}; \qquad M_{t+1}=\frac{3}{2}M_t-\frac{1}{2}M_tM_t^\top M_t; \qquad t\to\infty,
+The final bracket constitutes the "retraction map", which snaps the updated weights back to the manifold. Curiously, the update can be written in a purely multiplicative form.
 
-which goes back to `Kovarik (1970) <https://epubs.siam.org/doi/10.1137/0707031>`_ and `Björck & Bowie (1971) <https://epubs.siam.org/doi/10.1137/0708036>`_.
 
 Non-Riemannian manifold methods
 --------------------------------
@@ -81,15 +80,61 @@ Next, we decompose :math:`W^\top G = \frac{1}{2}[W^\top G + G^\top W] + \frac{1}
 .. math::
    \operatorname{arg max}_{X\in \mathbb{R}^{n\times n}:\|X\|_*\leq 1 \text{ and } X^\top + X= 0}\; \operatorname{trace}\left(\left[\frac{W^\top G - G^\top W}{2}\right]^\top X\right).
 
-If we simply ignore the skew-symmetric constraint, the solution for :math:`X` is given by :math:`X = [W^\top G - G^\top W]^\sharp`. But this solution for :math:`X` actually satisfies the skew-symmetric constraint! This is because the sharp-operator preserves skew-symmetry. An easy way to see this is that :math:`[W^\top G - G^\top W]^\sharp` can be computed by running an odd polynomial iteration ("Newton-Schulz") on :math:`W^\top G - G^\top W`, and odd polynomials preserve skew-symmetry. [#youla]_ 
+If we simply ignore the skew-symmetric constraint, the solution for :math:`X` is given by :math:`X = \operatorname{msign}[W^\top G - G^\top W]`. But this solution for :math:`X` actually satisfies the skew-symmetric constraint! This is because the matrix sign function preserves skew-symmetry. An easy way to see this is that :math:`\operatorname{msign}[W^\top G - G^\top W]` can be computed by running an odd polynomial iteration (see :doc:`Newton-Schulz <../newton-schulz>`) on :math:`W^\top G - G^\top W`, and odd polynomials preserve skew-symmetry. [#youla]_
 
-Undoing the change of variables, our tangent vector is given by :math:`A = W X = W [W^\top G - G^\top W]^\sharp`.
+Undoing the change of variables, our tangent vector is given by :math:`A = W \cdot \operatorname{msign}[W^\top G - G^\top W]`.
 
 
 Finding the retraction map
 ---------------------------
 
-The previous section suggests making the weight update :math:`W \mapsto W - \eta W X = W (I_n - \eta X)`. This update takes a step in the tangent space and will actually diverge slightly from the orthogonal manifold. We can fix this issue by using the sharp-operator, i.e. :math:`W \mapsto [W (I_n - \eta X)]^\sharp` to project the weights back to the manifold. But there is actually a shortcut: if :math:`W^\top G - G^\top W` is full rank, then :math:`X` is an orthogonal matrix and :math:`[W (I_n - \eta X)]^\top [W (I_n - \eta X)] = (1 + \eta^2) I_n`. Therefore, in this case, we can project back to the manifold simply by dividing through by the scalar :math:`\sqrt{1+\eta^2}`. It's worth noting that if :math:`n` is odd, then :math:`W^\top G - G^\top W` must have at least one zero singular value so it cannot be full rank. This issue can be avoided simply by making :math:`n` even!
+The previous section suggests making the weight update :math:`W \mapsto W - \eta W X = W (I_n - \eta X)`. This update takes a step in the tangent space, which diverges slightly from the orthogonal manifold for finite step sizes. A relatively expensive way to fix this issue is to just apply the matrix sign function, i.e. :math:`W \mapsto \operatorname{msign}[W (I_n - \eta X)]`, to project the weights back to the manifold. But we will show in this section that there is actually a shortcut. 
+
+As a warmup, let's first consider the case that :math:`W^\top G - G^\top W` is full rank. Then :math:`X` is an orthogonal matrix and :math:`[W (I_n - \eta X)]^\top [W (I_n - \eta X)] = (1 + \eta^2) I_n`. Therefore, in this case, we can project back to the manifold simply by dividing the updated weights through by the scalar :math:`\sqrt{1+\eta^2}`. 
+
+In the general case where :math:`W^\top G - G^\top W` and therefore :math:`X = \operatorname{msign}[W^\top G - G^\top W]` may not be full rank, let us search for a matrix :math:`C` such that :math:`W \cdot (I_n - \eta X) \cdot C` is orthogonal. Checking the orthogonality condition yields:
+
+.. math::
+
+   (W \cdot (I_n - \eta X) \cdot C)^\top (W \cdot (I_n - \eta X) \cdot C) = C^\top (I_n + \eta^2 X^\top X) C.
+
+The trick is to recognize :math:`X^\top X` as the orthogonal projector on to the row space of :math:`X`. The matrix :math:`X` conserves vectors in the null space of :math:`X` but scales up vectors in the row space of :math:`X` by a factor of :math:`1+\eta^2`. It therefore suffices to choose a matrix :math:`C` that inverts this transformation in two steps. Noting that :math:`I_n - X^\top X` projects on to the null space of :math:`X`, the following choice of :math:`C` is what we need:
+
+.. math::
+
+   C = C^\top = I_n - X^\top X + \frac{X^TX}{\sqrt{1+\eta^2}}.
+
+
+Python code
+---------------------------
+
+Here is a basic JAX implementation for the algorithm:
+
+.. code-block:: python
+
+   import jax.numpy as jnp
+   import math
+
+   def orthogonalize(M, steps = 10):
+      a, b, c = 3, -16/5, 6/5
+      transpose = M.shape[1] > M.shape[0]
+      if transpose:
+         M = M.T
+      M = M / jnp.linalg.norm(M)
+      for _ in range(steps):
+         A = M.T @ M
+         I = jnp.eye(A.shape[0])
+         M = M @ (a * I + b * A + c * A @ A)
+      if transpose:
+         M = M.T
+      return M
+
+   def update(W, G, eta, NS_steps=10):
+      I = jnp.eye(d)
+      X = orthogonalize(W.T @ G - G.T @ W, NS_steps)
+      retraction_factor = I - (1 - math.sqrt(1/(1+eta**2))) * X.T @ X
+      return W @ (I - eta * X) @ retraction_factor
+
 
 Open problem: Extending to the Stiefel Manifold
 ------------------------------------------------
