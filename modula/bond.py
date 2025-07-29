@@ -105,6 +105,7 @@ class Rope(Bond):
         self.sensitivity = 1  # rope is an orthogonal transformation
 
         self.rope_dim = d_head // 2
+        self.base = base
         self.inverse_frequencies = 1/base**(jnp.arange(self.rope_dim) / self.rope_dim)
         self.seq_len_cached = None
         self.sin_cached = None
@@ -126,7 +127,7 @@ class Rope(Bond):
         x1 = x[..., self.rope_dim:]  # shape [batch, n_heads, seq_len, rope_dim]
         x2 = x[..., :self.rope_dim]  # shape [batch, n_heads, seq_len, rope_dim]
 
-        cos, sin = self.get_cached(seq_len)
+        sin, cos = self.get_cached(seq_len)
         y1 =  cos * x1 + sin * x2
         y2 = -sin * x1 + cos * x2
 

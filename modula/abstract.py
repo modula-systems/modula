@@ -204,3 +204,137 @@ class Mul(Bond):
 
     def forward(self, x, w):
         return x * self.sensitivity
+
+def get_leaf_modules(module):
+    """
+    Walk through a module tree and return the leaf modules (Atom or Bond instances)
+    in the same order as the corresponding weights would be in the list returned by initialize().
+    
+    Args:
+        module: A Module instance (typically CompositeModule at top level)
+        
+    Returns:
+        List of leaf modules (Atom or Bond instances)
+    """
+    # Base case: if this is a leaf module (Atom or Bond)
+    if isinstance(module, (Atom, Bond)):
+        return [module]
+    
+    # If this is a CompositeModule
+    elif isinstance(module, CompositeModule):
+        m0, m1 = module.children
+        # Order matches initialize(): m0 weights first, then m1 weights
+        return get_leaf_modules(m0) + get_leaf_modules(m1)
+    
+    # If this is a TupleModule
+    elif isinstance(module, TupleModule):
+        leaf_modules = []
+        # Order matches initialize(): iterate through children in order
+        for child in module.children:
+            leaf_modules.extend(get_leaf_modules(child))
+        return leaf_modules
+    
+    # For any other Module type, assume no children or handle as needed
+    else:
+        return []
+
+def get_leaf_target_norms(module, target_norm=1.0):
+    """
+    Walk through a module tree the same way dualize() does and compute the target norm
+    that would be passed to each leaf module's dualize method, then store it in the module.
+    
+    Args:
+        module: A Module instance
+        target_norm: The target norm passed to this module's dualize method
+        
+    Returns:
+        List of target norms for leaf modules, in the same order as get_leaf_modules()
+    """
+    # Base case: if this is a leaf module (Atom or Bond)
+    if isinstance(module, (Atom, Bond)):
+        return [target_norm]
+    
+    # If this is a CompositeModule
+    elif isinstance(module, CompositeModule):
+        if module.mass > 0:
+            m0, m1 = module.children
+            # Same logic as in CompositeModule.dualize()
+            m0.target_norm = target_norm * m0.mass / module.mass / m1.sensitivity
+            m1.target_norm = target_norm * m1.mass / module.mass
+            
+            # Recursively get target norms for children (order: m0 first, then m1)
+            return (get_leaf_target_norms(m0, m0.target_norm) + 
+                    get_leaf_target_norms(m1, m1.target_norm))
+        else:
+            # When mass is 0, we still need to traverse to get the structure right
+            m0, m1 = module.children
+            return (get_leaf_target_norms(m0, 0.0) + 
+                    get_leaf_target_norms(m1, 0.0))
+    
+    # If this is a TupleModule
+    elif isinstance(module, TupleModule):
+        if module.mass > 0:
+            target_norms = []
+            # Same logic as in TupleModule.dualize()
+            for child in module.children:
+                child.target_norm = target_norm * child.mass / module.mass
+                target_norms.extend(get_leaf_target_norms(child, child.target_norm))
+            return target_norms
+        else:
+            # When mass is 0, we still need to traverse to get the structure right
+            target_norms = []
+            for child in module.children:
+                target_norms.extend(get_leaf_target_norms(child, 0.0))
+            return target_norms
+    
+    # For any other Module type, assume no children
+    else:
+        return []
+
+def traverse_forward_order(module, func):
+    """
+    Traverse composite modules in the order that forward() will execute them,
+    applying func to each module.
+    
+    Args:
+        module: The module to traverse
+        func: Function to apply to each module. Should accept a module as argument.
+    """
+    def _traverse(mod):
+        if isinstance(mod, CompositeModule):
+            # For composite modules, traverse m0 first, then m1 (execution order)
+            m0, m1 = mod.children
+            _traverse(m0)
+            _traverse(m1)
+        elif isinstance(mod, TupleModule):
+            # For tuple modules, traverse all children (they execute in parallel)
+            for child in mod.children:
+                _traverse(child)
+        
+        # Apply function to current module after traversing children
+        func(mod)
+    
+    _traverse(module)
+
+def set_atomic_weights(module, weights):
+    """
+    Set weights as attributes on atomic modules by traversing in forward execution order. Assumes each atomic module has only one weight.
+    
+    Args:
+        module: The root module to traverse
+        weights: List of weights corresponding to atomic modules
+    """
+    weight_index = [0]  # Use list to make it mutable in closure
+    
+    def assign_weight(mod):
+        if isinstance(mod, Atom):
+            if weight_index[0] < len(weights):
+                mod.weight = weights[weight_index[0]]
+                weight_index[0] += 1
+    
+    traverse_forward_order(module, assign_weight)
+    
+    # Validate that we used all weights
+    if weight_index[0] != len(weights):
+        raise ValueError(f"Number of weights ({len(weights)}) doesn't match number of atomic modules ({weight_index[0]})")
+

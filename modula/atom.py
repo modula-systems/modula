@@ -1,7 +1,7 @@
 import jax
 import jax.numpy as jnp
 
-from modula.abstract import Atom
+from modula.abstract import Atom, Bond, CompositeModule, TupleModule
 
 def orthogonalize(M):
     # six step Newton-Schulz by @YouJiacheng
@@ -92,6 +92,73 @@ class Embed(Atom):
 
 
 if __name__ == "__main__":
+    from modula.abstract import get_leaf_modules, get_leaf_target_norms 
+
+    def test_dualize_consistency(module, grad_w, target_norm=1.0, rtol=1e-6):
+        """
+        Test that get_unnormalized_dual and get_leaf_target_norms produce results
+        consistent with the actual dualize method.
+        
+        Args:
+            module: A Module instance
+            grad_w: Weight gradient list
+            target_norm: Target norm to test with
+            rtol: Relative tolerance for comparison
+            
+        Returns:
+            bool: True if consistent, False otherwise
+        """
+        # Get results from actual dualize
+        actual_dual = module.dualize(grad_w, target_norm=target_norm)
+        
+        # Get results from our functions
+        unnormalized_dual = get_unnormalized_dual(module, grad_w)
+        leaf_modules = get_leaf_modules(module)
+        target_norms = get_leaf_target_norms(module, target_norm=target_norm)
+        
+        # Apply target norms to unnormalized dual
+        predicted_dual = []
+        weight_idx = 0
+        
+        for leaf_module, leaf_target_norm in zip(leaf_modules, target_norms):
+            if isinstance(leaf_module, (Atom)):  # Only atoms have weights
+                leaf_weights = unnormalized_dual[weight_idx:weight_idx + leaf_module.atoms]
+                # Apply the target norm
+                scaled_weights = [w * leaf_target_norm for w in leaf_weights]
+                predicted_dual.extend(scaled_weights)
+                weight_idx += leaf_module.atoms
+            # Bonds have no weights, so nothing to add to predicted_dual
+        
+        # Compare actual vs predicted
+        if len(actual_dual) != len(predicted_dual):
+            print(f"Length mismatch: actual {len(actual_dual)}, predicted {len(predicted_dual)}")
+            return False
+        
+        for i, (actual, predicted) in enumerate(zip(actual_dual, predicted_dual)):
+            if not jnp.allclose(actual, predicted, rtol=rtol):
+                print(f"Mismatch at weight {i}")
+                print(f"Actual shape: {actual.shape}, Predicted shape: {predicted.shape}")
+                print(f"Max difference: {jnp.max(jnp.abs(actual - predicted))}")
+                return False
+        
+        print("✓ Dualize consistency test passed!")
+        return True
+
+    # Example usage:
+    def test_example():
+        """Example test with a simple module"""
+        # Create a simple module
+        linear = Linear(fanout=4, fanin=3)
+        linear @= Linear(fanout=4, fanin=4)  # Add another linear layer
+        linear @= Linear(fanout=2, fanin=4)  # Add another linear layer
+        
+        # Initialize weights and create some gradient
+        key = jax.random.PRNGKey(42)
+        weights = linear.initialize(key)
+        grad_w = [jax.random.normal(key, shape=w.shape) for w in weights]
+        
+        # Test consistency
+        return test_dualize_consistency(linear, grad_w, target_norm=2.5)
 
     key = jax.random.PRNGKey(0)
 
@@ -116,3 +183,5 @@ if __name__ == "__main__":
     error_O = jnp.linalg.norm(O - U @ Vh) / jnp.linalg.norm(U @ Vh)
     print(f"relative error in M's SVD: {error_M}")
     print(f"relative error in O: {error_O}")
+
+    test_example()
