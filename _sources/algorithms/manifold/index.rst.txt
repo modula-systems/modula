@@ -6,11 +6,18 @@ Manifold duality maps
 
    hypersphere
    orthogonal
+   stiefel
 
 In this section we will derive steepest descent optimization algorithms for manifolds equipped with certain norms. These algorithms will be useful if we want to construct steepest descent optimizers for modules where the tensors obey some natural constraints. In particular, we will consider:
 
-- for vectors: :doc:`steepest descent under the Euclidean norm on the hypersphere; <hypersphere>`
-- for matrices: :doc:`steepest descent under the spectral norm on the orthogonal manifold. <orthogonal>`
+For vectors:
+
+- :doc:`steepest descent under the Euclidean norm on the hypersphere; <hypersphere>`
+
+For matrices:
+
+- :doc:`steepest descent under the spectral norm on the orthogonal manifold. <orthogonal>`
+- :doc:`steepest descent under the spectral norm on the Stiefel manifold. <stiefel>`
 
 In each case, we will adopt the following strategy:
 
