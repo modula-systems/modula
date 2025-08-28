@@ -1,5 +1,7 @@
-import jax
 import copy
+
+import jax
+import einops
 
 class Module:
     def __init__(self):
@@ -204,3 +206,26 @@ class Mul(Bond):
 
     def forward(self, x, w):
         return x * self.sensitivity
+
+class Mean(Bond):
+    def __init__(self, axis, size):
+        super().__init__()
+        self.smooth = True
+        self.axis = axis
+        self.size = size
+        self.sensitivity = 1 / size
+
+    def forward(self, x, w):
+        assert x.shape[self.axis] == self.size
+        return jax.numpy.mean(x, axis=self.axis)
+
+class Patchify(Bond):
+    def __init__(self, size):
+        super().__init__()
+        self.smooth = True
+        self.sensitivity = 1
+        self.size = size
+
+    def forward(self, x, w):
+        p1, p2 = self.size
+        return einops.rearrange(x, 'b (h p1) (w p2) c -> b (h w) (p1 p2 c)', p1=p1, p2=p2)
