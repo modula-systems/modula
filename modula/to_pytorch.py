@@ -250,12 +250,14 @@ if __name__ == "__main__":
     torch.manual_seed(0)  # For reproducibility in PyTorch
 
     # Example usage
-
-    module = modula.atom.Linear(fanout=4, fanin=3)
-    module @= (modula.atom.Linear(fanout=2, fanin=4), modula.atom.Linear(fanout=2, fanin=4))
-    module @= modula.atom.Linear(fanout=2, fanin=4)
+    module = modula.abstract.TupleModule([modula.atom.Linear(fanout=2, fanin=4),
+                                          modula.atom.Linear(fanout=2, fanin=4)])
+    module @= modula.atom.Linear(fanout=4, fanin=3)
 
     print(sequentialise(module))
+    x = torch.randn(5,3)
+    print(f"input: {x.shape}")
+    print("output:", [y.shape for y in sequentialise(module)(x)])
 
     attention = Attention(num_heads=2, d_embed=8, d_query=4, d_value=4, attention_scale=1.0)
     weights = attention.initialize(key)
